@@ -513,7 +513,8 @@ var routine=function(require){
                     }
                     for(var i=0;i<ob.traces.length;i++){
                         b4w_SetObj(ob.traces[i]);
-                        b4w_SetZ(-(ob.traces.length-i)/(ob.traces.length)*7);
+                        b4w_SetZ(-(ob.traces.length-i)/(ob.traces.length)*3);
+                        //b4w_SetZ(0);
                         b4w_UpdateObj();
                     }
                     break;
@@ -562,7 +563,7 @@ var routine=function(require){
         setupMod(model,traces);
         var ts=false;
 
-        var my_offset_vector = new Float32Array([7.0, 7.0, 2.5]);
+        var my_offset_vector = new Float32Array([7.0, 7.0, 2]);
 
         function update(){
             console.log("robot update");
