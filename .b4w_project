@@ -1,26 +1,28 @@
 [info]
 author = 
+icon = 
 name = veterbot
 title = 
 
 [paths]
-assets_dirs = apps_dev/veterobot2;
-blend_dirs = apps_dev/veterobot2;
-blender_exec = blender
-build_dir = apps_dev/veterobot2
+assets_dirs = projects/veterbot/assets;
+blend_dirs = projects/veterbot/blender;
+blender_exec = /home/sungreen/_SOFT/blender/blender/278/blender
+build_dir = projects/veterbot/build
 deploy_dir = 
 
 [compile]
 apps = 
 css_ignore = 
-engine_type = update
+engine_type = copy
+ignore = 
 js_ignore = 
 optimization = simple
-use_physics = 
-use_smaa_textures = 
-version = 
+use_physics = True
 
 [deploy]
-assets_path_prefix = 
+assets_path_dest = assets
+assets_path_prefix = assets
+ignore = 
 override = 
 
