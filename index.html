@@ -7,6 +7,8 @@
         a:visited {color: #FFFFFF;}
         a:hover {color: #FFFFFF;}
 	-->
+    </style>
+	<style type="text/css">
         @import url('http://fonts.googleapis.com/css?family=Rye:100,300,700|Satisfy');
         H1, H2, TH {font-family: 'Rye'; vertical-align: middle; text-align: center;}
         H2 {font-size: 32pt; color: #FFFFFF;}
@@ -15,8 +17,11 @@
         TD, TH {padding: 1px;}
         TH {font-size: 16pt; color: #AAAAFF; background-color: #222222; padding: 1px;}
 
-        Canvas { position: fixed; z-index: 100; left: 0px; top: 0px; }
     </style>
+	<style type="text/css">
+        Canvas { position: fixed; z-index: -1; left: 0px; top: 0px; }
+	</style>
+      
 
 </head>
 <body bgcolor="#000000" lang="ru-RU">
@@ -40,12 +45,12 @@
 <h2>blender patch</h2>
 <br>
 
-<Canvas id="mycanvas" width=1000 height=1000></Canvas>
+//<Canvas id="mycanvas" width=1000 height=1000></Canvas>
 
 <script>
 
 var context={}
-//window.onmousemove = function(e){orderMouse(e);}
+window.onmousemove = function(e){orderMouse(e);}
 
 window.onresize=function(){
     var a = 1;
