@@ -1,52 +1,56 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head>
-	<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8"><title></title>
-	<style type="text/css">
+  
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+  <title></title>
+
+  
+  
+  <style type="text/css">
 	<!--
-        a:link {color: #FFFFFF;}
-        a:visited {color: #FFFFFF;}
-        a:hover {color: #FFFFFF;}
+        a:link {color: #5555FF;}
+        a:visited {color: #5555EE;}
+        a:hover {color: #5555EE;}
 	-->
     </style>
-	<style type="text/css">
-        @import url('https://fonts.googleapis.com/css?family=Rye:100,300,700|Satisfy');
-        H1, H2, TH {font-family: 'Rye'; vertical-align: middle; text-align: center;}
-        H2 {font-size: 32pt; color: #FFFFFF;}
-        H1 {font-size: 16pt; color: #FFFFAA; background-color: #222222; padding: 1px;}
-        TABLE {z-index: 0; border-top: 2px solid #000;border-bottom: 2px solid #000;}
-        TD, TH {padding: 1px;}
-        TH {font-size: 16pt; color: #AAAAFF; background-color: #222222; padding: 1px;}
 
+    <style>
+    .tableR {border-spacing: 0; border: 1px solid; border-radius: 12px; }
+    .tableR td, .tableR th { padding: 12px; border-left: 1px solid; border-top: 1px solid;}
+    .tableR th {background: #FFEECC;border-top: none;}
+    .tableR td:first-child, .tableR th:first-child {border-left: none;}
+    .tableR th:first-child {border-top-left-radius: 12px;}
+    .tableR th:last-child {border-top-right-radius: 12px;}
     </style>
-	<style type="text/css">
+  
+  <style type="text/css">
         Canvas { position: fixed; z-index: -1; left: 0px; top: 0px; }
 	</style>
-      
+</head><body style="background-color: rgb(170, 187, 170);" lang="ru-RU">
+<a href="mailto://sungreen@yandex.ru">sungreen@yandex.ru</a>
 
-</head>
-<body bgcolor="#000000" lang="ru-RU">
-
-<a href="mailto://sungreen@yandex.ru"><img src="pictures/sungreen.gif" name="sungreen@yandex.ru" width="256"></a><br><br>
-<h2>blend4web projects</h2>
 <br>
-<table style="width: 100%">
-  <tbody>
-    <tr><th colspan="2">Description</th><th>Links</th><th>Source</th></tr>
+<br>
+<br>
+
+<table class="tableR" style="width: 100%;">
+  <thead>
     <tr>
-        <th><p><a href="https://sungreen.github.io/projects/veterbot/veterbot.html"><img src="pictures/veterbot.jpg" name="2github" align="middle" border="0" height="128" width="128"></a></p></th>
-        <th><h1>Veter - robotics vehicle for researchers and makers <a href="http://veterobot.com/">veterobot.com</a><h1></h1></th>
-        <th><a href="https://sungreen.github.io/projects/veterbot/veterbot.html">start demo</a></th>
-        <th><a href="https://github.com/sungreen/sungreen.github.io/tree/master/projects/veterbot">https://github.com/sungreen/sungreen.github.io</a></th>
+      <th colspan=2>Description</th>
+      <th>Links</th>
+      <th>Sources</th>
     </tr>
-  </tbody>
+  </thead>
+    <tr>
+      <td><a href="https://sungreen.github.io/projects/veterbot/veterbot.html"><img src="pictures/veterbot.jpg" name="2github" align="middle" border="0" height="128" width="128"></a></td>
+      <td>Veter - robotics vehicle for researchers and makers <a href="http://veterobot.com/">veterobot.com</a></td>
+      <td>blend4web projects <a href="https://sungreen.github.io/projects/veterbot/veterbot.html">start demo</a> (webgl require)</td>
+      <td><a href="https://github.com/sungreen/sungreen.github.io/tree/master/projects/veterbot">https://github.com/sungreen/sungreen.github.io</a></td>      
+    </tr>
 </table>
-
-<br>
-<h2>blender patch</h2>
 <br>
 
-//<Canvas id="mycanvas" width=1000 height=1000></Canvas>
-
+<canvas id="mycanvas" width="1000" height="1000"></canvas>
 <script>
 
 var context={}
@@ -76,7 +80,7 @@ function orderMouse(e){
 }
 
 function refresh(){
-    var c = document.getElementById("mycanvas");
+/*   var c = document.getElementById("mycanvas");
     var w = context.w;
     var h = context.h;
     c.width = w;
@@ -90,11 +94,10 @@ function refresh(){
     ctx.lineTo(0,0);
     ctx.lineTo(context.mouseX,context.mouseY);
     ctx.strokeStyle = "#FF0000";
-    ctx.stroke();
+    ctx.stroke();*/
 }
 
 window.onresize();
 
 </script>
-
 </body></html>

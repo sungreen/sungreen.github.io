@@ -1,4 +1,4 @@
-var version = "5.2017.07.12";
+var version = "5.2017.07.23";
 
 var routine=function(require){
     var m_main      = require("main");
@@ -10,6 +10,7 @@ var routine=function(require){
     var tsr         = require("tsr");
     var m_scenes    = require("scenes");
     var m_objects   = require("objects");
+    var m_material  = require("material");
     var m_trans     = require("transform");
 
     var SysCurrent={smat:tsr.create(),dmat:tsr.create()};
@@ -164,7 +165,7 @@ var routine=function(require){
         var lastkey=0;
         var idata={};
         var triggers={FORWARD:false,BACK:false,LEFT:false,RIGHT:false};
-        var toggles={WHEELCHANGE:false,RELOAD:false,ROTATE:false,COLOR:false,CAMERAUP:false,CAMERADOWN:false};
+        var toggles={HELP:false,WHEELCHANGE:false,RELOAD:false,ROTATE:false,COLOR:false,CAMERAUP:false,CAMERADOWN:false};
 
         function update(){
             appendKeys(idata,exchange.get('to-cockpit'));
@@ -181,6 +182,8 @@ var routine=function(require){
         logic.addSensor({keyboard:{types:['keydown','keyup'],keys:[83,40]}},function(e){triggers.BACK=e.type=='keydown';});
         logic.addSensor({keyboard:{types:['keydown','keyup'],keys:[65,37]}},function(e){triggers.LEFT=e.type=='keydown';});
         logic.addSensor({keyboard:{types:['keydown','keyup'],keys:[68,39]}},function(e){triggers.RIGHT=e.type=='keydown';});
+
+        logic.addSensor({keyboard:{type:'keydown',key:112}},function(e){toggles.HELP=true;});
 
         logic.addSensor({keyboard:{type:'keydown',key:84}},function(e){toggles.WHEELCHANGE=true;});
         logic.addSensor({keyboard:{type:'keydown',key:67}},function(e){toggles.COLOR=true;});
@@ -225,6 +228,56 @@ var routine=function(require){
 
         function updateMod(mod){
             if(isDefined(mod))mod.order(UPDATE);
+        }
+
+        var modGround=function(param){
+            var ob=makeOb('ground',param);
+            ob.order=function(type){
+                switch(type){
+                case INSTALL:
+                    ob.gobs=b4w_AddObj('ground',ob.Form);
+                    break;
+                case DEINSTALL:
+                    b4w_SetObj(ob.gobs);
+                    b4w_RemoveObj();
+                    break;
+                case UPDATE:
+                    var P=ob.parent.mods.chassis.P;
+                    b4w_SetObj(ob.gobs);
+                    b4w_Move(P.x,P.z,0);
+                    b4w_UpdateObj();
+                    break;
+                }
+            }
+            return ob;
+        }
+
+        var modPanel=function(param){
+            var ob=makeOb('panel',param);
+            ob.gobs=b4w_AddObj('panel',ob.Form);
+            ob.life=0;
+            ob.order=function(type){
+                switch(type){
+                case INSTALL:
+                    ob.life=ob.life>1?0:1000;
+                    break;
+                case DEINSTALL:
+                    break;
+                case UPDATE:
+                    ob.life--;
+                    if(ob.life>0){
+                        b4w_SetObj(ob.gobs);
+                        b4w_Scale(1.0);
+                        b4w_UpdateObj();
+                    } else {
+                        b4w_SetObj(ob.gobs);
+                        b4w_Scale(0.0);
+                        b4w_UpdateObj();
+                    }
+                    break;
+                }
+            }
+            return ob;
         }
 
         var modChassis=function(param){
@@ -294,29 +347,7 @@ var routine=function(require){
             }
             return ob;
         }
-
-        var modGround=function(param){
-            var ob=makeOb('ground',param);
-            ob.order=function(type){
-                switch(type){
-                case INSTALL:
-                    ob.gobs=b4w_AddObj('ground',ob.Form);
-                    break;
-                case DEINSTALL:
-                    b4w_SetObj(ob.gobs);
-                    b4w_RemoveObj();
-                    break;
-                case UPDATE:
-                    var P=ob.parent.mods.chassis.P;
-                    b4w_SetObj(ob.gobs);
-                    b4w_Move(P.x,P.z,0);
-                    b4w_UpdateObj();
-                    break;
-                }
-            }
-            return ob;
-        }
-        
+      
         var modWheels=function(param){
             var ob=makeOb('wheels',param);
             ob.order=function(type){
@@ -514,7 +545,6 @@ var routine=function(require){
                     for(var i=0;i<ob.traces.length;i++){
                         b4w_SetObj(ob.traces[i]);
                         b4w_SetZ(-(ob.traces.length-i)/(ob.traces.length)*3);
-                        //b4w_SetZ(0);
                         b4w_UpdateObj();
                     }
                     break;
@@ -544,6 +574,7 @@ var routine=function(require){
         var dist = 0;
         var ddist = 16;
         var car, cam;
+        
         var chassis=modChassis({B:74,T:80});
         var motors=modMotors();
         var carcass=modCarcass({Form:'carcass'});
@@ -553,7 +584,10 @@ var routine=function(require){
         var model=modModel();
 
         var ground=modGround({Form:'ground'});
+        var panel=modPanel({Form:'panel'});
+
         setupMod(model,ground);
+        setupMod(model,panel);
         
         setupMod(model,chassis);
         setupMod(model,motors);
@@ -561,12 +595,11 @@ var routine=function(require){
         setupMod(chassis,carcass);
         setupMod(chassis,tracks);
         setupMod(model,traces);
-        var ts=false;
+        var ts=0;
 
         var my_offset_vector = new Float32Array([7.0, 7.0, 2]);
 
         function update(){
-            console.log("robot update");
             var Time=new Date();
             SysDTime=(Time-SysTime)/1000;
             SysTime=Time;
@@ -589,14 +622,23 @@ var routine=function(require){
                 }
                 if(isDefined(cmd.powerL))motors.Power=[B2F(cmd.powerL),B2F(cmd.powerR)];
                 if(isDefined(cmd.WHEELCHANGE)){
-                    ts=!ts;
-                    if(ts){
+                    ts++;
+                    if(ts>2) ts=0;
+                    if(ts==0){
+                        wheels=modWheels({Bw:20,R:32,Form:'wheel'});
+                        tracks=modTracks({Width:11,Form:'track'});
+                        setupMod(chassis,wheels);
+                        setupMod(chassis,tracks)
+                        traces.Form='trace';
+                    }
+                    if(ts==1){
                         wheels=modWheels({Bw:34,R:55,Form:'wheelbig'});
                         tracks=modTracks2({Width:11});
                         setupMod(chassis,wheels);
                         setupMod(chassis,tracks)
                         traces.Form='trace_wheelbig';
-                    }else{
+                    }
+                    if(ts==2){
                         wheels=modWheels({Bw:50,R:20+2,Form:'wheelwide'});   
                         tracks=modTracks({Width:11,Form:'trackwide'});
                         setupMod(chassis,wheels);
@@ -604,6 +646,7 @@ var routine=function(require){
                         traces.Form='trace_trackwide';
                     }
                 }
+                if(isDefined(cmd.HELP))setupMod(model,panel);
                 SysMTime=SysTime;
             }
             updateMod(model);
@@ -626,6 +669,8 @@ var routine=function(require){
 
     vRobot.cam = m_scenes.get_active_camera();
     vRobot.car = b4w_GetForm('carcass');
+    vCockpit.panel = b4w_GetForm('control_panel');
+    
     vRobot.dist = 16;
 
     //b4w_RotateX(-Math.PI/2);
