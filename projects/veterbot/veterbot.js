@@ -80,7 +80,6 @@ function load_cb(data_id, success) {
     m_cfg.set("alpha", true);
     
     routine_start(require);
-
 }
 
 
