@@ -39,7 +39,8 @@ function b3d(require){
 
     this.AddObj=function(name,form_name){
         var obj={name:name,smat:tsr.create(),dmat:tsr.create(),/*time:SysTime,life:-1*/};
-        if(isDefined(name)&&isDefined(form_name)){
+        if(isDefined(name)){
+            if(isUndefined(form_name))form_name=name;
             var form=this.GetForm(form_name);
             if(name!=form_name){
                 obj.form=m_objects.copy(form,name,false);
@@ -110,6 +111,7 @@ function UInterface(config){
     var sensors={};
 
     function eventKey(e){
+        console.log(e.which);
         if(isUndefined(e))e=window.event;
         if(isDefined(sensors[e.type])){
         var keys = ["anykey",e.which];
@@ -184,11 +186,11 @@ function Cockpit(exchange){
     var lastkey=0;
     var idata={};
     var triggers={FORWARD:false,BACK:false,LEFT:false,RIGHT:false};
-    var toggles={HELP:false,WHEELCHANGE:false,RELOAD:false,ROTATE:false,COLOR:false,CAMERAUP:false,CAMERADOWN:false};
+    var toggles={HELP:false,WHEELCHANGE:false,RELOAD:false,ROTATE:false,COLOR:false,CAMERA:false};
 
     var config = {
         data:{toggles:toggles,triggers:triggers},
-        toggles:{HELP:[112], WHEELCHANGE:[84], COLOR:[67], ROTATE:[82], CAMERAUP:[61], CAMERADOWN:[173]},
+        toggles:{HELP:[112], WHEELCHANGE:[84], COLOR:[67], ROTATE:[82], CAMERA:[86]},
         triggers:{FORWARD:[87,38],BACK:[83,40],LEFT:[65,37],RIGHT:[68,39]}
     };
 
@@ -209,12 +211,21 @@ function Cockpit(exchange){
 const INSTALL   =0;
 const DEINSTALL =1;
 const UPDATE    =2;
+const SETUP     =3;
 
 function ModelSet(){
     function makeOb(tag,param,sparam){
         var ob={tag:tag,mods:{},gobs:[]};
         appendKeys(ob,param);
         appendKeys(ob,sparam);
+        ob.suborder=function(type){for(var key in ob.mods)if(isDefined(ob.mods[key]))ob.mods[key].order(type);}
+        ob.order=function(type){ob.suborder(type);}
+        return ob;
+    }
+
+    function makeMod(param){
+        var ob={mods:{},gobs:[]};
+        appendKeys(ob,param);
         ob.suborder=function(type){for(var key in ob.mods)if(isDefined(ob.mods[key]))ob.mods[key].order(type);}
         ob.order=function(type){ob.suborder(type);}
         return ob;
@@ -250,10 +261,6 @@ function ModelSet(){
 
 // Robot
 function Robot(b3d,exchange){
-    const INSTALL=0;
-    const DEINSTALL=1;
-    const UPDATE=2;
-
     var up_last = new Date();
     var up_delta = 0;
 
@@ -267,6 +274,15 @@ function Robot(b3d,exchange){
         appendKeys(ob,sparam);
         ob.suborder=function(type){for(var key in ob.mods)if(isDefined(ob.mods[key]))ob.mods[key].order(type);}
         ob.order=function(type){ob.suborder(type);}
+        return ob;
+    }
+
+    function makeMod(param,sparam){
+        var ob={mods:{},gobs:[]};
+        ob.suborder=function(type){for(var key in ob.mods)if(isDefined(ob.mods[key]))ob.mods[key].order(type);}
+        ob.order=function(type){ob.suborder(type);}
+        appendKeys(ob,param);
+        appendKeys(ob,sparam);
         return ob;
     }
 
@@ -294,102 +310,6 @@ function Robot(b3d,exchange){
 
     function updateMod(mod){
         if(isDefined(mod))mod.order(UPDATE);
-    }
-
-    var modPanel=function(param){
-        var ob=makeOb("panel",param);
-        ob.order=function(type){
-            switch(type){
-                case INSTALL:
-                    ob.life=1000;
-                    ob.gobs=b3d.AddObj("panel_me",ob.Form);
-                    b3d.AppendStiffViewport(m_b3d.GetForm("panel_me"),m_b3d.GetActiveCamera(),{left:0,bottom:0,distance:1});
-                    break;
-                case UPDATE:
-                    ob.life--;
-                    if(ob.life>0)break;
-                case DEINSTALL:
-                    b3d.SetObj(ob.gobs);
-                    b3d.RemoveObj();
-                    break;
-            }
-        }
-        return ob;
-    }
-
-    var modChassis=function(param){
-        var ob=makeOb("chassis",param,{A:[0,0],D:[0,0],W:0,P:pos(0,0,0)});
-        ob.order=function(type){
-            switch(type){
-                case INSTALL:
-                    ob.gobs=b3d.AddObj();
-                    ob.suborder(type);
-                    break;
-                case DEINSTALL:
-                    b3d.SetObj(ob.gobs);
-                    b3d.RemoveObj();
-                    ob.suborder(type);
-                    break;
-                case UPDATE:
-                    var Speed=ob.parent.mods.motors.Speed;
-                    var R=ob.mods.wheels.R;
-                    ob.P.y=R;
-                    var dv=2*Math.PI*getDelta()*R;
-                    ob.D=[dv*Speed[0],dv*Speed[1]];
-                    var a=(ob.D[0]-ob.D[1])/(2*ob.B);
-                    if(a!=0){
-                        var r=(ob.D[0]+ob.D[1])/(2*a);
-                        var rd=Math.abs(r)+ob.B;
-                        ob.P.x-=r*Math.cos(ob.W);
-                        ob.P.z+=r*Math.sin(ob.W);
-                        ob.W=slide(ob.W-a/Math.sqrt(rd*rd+ob.T*ob.T)*rd,2*Math.PI);
-                        ob.P.x+=r*Math.cos(ob.W);
-                        ob.P.z-=r*Math.sin(ob.W);
-                    }else{
-                        ob.P.x+=ob.D[0]*Math.sin(ob.W);
-                        ob.P.z+=ob.D[1]*Math.cos(ob.W);
-                    }
-                    ob.A[0]+=ob.D[0]/R;
-                    ob.A[1]+=ob.D[1]/R;
-
-                    b3d.SetObj(ob.gobs);
-                    b3d.Move(ob.P.x,ob.P.z,ob.P.y);
-                    b3d.RotateZ(-ob.W);
-                    b3d.StatePush();
-                    ob.suborder(type);
-                    b3d.StatePop();
-                    b3d.UpdateObj();
-                    break;
-            }
-        }
-        return ob;
-    }
-
-    var modCarcass=function(param){
-        var ob=makeOb("carcass",param);
-        ob.bodyA=b3d.GetForm("bodyA");
-        ob.bodyM=b3d.GetForm("bodyM");
-        ob.bodyT=b3d.GetForm("bodyT");
-        ob.order=function(type){
-            switch(type){
-                case INSTALL:
-                    ob.gobs=b3d.AddObj("carcass",ob.Form);
-                    m_b3d.AppendSemiSoftCam(m_b3d.GetActiveCamera(),m_b3d.GetForm("carcass"), new Float32Array([7.0, 7.0, 2]), 12);
-                    break;
-                case DEINSTALL:
-                    b3d.SetObj(ob.gobs);
-                    b3d.RemoveObj();
-                    break;
-                case UPDATE:
-                    b3d.SetObj(ob.gobs);
-                    b3d.UpdateObj();
-                    b3d.SetNodematRGB(ob.bodyA,["white","RGB"],bodycolor[0],bodycolor[1],bodycolor[2]);
-                    //b3d.SetNodematRGB(ob.bodyM,["white","RGB"],bodycolor[0],bodycolor[1],bodycolor[2]);
-                    //b3d.SetNodematRGB(ob.bodyT,["white","RGB"],bodycolor[0],bodycolor[1],bodycolor[2]);
-                    break;
-            }
-        }
-        return ob;
     }
 
     var modWheels=function(param){
@@ -596,54 +516,160 @@ function Robot(b3d,exchange){
         return ob;
     }
 
-    var modMotors=function(param){
-        var ob=makeOb("motors",param,{Power:[0,0],Speed:[0,0],SpeedMax:2,SpeedUp:2});
-        ob.order=function(type){
-            switch(type){
-                case UPDATE:
-                    for(var i in [0,1]) ob.Speed[i]=limita(ob.Speed[i]+limita(ob.Power[i]*ob.SpeedMax-ob.Speed[i],ob.SpeedUp*getDelta()),ob.SpeedMax);
-                    break;
-                }
-        }
-        return ob;
-    }
-
-    var modModel=function(param){
-        var ob=makeOb("model");
-        return ob;
-    }
-
-    var chassis=modChassis({B:74,T:80});
-    var motors=modMotors();
-    var carcass=modCarcass({Form:"carcass"});
     var wheels=modWheels({Bw:20,R:30+2,Form:"wheel"});
     var tracks=modTracks({Width:11,Form:"track"});
     var traces=modTraces({Form:"trace_track"});
-    var model=modModel();
     var bodycolor=[1,1,1];
 
-
-    var ground=makeOb("ground",{Form:"ground"});
-    ground.order=function(type){
-        switch(type){
-            case INSTALL:
-                this.gobs=b3d.AddObj("ground",this.Form);
-                break;
-            case DEINSTALL:
-                b3d.SetObj(this.gobs);
-                b3d.RemoveObj();
-                break;
-            case UPDATE:
-                var P=this.parent.mods.chassis.P;
-                b3d.SetObj(this.gobs);
-                b3d.Move(P.x,P.z,0);
-                b3d.UpdateObj();
-                break;
+    var config = {
+        model:{
+        },
+        ground:{
+            tag:"ground",
+            order:function(type){
+                switch(type){
+                case INSTALL:
+                    this.gobs=b3d.AddObj(this.tag);
+                    break;
+                case DEINSTALL:
+                    b3d.SetObj(this.gobs);
+                    b3d.RemoveObj();
+                    break;
+                case UPDATE:
+                    var P=this.parent.mods.chassis.P;
+                    b3d.SetObj(this.gobs);
+                    b3d.Move(P.x,P.z,0);
+                    b3d.UpdateObj();
+                    break;
+                }
+            }
+        },
+        panel:{
+            tag:"panel",
+            order:function(type){
+                switch(type){
+                    case INSTALL:
+                        this.life=1000;
+                        this.gobs=b3d.AddObj(this.tag+"me",this.tag);
+                        b3d.AppendStiffViewport(m_b3d.GetForm(this.tag+"me"),m_b3d.GetActiveCamera(),{left:0,bottom:0,distance:1});
+                        break;
+                    case UPDATE:
+                        this.life--;
+                        if(this.life>0)break;
+                    case DEINSTALL:
+                        b3d.SetObj(this.gobs);
+                        b3d.RemoveObj();
+                        break;
+                }
+            }
+        },
+        motors:{
+            tag:"motors",
+            Power:[0,0],
+            Speed:[0,0],
+            SpeedMax:2,
+            SpeedUp:1,
+            order:function(type,param){
+                switch(type){
+                    case SETUP:
+                        this.Power = param;
+                    case UPDATE:
+                        for(var i in [0,1]) this.Speed[i]=limita(this.Speed[i]+limita(this.Power[i]*this.SpeedMax-this.Speed[i],this.SpeedUp*getDelta()),this.SpeedMax);
+                        break;
+                }
+            }
+        },
+        chassis:{
+            tag:"chassis",
+            A:[0,0],
+            D:[0,0],
+            W:0,
+            P:pos(0,0,0),
+            order:function(type){
+                switch(type){
+                    case INSTALL:
+                        this.gobs=b3d.AddObj();
+                        this.suborder(type);
+                        break;
+                    case DEINSTALL:
+                        b3d.SetObj(this.gobs);
+                        b3d.RemoveObj();
+                        this.suborder(type);
+                        break;
+                    case UPDATE:
+                        var Speed=this.parent.mods.motors.Speed;
+                        var R=this.mods.wheels.R;
+                        this.P.y=R;
+                        var dv=2*Math.PI*getDelta()*R;
+                        this.D=[dv*Speed[0],dv*Speed[1]];
+                        var a=(this.D[0]-this.D[1])/(2*this.B);
+                        if(a!=0){
+                            var r=(this.D[0]+this.D[1])/(2*a);
+                            var rd=Math.abs(r)+this.B;
+                            this.P.x-=r*Math.cos(this.W);
+                            this.P.z+=r*Math.sin(this.W);
+                            this.W=slide(this.W-a/Math.sqrt(rd*rd+this.T*this.T)*rd,2*Math.PI);
+                            this.P.x+=r*Math.cos(this.W);
+                            this.P.z-=r*Math.sin(this.W);
+                        }else{
+                            this.P.x+=this.D[0]*Math.sin(this.W);
+                            this.P.z+=this.D[1]*Math.cos(this.W);
+                        }
+                        this.A[0]+=this.D[0]/R;
+                        this.A[1]+=this.D[1]/R;
+                        b3d.SetObj(this.gobs);
+                        b3d.Move(this.P.x,this.P.z,this.P.y);
+                        b3d.RotateZ(-this.W);
+                        b3d.StatePush();
+                        this.suborder(type);
+                        b3d.StatePop();
+                        b3d.UpdateObj();
+                        break;
+                }
+            }
+        },
+        carcass:{
+            tag:"carcass",
+            camera:1,
+            colorbody:[1,1,1],
+            body:b3d.GetForm("bodyA"),
+            order:function(type){
+                switch(type){
+                    case INSTALL:
+                        this.gobs=b3d.AddObj(this.tag);
+                        m_b3d.AppendSemiSoftCam(m_b3d.GetActiveCamera(),m_b3d.GetForm("carcass"), new Float32Array([7.0, 7.0, this.camera*2]), 12);
+                        break;
+                    case DEINSTALL:
+                        b3d.SetObj(this.gobs);
+                        b3d.RemoveObj();
+                        break;
+                    case UPDATE:
+                        b3d.SetObj(this.gobs);
+                        b3d.UpdateObj();
+                        break;
+                    case 100:
+                        this.camera+=2;
+                        if(this.camera>8)this.camera=0;
+                        this.order(INSTALL);
+                        break;
+                    case 101:
+                        bodycolor=[Math.random(),Math.random(),Math.random()];
+                        b3d.SetNodematRGB(this.body,["white","RGB"],bodycolor[0],bodycolor[1],bodycolor[2]);
+                        break;
+                }
+            }
         }
-    };
+    }
+        
+    var model   = makeMod(config.model);
+    var panel   = makeMod(config.panel);
+    var ground  = makeMod(config.ground);
+    var motors  = makeMod(config.motors);
+    var chassis = makeMod(config.chassis,{B:74,T:80});
+    var carcass = makeMod(config.carcass);
 
-    var panel=modPanel({Form:"panel"});
     var ts=0;
+    var vs=0;
     var ready=true;
     
     setupMod(model,ground);
@@ -666,7 +692,7 @@ function Robot(b3d,exchange){
                 //}
             }else{
                 //removeMod(model,panel);
-                if(isDefined(cmd.powerL))motors.Power=[B2F(cmd.powerL),B2F(cmd.powerR)];
+                if(isDefined(cmd.powerL))motors.order(SETUP,[B2F(cmd.powerL),B2F(cmd.powerR)]);
                 if(isDefined(cmd.WHEELCHANGE)){
                     ts++;
                     if(ts>2) ts=0;
@@ -696,9 +722,8 @@ function Robot(b3d,exchange){
                     if(hasMod(model,panel))removeMod(model,panel)
                     else setupMod(model,panel);
                 }
-                if(isDefined(cmd.COLOR)){
-                    bodycolor=[Math.random(),Math.random(),Math.random()];
-                }
+                if(isDefined(cmd.CAMERA))carcass.order(100);
+                if(isDefined(cmd.COLOR))carcass.order(101);
             }
             updateMod(model);
 
