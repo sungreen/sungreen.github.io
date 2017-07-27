@@ -13,7 +13,6 @@ function appendItems(dest,sour){if(isDefined(sour))for(var i=0;i<sour.length;i++
 function F2B(f){return (f*127+127)|0;}
 function B2F(b){return (b-127)/127;}
 
-
 //3d tools
 function b3d(require){
     var m_main      = require("main");
@@ -27,6 +26,7 @@ function b3d(require){
     var m_objects   = require("objects");
     var m_material  = require("material");
     var m_trans     = require("transform");
+    var m_sfx       = require("sfx");
 
     var SysCurrent={smat:tsr.create(),dmat:tsr.create()};
     var SysWorld=tsr.create();
@@ -103,6 +103,8 @@ function b3d(require){
     this.AppendSemiSoftCam=function(cam,obj,offset,dist){m_cons.append_semi_soft_cam(cam,obj,offset,dist);}
     this.AppendStiffViewport=function(obj,cam,position){m_cons.append_stiff_viewport(obj,cam,position);}
     this.SetNodematRGB=function(obj,mat,r,g,b){m_material.set_nodemat_rgb(obj,mat,r,g,b);}
+
+    this.SoundPlay=function(obj,w,d){m_sfx.play(obj,w,d);}
 }
 
 
@@ -569,12 +571,16 @@ function Robot(b3d,exchange){
             Speed:[0,0],
             SpeedMax:2,
             SpeedUp:1,
+            Sound:{},
             order:function(type,param){
                 switch(type){
                     case SETUP:
+                        this.Sound = b3d.GetForm("Speaker");
                         this.Power = param;
                     case UPDATE:
                         for(var i in [0,1]) this.Speed[i]=limita(this.Speed[i]+limita(this.Power[i]*this.SpeedMax-this.Speed[i],this.SpeedUp*getDelta()),this.SpeedMax);
+                        var pows = this.Power[0]*this.Power[0]+this.Power[1]*this.Power[1];
+                        if(pows>0) b3d.SoundPlay(this.Sound);
                         break;
                 }
             }
