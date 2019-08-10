@@ -1,0 +1,399 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <tab name="Init" type="InitTab" active="false" scrollx="172.50837500615057" scrolly="245.14348027189817" scale="0.9079388158218448">
+    <block type="initPreloader" id="MWmWcS[37qbr#MzrzsS~" x="-190" y="-270">
+      <statement name="DO_PROGRESS">
+        <block type="setHTMLElemStyle" id=":u9=QmY%5}`wx,1u!/DY">
+          <field name="PROPERTY">width</field>
+          <field name="PARENT">FALSE</field>
+          <value name="VALUE">
+            <block type="text_join" id="oh?/[4~9F(5f-F?0pg_%">
+              <mutation items="2"></mutation>
+              <value name="ADD0">
+                <block type="percentage" id="V8JqNIMCp}qMwkN.,;9|"></block>
+              </value>
+              <value name="ADD1">
+                <block type="text" id="%.CXB^}^UhnZuf^3lP%K">
+                  <field name="TEXT">%</field>
+                </block>
+              </value>
+            </block>
+          </value>
+          <value name="ID">
+            <block type="text" id="Z84TZ[-ues+k[mV3PI%i">
+              <field name="TEXT">progress_bar</field>
+            </block>
+          </value>
+        </block>
+      </statement>
+    </block>
+  </tab>
+  <tab name="Main" type="MainTab" active="true" scrollx="960.0972900390625" scrolly="1344.491070569221" scale="0.9321534458262513">
+    <block type="whenHovered" id="o_[_ciSmFkc5I~CP`G$e" x="-690" y="-1350">
+      <value name="VALUE">
+        <block type="allObjectList" id="IufSCvchDX.P@aDpLJ!F"></block>
+      </value>
+      <statement name="DO_OVER">
+        <block type="controls_ifelse" id="2zmdWs:QRiSKnR!b|5*p">
+          <value name="IF0">
+            <block type="logic_compare" id="Jk*gKvyzW$zDjJFc,P.|">
+              <field name="OP">EQ</field>
+              <value name="A">
+                <block type="hoveredObject" id="c3n{)f_5r`P.w,XnH_KM"></block>
+              </value>
+              <value name="B">
+                <block type="objectList" id="fFFZ(o1ijktoLTzNJ=^o">
+                  <field name="FIELDNAME">_dome</field>
+                </block>
+              </value>
+            </block>
+          </value>
+          <statement name="DO0">
+            <block type="outline" id="T1NX66ug61c0snm+f*(B">
+              <field name="DO_WHAT">DISABLE</field>
+              <value name="TARGET">
+                <block type="hoveredObject" id="VVI_i|.R[2_LUu|pRC$a"></block>
+              </value>
+              <next>
+                <block type="setHTMLElemStyle" id="RXNnO*=puX%WJNajaD?x">
+                  <field name="PROPERTY">cursor</field>
+                  <field name="PARENT">FALSE</field>
+                  <value name="VALUE">
+                    <block type="text" id="BYrBR?P-le-j7@0]iv!*">
+                      <field name="TEXT">default</field>
+                    </block>
+                  </value>
+                  <value name="ID">
+                    <block type="HTMLBody" id="Ek}~0{.+N~rDNmAt]56^"></block>
+                  </value>
+                </block>
+              </next>
+            </block>
+          </statement>
+          <statement name="ELSE">
+            <block type="setHTMLElemStyle" id="^*K)O6NbB*+e^hq.2LZ-">
+              <field name="PROPERTY">cursor</field>
+              <field name="PARENT">FALSE</field>
+              <value name="VALUE">
+                <block type="text" id="U~*/yLNc^=T=,@i!-V}^">
+                  <field name="TEXT">pointer</field>
+                </block>
+              </value>
+              <value name="ID">
+                <block type="HTMLBody" id="dbA[%%w5#WN|eH/,C4#c"></block>
+              </value>
+              <next>
+                <block type="outline" id="WsSO}11_U{Gp=T1GiHK[">
+                  <field name="DO_WHAT">ENABLE</field>
+                  <value name="TARGET">
+                    <block type="hoveredObject" id="/WARGK4AkQS;trgPy=Ky"></block>
+                  </value>
+                </block>
+              </next>
+            </block>
+          </statement>
+          <next>
+            <block type="updateTextObject" id="s}gxvB:C-G+m50e5/)X]">
+              <value name="VALUE1">
+                <block type="objectList" id="jBO`w*uCRBQ*)YmHTKyf">
+                  <field name="FIELDNAME">_panel_main_text</field>
+                </block>
+              </value>
+              <value name="VALUE2">
+                <shadow type="text" id="r8+GR_;75-1([^@SCSrg">
+                  <field name="TEXT">Привет, Комсомол!</field>
+                </shadow>
+                <block type="dictGet" id="[BxE{H/e)64y?D$]Kd8o">
+                  <value name="DICT">
+                    <block type="getObjCustomProps" id="x*Hm5xdD];R~XO^nPPp1">
+                      <value name="VALUE">
+                        <block type="objectList" id="^jXpnK7R|$A.nbYQSqbl">
+                          <field name="FIELDNAME">_panel_main_text</field>
+                        </block>
+                      </value>
+                    </block>
+                  </value>
+                  <value name="KEY">
+                    <shadow type="text" id="_QY8Lj-C_XWDPDbS5v^N">
+                      <field name="TEXT">prop</field>
+                    </shadow>
+                  </value>
+                </block>
+              </value>
+              <next>
+                <block type="controls_if" id="H+8Af}d1(wI/-tmS7j^5">
+                  <value name="IF0">
+                    <block type="logic_compare" id="W3cHDerfQ*YFfyleC{0=">
+                      <field name="OP">NEQ</field>
+                      <value name="A">
+                        <block type="getHTMLElemAttribute" id="VYq,RG`eF2a2T2BC_DaG">
+                          <field name="ATTRIBUTE">id</field>
+                          <field name="PARENT">FALSE</field>
+                          <value name="ID">
+                            <block type="text" id="lEG}+^Ee?aQe@e7eQ|Lx">
+                              <field name="TEXT">alert</field>
+                            </block>
+                          </value>
+                        </block>
+                      </value>
+                      <value name="B">
+                        <block type="text" id="@nM_brOA*sFj_Wm[@vG|">
+                          <field name="TEXT">alert</field>
+                        </block>
+                      </value>
+                    </block>
+                  </value>
+                  <statement name="DO0">
+                    <block type="addHTMLElement" id="3hwVa$./e%FmvC[JMMa1">
+                      <field name="ELEMENT">div</field>
+                      <value name="ID">
+                        <block type="text" id="3^Gx!U_/`B7j{(*^9kEB">
+                          <field name="TEXT">alert</field>
+                        </block>
+                      </value>
+                    </block>
+                  </statement>
+                  <next>
+                    <block type="controls_ifelse" id="W[UNJ:+!AKyc1vUi*8F]">
+                      <value name="IF0">
+                        <block type="logic_compare" id="6G;{8OWuMLap^t}H$`:~">
+                          <field name="OP">EQ</field>
+                          <value name="A">
+                            <block type="dictGet" id=";L@+g3`wk[Zq!vZH$z{s">
+                              <value name="DICT">
+                                <block type="getObjCustomProps" id="Mn0*Q$2@[,g35}]^`_Pu">
+                                  <value name="VALUE">
+                                    <block type="hoveredObject" id="|xqj(Ru!`9{2xCbCNrO*"></block>
+                                  </value>
+                                </block>
+                              </value>
+                              <value name="KEY">
+                                <shadow type="text" id="Z0PWK6!xJhb[)lW|I*`o">
+                                  <field name="TEXT">prop</field>
+                                </shadow>
+                                <block type="text" id="?ny:dKt6bEo|q/djQn?F">
+                                  <field name="TEXT">prop</field>
+                                </block>
+                              </value>
+                            </block>
+                          </value>
+                          <value name="B">
+                            <block type="text" id="+k5R!u;sZ(7Q!p|f{[xN">
+                              <field name="TEXT">undefined</field>
+                            </block>
+                          </value>
+                        </block>
+                      </value>
+                      <statement name="DO0">
+                        <block type="setHTMLElemAttribute" id="Dwq3NiTM6hhE=E*$R#KS">
+                          <field name="ATTRIBUTE">innerHTML</field>
+                          <field name="PARENT">FALSE</field>
+                          <value name="VALUE">
+                            <block type="text" id="?HQbO)WlWmQkJ4vsFqJ{">
+                              <field name="TEXT">default</field>
+                            </block>
+                          </value>
+                          <value name="ID">
+                            <block type="text" id="czL~Y@S^,[Tg?RR;0x?M">
+                              <field name="TEXT">alert</field>
+                            </block>
+                          </value>
+                        </block>
+                      </statement>
+                      <statement name="ELSE">
+                        <block type="setHTMLElemAttribute" id="|Y,r)#DEiGERk=0Ueb!n">
+                          <field name="ATTRIBUTE">innerHTML</field>
+                          <field name="PARENT">FALSE</field>
+                          <value name="VALUE">
+                            <block type="text_join" id="g!_q4.kh9kH/.l6Q(s]8">
+                              <mutation items="2"></mutation>
+                              <value name="ADD0">
+                                <block type="text" id="_@C1b5J]9G,uBf%|=YMQ">
+                                  <field name="TEXT">&lt;span id="close_btn"&gt;&amp;times;&lt;/span&gt;</field>
+                                </block>
+                              </value>
+                              <value name="ADD1">
+                                <block type="dictGet" id="xVlV-vUpx@,fU?O~TV;?">
+                                  <value name="DICT">
+                                    <block type="getObjCustomProps" id="MqcG+S|WXlc+04{]Ny?n">
+                                      <value name="VALUE">
+                                        <block type="hoveredObject" id="[L;^8lqvmak~BLJW}fAg"></block>
+                                      </value>
+                                    </block>
+                                  </value>
+                                  <value name="KEY">
+                                    <shadow type="text" id="Z0PWK6!xJhb[)lW|I*`o">
+                                      <field name="TEXT">prop</field>
+                                    </shadow>
+                                    <block type="text" id="ByPa]+#w~OW5fcygGvJ,">
+                                      <field name="TEXT">prop</field>
+                                    </block>
+                                  </value>
+                                </block>
+                              </value>
+                            </block>
+                          </value>
+                          <value name="ID">
+                            <block type="text" id="mob0W+eoE{@R9f}`!cqa">
+                              <field name="TEXT">alert</field>
+                            </block>
+                          </value>
+                          <next>
+                            <block type="setHTMLElemAttribute" id="Y1D;J.Ne[#y5_wJ2u|w+">
+                              <field name="ATTRIBUTE">style</field>
+                              <field name="PARENT">FALSE</field>
+                              <value name="VALUE">
+                                <block type="text_join" id="n[O/,4=tHBL),+%!x^No">
+                                  <mutation items="11"></mutation>
+                                  <value name="ADD0">
+                                    <block type="text" id="U_ft4|6s6|8$0`w0Zh?Z">
+                                      <field name="TEXT">position: absolute;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD1">
+                                    <block type="text" id="|dmbc6F#ZnfUSD:46~k,">
+                                      <field name="TEXT">padding: 20px;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD2">
+                                    <block type="text" id=";tJm{.Dt77K!I$=a(6E.">
+                                      <field name="TEXT">background-color: #AA22FF;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD3">
+                                    <block type="text" id="UB)eOhtcN1NSMf043t77">
+                                      <field name="TEXT">color: white;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD4">
+                                    <block type="text" id="KsAZ[F#/qHEGPA4or:g$">
+                                      <field name="TEXT">opacity: 0.5;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD5">
+                                    <block type="text" id="+S|@jiX)6I5apFjC)u#I">
+                                      <field name="TEXT">transition: opacity 0.6s;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD6">
+                                    <block type="text" id="Oah_WrZ/25d!+Ghjv;)[">
+                                      <field name="TEXT">left: 0px;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD7">
+                                    <block type="text" id="b4(2JL8j^=;6G,q0tG=s">
+                                      <field name="TEXT">right: 0px;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD8">
+                                    <block type="text" id="JD*cuAI3tzuk7VUK*3tP">
+                                      <field name="TEXT">bottom: 0px;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD9">
+                                    <block type="text" id="[G1#j+DQt,|8s`J`T)^S">
+                                      <field name="TEXT">font-family: sans-serif;</field>
+                                    </block>
+                                  </value>
+                                  <value name="ADD10">
+                                    <block type="text" id="cXgH@@r-^Dx-/`U;4_=M">
+                                      <field name="TEXT">text-align: center;</field>
+                                    </block>
+                                  </value>
+                                </block>
+                              </value>
+                              <value name="ID">
+                                <block type="text" id="R{/se+;/E?}7)1YRe2{,">
+                                  <field name="TEXT">alert</field>
+                                </block>
+                              </value>
+                              <next>
+                                <block type="setHTMLElemAttribute" id="9bTGaMg6hUMI:C;9j.7m">
+                                  <field name="ATTRIBUTE">style</field>
+                                  <field name="PARENT">FALSE</field>
+                                  <value name="VALUE">
+                                    <block type="text_join" id="wOdcuaH0i+~$9!f]^=+j">
+                                      <mutation items="6"></mutation>
+                                      <value name="ADD0">
+                                        <block type="text" id="4e%bRS*[p:|(K=b55m{{">
+                                          <field name="TEXT">font-weight: bold;</field>
+                                        </block>
+                                      </value>
+                                      <value name="ADD1">
+                                        <block type="text" id="$V`z~8Hl/xrB[pRi=29p">
+                                          <field name="TEXT">float: right;</field>
+                                        </block>
+                                      </value>
+                                      <value name="ADD2">
+                                        <block type="text" id="[VLldwxH`JYeRM?%M6`*">
+                                          <field name="TEXT">font-size: 36px;</field>
+                                        </block>
+                                      </value>
+                                      <value name="ADD3">
+                                        <block type="text" id="#lQG:XVZm^zNX9:zvx!M">
+                                          <field name="TEXT">line-height: 20px;</field>
+                                        </block>
+                                      </value>
+                                      <value name="ADD4">
+                                        <block type="text" id="e@$KOFcbKqnek5iy[otf">
+                                          <field name="TEXT">cursor: pointer;</field>
+                                        </block>
+                                      </value>
+                                      <value name="ADD5">
+                                        <block type="text" id="5-WO.]HK(/z836ZS8.3_">
+                                          <field name="TEXT">transition: 0.3s;</field>
+                                        </block>
+                                      </value>
+                                    </block>
+                                  </value>
+                                  <value name="ID">
+                                    <block type="text" id=",3!R1FOQ-nQ7fafA]*0W">
+                                      <field name="TEXT">close_btn</field>
+                                    </block>
+                                  </value>
+                                </block>
+                              </next>
+                            </block>
+                          </next>
+                        </block>
+                      </statement>
+                    </block>
+                  </next>
+                </block>
+              </next>
+            </block>
+          </next>
+        </block>
+      </statement>
+      <statement name="DO_OUT">
+        <block type="setHTMLElemStyle" id="2(wC`J%x{;}#!)RFRQp)">
+          <field name="PROPERTY">cursor</field>
+          <field name="PARENT">FALSE</field>
+          <value name="VALUE">
+            <block type="text" id="dY1ON7cgPEn~_ap*HQ5.">
+              <field name="TEXT">default</field>
+            </block>
+          </value>
+          <value name="ID">
+            <block type="HTMLBody" id="@{~WaxB$eO[PK!gy=Cs3"></block>
+          </value>
+          <next>
+            <block type="outline" id="O]D~RUa3x?Nv(E*RRss=">
+              <field name="DO_WHAT">DISABLE</field>
+              <value name="TARGET">
+                <block type="hoveredObject" id="Z]UT}ocH?`=w9er%R?`S"></block>
+              </value>
+            </block>
+          </next>
+        </block>
+      </statement>
+    </block>
+    <block type="logic_compare" id="h{-:3^6{o{$l(-eDC`P/" x="-1490" y="-1170">
+      <field name="OP">EQ</field>
+    </block>
+    <block type="logic_compare" id="}2]:UO!L{J?yn4=nMU/P" x="-1430" y="-1010">
+      <field name="OP">EQ</field>
+    </block>
+  </tab>
+  <tab name="Code" type="SecondaryTab" active="false" scrollx="0" scrolly="0" scale="0.9"></tab>
+  <editorsettings width="1512" height="1151"></editorsettings>
+</xml>
