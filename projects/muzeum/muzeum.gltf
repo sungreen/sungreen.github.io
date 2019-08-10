@@ -3,9 +3,9 @@
         {
             "bufferView" : 0, 
             "componentType" : 5121, 
-            "count" : 240, 
+            "count" : 6, 
             "max" : [
-                239
+                3
             ], 
             "min" : [
                 0
@@ -15,41 +15,41 @@
         {
             "bufferView" : 1, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 4, 
             "max" : [
-                0.9510578513145447, 
                 1.0, 
-                0.9999999403953552
+                0.0, 
+                1.0
             ], 
             "min" : [
-                -0.9510578513145447, 
                 -1.0, 
-                -0.9999999403953552
+                0.0, 
+                -1.0
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 2, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 4, 
             "max" : [
-                0.9920774102210999, 
-                0.9435237646102905, 
-                0.9435215592384338
+                0.0, 
+                1.0, 
+                -0.0
             ], 
             "min" : [
-                -0.9920774102210999, 
-                -0.9435237646102905, 
-                -0.9435215592384338
+                0.0, 
+                1.0, 
+                -0.0
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 3, 
             "componentType" : 5121, 
-            "count" : 240, 
+            "count" : 6, 
             "max" : [
-                239
+                3
             ], 
             "min" : [
                 0
@@ -59,41 +59,41 @@
         {
             "bufferView" : 4, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 4, 
             "max" : [
-                0.9510578513145447, 
                 1.0, 
-                0.9999999403953552
+                0.0, 
+                1.0
             ], 
             "min" : [
-                -0.9510578513145447, 
                 -1.0, 
-                -0.9999999403953552
+                0.0, 
+                -1.0
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 5, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 4, 
             "max" : [
-                0.9920774102210999, 
-                0.9435237646102905, 
-                0.9435215592384338
+                0.0, 
+                1.0, 
+                -0.0
             ], 
             "min" : [
-                -0.9920774102210999, 
-                -0.9435237646102905, 
-                -0.9435215592384338
+                0.0, 
+                1.0, 
+                -0.0
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 6, 
-            "componentType" : 5121, 
-            "count" : 240, 
+            "componentType" : 5125, 
+            "count" : 267264, 
             "max" : [
-                239
+                178175
             ], 
             "min" : [
                 0
@@ -103,85 +103,73 @@
         {
             "bufferView" : 7, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 178176, 
             "max" : [
-                0.9510578513145447, 
-                1.0, 
-                0.9999999403953552
+                -7.057977676391602, 
+                1.9156115055084229, 
+                1.9467921257019043
             ], 
             "min" : [
-                -0.9510578513145447, 
-                -1.0, 
-                -0.9999999403953552
+                -9.949930191040039, 
+                -6.945516109466553, 
+                -4.176445484161377
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 8, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 178176, 
             "max" : [
-                0.9920774102210999, 
-                0.9435237646102905, 
-                0.9435215592384338
+                0.9999982118606567, 
+                0.8500006198883057, 
+                0.7380500435829163
             ], 
             "min" : [
-                -0.9920774102210999, 
-                -0.9435237646102905, 
-                -0.9435215592384338
+                -0.8919365406036377, 
+                -0.691400408744812, 
+                -0.6008569598197937
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 9, 
-            "componentType" : 5121, 
-            "count" : 240, 
+            "componentType" : 5126, 
+            "count" : 178176, 
             "max" : [
-                239
+                1.0, 
+                0.552754282951355, 
+                -0.0, 
+                1.0
             ], 
             "min" : [
-                0
+                -0.5942627787590027, 
+                -0.6733092665672302, 
+                -1.0, 
+                -1.0
             ], 
-            "type" : "SCALAR"
+            "type" : "VEC4"
         }, 
         {
             "bufferView" : 10, 
             "componentType" : 5126, 
-            "count" : 240, 
+            "count" : 178176, 
             "max" : [
-                0.9510578513145447, 
-                1.0, 
-                0.9999999403953552
+                0.5695351362228394, 
+                0.745605081319809
             ], 
             "min" : [
-                -0.9510578513145447, 
-                -1.0, 
-                -0.9999999403953552
+                0.4692481756210327, 
+                0.4373764991760254
             ], 
-            "type" : "VEC3"
+            "type" : "VEC2"
         }, 
         {
             "bufferView" : 11, 
-            "componentType" : 5126, 
-            "count" : 240, 
-            "max" : [
-                0.9920774102210999, 
-                0.9435237646102905, 
-                0.9435215592384338
-            ], 
-            "min" : [
-                -0.9920774102210999, 
-                -0.9435237646102905, 
-                -0.9435215592384338
-            ], 
-            "type" : "VEC3"
-        }, 
-        {
-            "bufferView" : 12, 
             "componentType" : 5123, 
-            "count" : 3072, 
+            "count" : 12288, 
             "max" : [
-                587
+                2150
             ], 
             "min" : [
                 0
@@ -189,65 +177,141 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 13, 
+            "bufferView" : 12, 
             "componentType" : 5126, 
-            "count" : 588, 
+            "count" : 2151, 
             "max" : [
-                10.269652366638184, 
-                10.269659042358398, 
-                10.2696533203125
+                9.999994277954102, 
+                9.999972343444824, 
+                9.999991416931152
             ], 
             "min" : [
-                -10.269652366638184, 
-                -10.269652366638184, 
-                -10.269659996032715
+                -9.999990463256836, 
+                -9.999975204467773, 
+                -9.999995231628418
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 13, 
+            "componentType" : 5126, 
+            "count" : 2151, 
+            "max" : [
+                1.0, 
+                0.9987487196922302, 
+                1.0
+            ], 
+            "min" : [
+                -0.9988097548484802, 
+                -0.9987487196922302, 
+                -1.0
             ], 
             "type" : "VEC3"
         }, 
         {
             "bufferView" : 14, 
             "componentType" : 5126, 
-            "count" : 588, 
+            "count" : 2151, 
             "max" : [
                 1.0, 
-                0.9951781034469604, 
+                0.042852044105529785, 
+                0.9992227554321289, 
                 1.0
             ], 
             "min" : [
                 -1.0, 
-                -0.9951781034469604, 
-                -1.0
-            ], 
-            "type" : "VEC3"
-        }, 
-        {
-            "bufferView" : 15, 
-            "componentType" : 5126, 
-            "count" : 588, 
-            "max" : [
-                1.0, 
-                0.09696369618177414, 
-                1.0, 
-                1.0
-            ], 
-            "min" : [
-                -1.0, 
-                -0.09786594659090042, 
+                -0.042855534702539444, 
                 -1.0, 
                 1.0
             ], 
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 16, 
+            "bufferView" : 15, 
             "componentType" : 5126, 
-            "count" : 588, 
+            "count" : 2151, 
+            "max" : [
+                0.9999999403953552, 
+                1.0
+            ], 
+            "min" : [
+                0.0, 
+                0.0
+            ], 
+            "type" : "VEC2"
+        }, 
+        {
+            "bufferView" : 16, 
+            "componentType" : 5123, 
+            "count" : 49152, 
+            "max" : [
+                8464
+            ], 
+            "min" : [
+                0
+            ], 
+            "type" : "SCALAR"
+        }, 
+        {
+            "bufferView" : 17, 
+            "componentType" : 5126, 
+            "count" : 8465, 
+            "max" : [
+                11.494919776916504, 
+                11.634223937988281, 
+                11.494918823242188
+            ], 
+            "min" : [
+                -11.494917869567871, 
+                -11.63421630859375, 
+                -11.494922637939453
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 18, 
+            "componentType" : 5126, 
+            "count" : 8465, 
+            "max" : [
+                1.0, 
+                0.9951170086860657, 
+                1.0
+            ], 
+            "min" : [
+                -1.0, 
+                -0.9951170086860657, 
+                -1.0
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 19, 
+            "componentType" : 5126, 
+            "count" : 8465, 
+            "max" : [
+                1.0, 
+                0.09859967976808548, 
+                1.0, 
+                1.0
+            ], 
+            "min" : [
+                -1.0, 
+                -0.09854128956794739, 
+                -1.0, 
+                1.0
+            ], 
+            "type" : "VEC4"
+        }, 
+        {
+            "bufferView" : 20, 
+            "componentType" : 5126, 
+            "count" : 8465, 
             "max" : [
                 1.0, 
                 0.9999999701976776
             ], 
             "min" : [
-                0.0002130270004272461, 
+                0.00021310150623321533, 
                 0.0006886720657348633
             ], 
             "type" : "VEC2"
@@ -260,110 +324,134 @@
     "bufferViews" : [
         {
             "buffer" : 0, 
-            "byteLength" : 240, 
+            "byteLength" : 6, 
             "byteOffset" : 0, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 240, 
+            "byteLength" : 48, 
+            "byteOffset" : 8, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 3120, 
+            "byteLength" : 48, 
+            "byteOffset" : 56, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 240, 
-            "byteOffset" : 6000, 
+            "byteLength" : 6, 
+            "byteOffset" : 104, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 6240, 
+            "byteLength" : 48, 
+            "byteOffset" : 112, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 9120, 
+            "byteLength" : 48, 
+            "byteOffset" : 160, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 240, 
-            "byteOffset" : 12000, 
+            "byteLength" : 1069056, 
+            "byteOffset" : 208, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 12240, 
+            "byteLength" : 2138112, 
+            "byteOffset" : 1069264, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 15120, 
+            "byteLength" : 2138112, 
+            "byteOffset" : 3207376, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 240, 
-            "byteOffset" : 18000, 
+            "byteLength" : 2850816, 
+            "byteOffset" : 5345488, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 1425408, 
+            "byteOffset" : 8196304, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 24576, 
+            "byteOffset" : 9621712, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 18240, 
+            "byteLength" : 25812, 
+            "byteOffset" : 9646288, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 2880, 
-            "byteOffset" : 21120, 
+            "byteLength" : 25812, 
+            "byteOffset" : 9672100, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 6144, 
-            "byteOffset" : 24000, 
+            "byteLength" : 34416, 
+            "byteOffset" : 9697912, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 17208, 
+            "byteOffset" : 9732328, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 98304, 
+            "byteOffset" : 9749536, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 7056, 
-            "byteOffset" : 30144, 
+            "byteLength" : 101580, 
+            "byteOffset" : 9847840, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 7056, 
-            "byteOffset" : 37200, 
+            "byteLength" : 101580, 
+            "byteOffset" : 9949420, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 9408, 
-            "byteOffset" : 44256, 
+            "byteLength" : 135440, 
+            "byteOffset" : 10051000, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 4704, 
-            "byteOffset" : 53664, 
+            "byteLength" : 67720, 
+            "byteOffset" : 10186440, 
             "target" : 34962
         }
     ], 
     "buffers" : [
         {
-            "byteLength" : 58368, 
+            "byteLength" : 10254160, 
             "uri" : "muzeum.bin"
         }
     ], 
@@ -373,11 +461,11 @@
                 "S8S_v3d_camera_data" : {
                     "controls" : "ORBIT", 
                     "enablePan" : true, 
-                    "moveSpeed" : 1.0, 
+                    "moveSpeed" : 0.0, 
                     "orbitMaxDistance" : 100.0, 
-                    "orbitMaxPolarAngle" : 3.1415927410125732, 
+                    "orbitMaxPolarAngle" : 2.5307273864746094, 
                     "orbitMinDistance" : 0.0, 
-                    "orbitMinPolarAngle" : 0.9599310755729675, 
+                    "orbitMinPolarAngle" : 0.7853981852531433, 
                     "orbitTarget" : [
                         0.0, 
                         0.0, 
@@ -410,6 +498,15 @@
                     "intensity" : 1.0, 
                     "name" : "Lamp", 
                     "profile" : "blender", 
+                    "shadow" : {
+                        "bias" : -0.001500000013038516, 
+                        "cameraFar" : 100.0, 
+                        "cameraFov" : 1.5707963705062866, 
+                        "cameraNear" : 0.20000000298023224, 
+                        "cameraSize" : 10.0, 
+                        "mapSize" : 1024, 
+                        "radius" : 1.0
+                    }, 
                     "type" : "directional"
                 }, 
                 {
@@ -440,121 +537,6 @@
         }
     ], 
     "materials" : [
-        {
-            "extensions" : {
-                "S8S_v3d_material_data" : {
-                    "nodeGraph" : {
-                        "edges" : [
-                            {
-                                "fromNode" : 1, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 0
-                            }, 
-                            {
-                                "fromNode" : 1, 
-                                "fromOutput" : 1, 
-                                "toInput" : 1, 
-                                "toNode" : 0
-                            }
-                        ], 
-                        "nodes" : [
-                            {
-                                "inputs" : [
-                                    [
-                                        1, 
-                                        1, 
-                                        1, 
-                                        1
-                                    ], 
-                                    1
-                                ], 
-                                "is_active_output" : true, 
-                                "name" : "Output", 
-                                "outputs" : [], 
-                                "type" : "OUTPUT"
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.8019233345985413, 
-                                        0.33626797795295715, 
-                                        0.03186456486582756, 
-                                        1
-                                    ], 
-                                    [
-                                        1.0, 
-                                        1.0, 
-                                        1.0, 
-                                        1
-                                    ], 
-                                    0.800000011920929, 
-                                    [
-                                        0, 
-                                        0, 
-                                        0
-                                    ], 
-                                    [
-                                        0, 
-                                        0, 
-                                        0, 
-                                        0
-                                    ], 
-                                    1.0, 
-                                    0.0, 
-                                    1.0, 
-                                    0, 
-                                    1.0, 
-                                    0
-                                ], 
-                                "invertNormal" : false, 
-                                "materialName" : "Material", 
-                                "name" : "Material", 
-                                "outputs" : [
-                                    [
-                                        0, 
-                                        0, 
-                                        0, 
-                                        0
-                                    ], 
-                                    0, 
-                                    [
-                                        0, 
-                                        0, 
-                                        0
-                                    ], 
-                                    [
-                                        0, 
-                                        0, 
-                                        0, 
-                                        0
-                                    ], 
-                                    [
-                                        0, 
-                                        0, 
-                                        0, 
-                                        0
-                                    ], 
-                                    [
-                                        0, 
-                                        0, 
-                                        0, 
-                                        0
-                                    ]
-                                ], 
-                                "specularHardness" : 50, 
-                                "specularIntensity" : 0.5, 
-                                "type" : "MATERIAL_EXT", 
-                                "useDiffuse" : true, 
-                                "useShadeless" : false, 
-                                "useSpecular" : true
-                            }
-                        ]
-                    }
-                }
-            }, 
-            "name" : "marker"
-        }, 
         {
             "extensions" : {
                 "S8S_v3d_material_data" : {
@@ -785,10 +767,483 @@
                                 "uvLayer" : ""
                             }
                         ]
-                    }
+                    }, 
+                    "useCastShadows" : true, 
+                    "useShadows" : true
+                }
+            }, 
+            "name" : "_dome_material"
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_material_data" : {
+                    "nodeGraph" : {
+                        "edges" : [
+                            {
+                                "fromNode" : 1, 
+                                "fromOutput" : 0, 
+                                "toInput" : 0, 
+                                "toNode" : 0
+                            }, 
+                            {
+                                "fromNode" : 1, 
+                                "fromOutput" : 1, 
+                                "toInput" : 1, 
+                                "toNode" : 0
+                            }, 
+                            {
+                                "fromNode" : 2, 
+                                "fromOutput" : 0, 
+                                "toInput" : 0, 
+                                "toNode" : 1
+                            }, 
+                            {
+                                "fromNode" : 3, 
+                                "fromOutput" : 1, 
+                                "toInput" : 2, 
+                                "toNode" : 2
+                            }, 
+                            {
+                                "fromNode" : 4, 
+                                "fromOutput" : 4, 
+                                "toInput" : 0, 
+                                "toNode" : 3
+                            }
+                        ], 
+                        "nodes" : [
+                            {
+                                "inputs" : [
+                                    [
+                                        1, 
+                                        1, 
+                                        1, 
+                                        1
+                                    ], 
+                                    1
+                                ], 
+                                "is_active_output" : true, 
+                                "name" : "Output", 
+                                "outputs" : [], 
+                                "type" : "OUTPUT"
+                            }, 
+                            {
+                                "inputs" : [
+                                    [
+                                        0.800000011920929, 
+                                        0.800000011920929, 
+                                        0.800000011920929, 
+                                        1
+                                    ], 
+                                    [
+                                        1.0, 
+                                        1.0, 
+                                        1.0, 
+                                        1
+                                    ], 
+                                    0.800000011920929, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    1.0, 
+                                    1.0, 
+                                    1.0, 
+                                    0, 
+                                    1.0, 
+                                    0
+                                ], 
+                                "invertNormal" : false, 
+                                "materialName" : "Material", 
+                                "name" : "Material", 
+                                "outputs" : [
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    0, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "specularHardness" : 50, 
+                                "specularIntensity" : 0.5, 
+                                "type" : "MATERIAL_EXT", 
+                                "useDiffuse" : true, 
+                                "useShadeless" : false, 
+                                "useSpecular" : true
+                            }, 
+                            {
+                                "blendType" : "MIX", 
+                                "inputs" : [
+                                    1.0, 
+                                    [
+                                        0.800000011920929, 
+                                        0.800000011920929, 
+                                        0.800000011920929, 
+                                        1
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "name" : "DiffuseMix", 
+                                "outputs" : [
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "type" : "MIX_RGB", 
+                                "useClamp" : false
+                            }, 
+                            {
+                                "inputs" : [
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "name" : "Diffuse", 
+                                "outputs" : [
+                                    0, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "texture" : 1, 
+                                "type" : "TEXTURE"
+                            }, 
+                            {
+                                "colorLayer" : "", 
+                                "inputs" : [], 
+                                "name" : "Geometry", 
+                                "outputs" : [
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    0, 
+                                    0
+                                ], 
+                                "type" : "GEOMETRY", 
+                                "uvLayer" : ""
+                            }
+                        ]
+                    }, 
+                    "useCastShadows" : true, 
+                    "useShadows" : true
                 }
             }, 
             "name" : "Material.003"
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_material_data" : {
+                    "nodeGraph" : {
+                        "edges" : [
+                            {
+                                "fromNode" : 1, 
+                                "fromOutput" : 0, 
+                                "toInput" : 0, 
+                                "toNode" : 0
+                            }, 
+                            {
+                                "fromNode" : 1, 
+                                "fromOutput" : 1, 
+                                "toInput" : 1, 
+                                "toNode" : 0
+                            }
+                        ], 
+                        "nodes" : [
+                            {
+                                "inputs" : [
+                                    [
+                                        1, 
+                                        1, 
+                                        1, 
+                                        1
+                                    ], 
+                                    1
+                                ], 
+                                "is_active_output" : true, 
+                                "name" : "Output", 
+                                "outputs" : [], 
+                                "type" : "OUTPUT"
+                            }, 
+                            {
+                                "inputs" : [
+                                    [
+                                        0.8017309904098511, 
+                                        0.31893810629844666, 
+                                        0.0, 
+                                        1
+                                    ], 
+                                    [
+                                        1.0, 
+                                        1.0, 
+                                        1.0, 
+                                        1
+                                    ], 
+                                    0.800000011920929, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    1.0, 
+                                    0.0, 
+                                    1.0, 
+                                    0, 
+                                    1.0, 
+                                    0
+                                ], 
+                                "invertNormal" : false, 
+                                "materialName" : "Material", 
+                                "name" : "Material", 
+                                "outputs" : [
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    0, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "specularHardness" : 50, 
+                                "specularIntensity" : 0.5, 
+                                "type" : "MATERIAL_EXT", 
+                                "useDiffuse" : true, 
+                                "useShadeless" : false, 
+                                "useSpecular" : true
+                            }
+                        ]
+                    }, 
+                    "useCastShadows" : true, 
+                    "useShadows" : true
+                }
+            }, 
+            "name" : "Material.004"
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_material_data" : {
+                    "nodeGraph" : {
+                        "edges" : [
+                            {
+                                "fromNode" : 1, 
+                                "fromOutput" : 0, 
+                                "toInput" : 0, 
+                                "toNode" : 0
+                            }, 
+                            {
+                                "fromNode" : 1, 
+                                "fromOutput" : 1, 
+                                "toInput" : 1, 
+                                "toNode" : 0
+                            }
+                        ], 
+                        "nodes" : [
+                            {
+                                "inputs" : [
+                                    [
+                                        1, 
+                                        1, 
+                                        1, 
+                                        1
+                                    ], 
+                                    1
+                                ], 
+                                "is_active_output" : true, 
+                                "name" : "Output", 
+                                "outputs" : [], 
+                                "type" : "OUTPUT"
+                            }, 
+                            {
+                                "inputs" : [
+                                    [
+                                        0.0, 
+                                        0.028911791741847992, 
+                                        0.8017362356185913, 
+                                        1
+                                    ], 
+                                    [
+                                        1.0, 
+                                        1.0, 
+                                        1.0, 
+                                        1
+                                    ], 
+                                    0.800000011920929, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    1.0, 
+                                    0.0, 
+                                    1.0, 
+                                    0, 
+                                    1.0, 
+                                    0
+                                ], 
+                                "invertNormal" : false, 
+                                "materialName" : "Material", 
+                                "name" : "Material", 
+                                "outputs" : [
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    0, 
+                                    [
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ], 
+                                    [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                    ]
+                                ], 
+                                "specularHardness" : 50, 
+                                "specularIntensity" : 0.5, 
+                                "type" : "MATERIAL_EXT", 
+                                "useDiffuse" : true, 
+                                "useShadeless" : false, 
+                                "useSpecular" : true
+                            }
+                        ]
+                    }, 
+                    "useCastShadows" : true, 
+                    "useShadows" : true
+                }
+            }, 
+            "name" : "Material.005"
         }, 
         {
             "extensions" : {
@@ -846,7 +1301,9 @@
                                 "type" : "OUTPUT_WORLD"
                             }
                         ]
-                    }
+                    }, 
+                    "useCastShadows" : true, 
+                    "useShadows" : true
                 }
             }, 
             "name" : "Verge3D_Environment_World"
@@ -860,7 +1317,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Icosphere", 
+            "name" : "Plane", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -868,7 +1325,7 @@
                         "POSITION" : 1
                     }, 
                     "indices" : 0, 
-                    "material" : 0, 
+                    "material" : 3, 
                     "mode" : 4
                 }
             ]
@@ -880,7 +1337,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Icosphere.001", 
+            "name" : "Plane.001", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -888,7 +1345,7 @@
                         "POSITION" : 4
                     }, 
                     "indices" : 3, 
-                    "material" : 0, 
+                    "material" : 2, 
                     "mode" : 4
                 }
             ]
@@ -900,12 +1357,14 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Icosphere.002", 
+            "name" : "Plane.002", 
             "primitives" : [
                 {
                     "attributes" : {
                         "NORMAL" : 8, 
-                        "POSITION" : 7
+                        "POSITION" : 7, 
+                        "TANGENT" : 9, 
+                        "TEXCOORD_0" : 10
                     }, 
                     "indices" : 6, 
                     "material" : 0, 
@@ -920,14 +1379,16 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Icosphere.003", 
+            "name" : "Plane.004", 
             "primitives" : [
                 {
                     "attributes" : {
-                        "NORMAL" : 11, 
-                        "POSITION" : 10
+                        "NORMAL" : 13, 
+                        "POSITION" : 12, 
+                        "TANGENT" : 14, 
+                        "TEXCOORD_0" : 15
                     }, 
-                    "indices" : 9, 
+                    "indices" : 11, 
                     "material" : 0, 
                     "mode" : 4
                 }
@@ -944,12 +1405,12 @@
             "primitives" : [
                 {
                     "attributes" : {
-                        "NORMAL" : 14, 
-                        "POSITION" : 13, 
-                        "TANGENT" : 15, 
-                        "TEXCOORD_0" : 16
+                        "NORMAL" : 18, 
+                        "POSITION" : 17, 
+                        "TANGENT" : 19, 
+                        "TEXCOORD_0" : 20
                     }, 
-                    "indices" : 12, 
+                    "indices" : 16, 
                     "material" : 1, 
                     "mode" : 4
                 }
@@ -957,6 +1418,54 @@
         }
     ], 
     "nodes" : [
+        {
+            "extensions" : {
+                "S8S_v3d_node_data" : {
+                    "frustumCulling" : true, 
+                    "hidden" : false, 
+                    "renderOrder" : 0
+                }
+            }, 
+            "mesh" : 3, 
+            "name" : "_dome"
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_node_data" : {
+                    "frustumCulling" : true, 
+                    "hidden" : false, 
+                    "renderOrder" : 0
+                }
+            }, 
+            "name" : "_dome_pro_u", 
+            "rotation" : [
+                0.0, 
+                0.7071068286895752, 
+                -0.0, 
+                0.7071067690849304
+            ]
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_node_data" : {
+                    "frustumCulling" : true, 
+                    "hidden" : false, 
+                    "renderOrder" : 0
+                }
+            }, 
+            "name" : "_dome_pro_v"
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_node_data" : {
+                    "frustumCulling" : true, 
+                    "hidden" : false, 
+                    "renderOrder" : 0
+                }
+            }, 
+            "mesh" : 2, 
+            "name" : "_obj_001_lamp"
+        }, 
         {
             "camera" : 0, 
             "extensions" : {
@@ -979,107 +1488,9 @@
                 1.0
             ], 
             "translation" : [
-                0.0, 
-                3.0, 
-                10.0
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "mesh" : 0, 
-            "name" : "Icosphere", 
-            "rotation" : [
-                0.19555893540382385, 
-                -0.19421221315860748, 
-                0.03029964491724968, 
-                0.9607914686203003
-            ], 
-            "translation" : [
-                -3.6134414672851562, 
-                -3.875519037246704, 
-                8.480765342712402
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "mesh" : 1, 
-            "name" : "Icosphere.001", 
-            "rotation" : [
-                0.1339571624994278, 
-                0.28487592935562134, 
-                -0.07931499183177948, 
-                0.945838451385498
-            ], 
-            "scale" : [
+                5.0, 
                 1.0, 
-                0.9999999403953552, 
-                1.0
-            ], 
-            "translation" : [
-                5.176436424255371, 
-                -2.9859344959259033, 
-                8.018022537231445
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "mesh" : 2, 
-            "name" : "Icosphere.002", 
-            "rotation" : [
-                0.0003233758034184575, 
-                0.9385899901390076, 
-                -0.18349908292293549, 
-                0.2921934127807617
-            ], 
-            "translation" : [
-                5.483806133270264, 
-                -3.4464969635009766, 
-                -7.619023323059082
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "mesh" : 3, 
-            "name" : "Icosphere.003", 
-            "rotation" : [
-                0.066799595952034, 
-                -0.8598963022232056, 
-                0.25162336230278015, 
-                0.43909233808517456
-            ], 
-            "scale" : [
-                1.0, 
-                0.9999999403953552, 
-                0.9999999403953552
-            ], 
-            "translation" : [
-                -7.215308666229248, 
-                -4.914021015167236, 
-                -4.877673149108887
+                8.0
             ]
         }, 
         {
@@ -1117,6 +1528,38 @@
                     "renderOrder" : 0
                 }
             }, 
+            "mesh" : 0, 
+            "name" : "Plane", 
+            "translation" : [
+                5.0, 
+                -5.0, 
+                -5.0
+            ]
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_node_data" : {
+                    "frustumCulling" : true, 
+                    "hidden" : false, 
+                    "renderOrder" : 0
+                }
+            }, 
+            "mesh" : 1, 
+            "name" : "Plane.001", 
+            "translation" : [
+                -5.0, 
+                0.0, 
+                5.0
+            ]
+        }, 
+        {
+            "extensions" : {
+                "S8S_v3d_node_data" : {
+                    "frustumCulling" : true, 
+                    "hidden" : true, 
+                    "renderOrder" : 0
+                }
+            }, 
             "mesh" : 4, 
             "name" : "Sphere", 
             "rotation" : [
@@ -1136,7 +1579,33 @@
             "extensions" : {
                 "S8S_v3d_scene_data" : {
                     "light" : 1, 
-                    "worldMaterial" : 2
+                    "postprocessing" : [
+                        {
+                            "edgeGlow" : 0.0, 
+                            "edgeStrength" : 3.0, 
+                            "edgeThickness" : 1.0, 
+                            "hiddenEdgeColor" : [
+                                0.10000000149011612, 
+                                0.10000000149011612, 
+                                0.10000000149011612, 
+                                1.0
+                            ], 
+                            "pulsePeriod" : 0.0, 
+                            "type" : "outline", 
+                            "visibleEdgeColor" : [
+                                0.3399513363838196, 
+                                0.0, 
+                                0.9985896348953247, 
+                                1.0
+                            ]
+                        }
+                    ], 
+                    "shadowMap" : {
+                        "renderReverseSided" : false, 
+                        "renderSingleSided" : true, 
+                        "type" : "PCFSOFT"
+                    }, 
+                    "worldMaterial" : 4
                 }
             }, 
             "extras" : {
@@ -1144,17 +1613,29 @@
             }, 
             "name" : "Scene", 
             "nodes" : [
-                4, 
-                3, 
                 2, 
                 1, 
-                5, 
+                3, 
                 0, 
-                6
+                7, 
+                6, 
+                5, 
+                4, 
+                8
             ]
         }
     ], 
     "textures" : [
+        {
+            "extensions" : {
+                "S8S_v3d_texture_data" : {
+                    "colorSpace" : "srgb"
+                }
+            }, 
+            "name" : "_dome_texture", 
+            "sampler" : 0, 
+            "source" : 0
+        }, 
         {
             "extensions" : {
                 "S8S_v3d_texture_data" : {
