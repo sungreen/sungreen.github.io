@@ -171,6 +171,10 @@ function prepareExternalInterface(app) {
     //     console.log('Hello, World!');
     // }
 
+    app.ExternalInterface.setundefined = function() {
+		return undefined
+	}
+
 }
 
 function runCode(app) {
