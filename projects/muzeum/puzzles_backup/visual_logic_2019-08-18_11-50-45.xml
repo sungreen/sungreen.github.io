@@ -1,6 +1,6 @@
 <xml xmlns="http://www.w3.org/1999/xhtml">
   <tab name="Init" type="InitTab" active="false" scrollx="210.00000000000023" scrolly="1070" scale="1"></tab>
-  <tab name="Main" type="MainTab" active="false" scrollx="838.572875976562" scrolly="3620.205078125" scale="0.7958552405250175">
+  <tab name="Main" type="MainTab" active="false" scrollx="838.5728759765618" scrolly="3620.205078125" scale="0.7958552405250175">
     <variables>
       <variable type="" id="wk9:{J4_D{cnp]JtgD^1">data_muz</variable>
       <variable type="" id="5jl~cd,QFdcw?,;uy%4E">info_style</variable>
@@ -248,6 +248,20 @@
         </block>
       </next>
     </block>
+    <block type="setHTMLElemStyle" id="Zi2dB-]e0mRUJ~).7,;2" x="-630" y="-3410">
+      <field name="PROPERTY">display</field>
+      <field name="PARENT">FALSE</field>
+      <value name="VALUE">
+        <block type="text" id="=PV5DIrlbOLiH)0)$-SB">
+          <field name="TEXT">none</field>
+        </block>
+      </value>
+      <value name="ID">
+        <block type="text" id="2YT~8MIh@Ud3tw+8Iyoa">
+          <field name="TEXT">alert</field>
+        </block>
+      </value>
+    </block>
     <block type="variables_get" id="},s]/PJ5rlbE;C9,9CJ6" x="-1350" y="-2050">
       <field name="VAR" id="5jl~cd,QFdcw?,;uy%4E" variabletype="">info_style</field>
     </block>
@@ -398,7 +412,7 @@
       </statement>
     </block>
   </tab>
-  <tab name="Code" type="SecondaryTab" active="true" scrollx="12.807083129882812" scrolly="-677.9412863591092" scale="0.8843300071440965">
+  <tab name="Code" type="SecondaryTab" active="false" scrollx="12.807083129882812" scrolly="-677.9412863591092" scale="0.8843300071440965">
     <variables>
       <variable type="" id="7{$qUFC:nv![wM$=bI)J">dome_rotate</variable>
       <variable type="" id="R2=tyaOT%Yoc]3,!?HV=">tmp</variable>
@@ -870,12 +884,7 @@
                       </value>
                       <value name="ADD13">
                         <block type="text" id="n)w_]Z]9at2jF#+(o{JX">
-                          <field name="TEXT">background: linear-gradient(to top, #3355AA, #113377); line-height: 0.3; border: 5px solid  #3355AA transparent;</field>
-                        </block>
-                      </value>
-                      <value name="ADD14">
-                        <block type="text" id="nC]+VKO6W6G`^[716,gQ" disabled="true">
-                          <field name="TEXT">background: transparent;</field>
+                          <field name="TEXT">background: linear-gradient(to top, #3355AA, #113377); line-height: 0.3; border: 5px solid  #3355AA;</field>
                         </block>
                       </value>
                     </block>
@@ -918,33 +927,20 @@
       </statement>
     </block>
   </tab>
-  <tab name="Intro" type="SecondaryTab" active="false" scrollx="278.4431435963786" scrolly="-42.99999999999915" scale="0.9">
-    <variables>
-      <variable type="" id="/i]vEfPdsA6FjkCxf.OC">camera_locale</variable>
-    </variables>
-    <block type="variables_set" id="lX*-hsNvn/Gg2ZL.Q7rJ" x="350" y="270">
-      <field name="VAR" id="/i]vEfPdsA6FjkCxf.OC" variabletype="">camera_locale</field>
-      <value name="VALUE">
-        <block type="math_number" id="c:xn:/%ggj!*E!C!Bbn#">
-          <field name="NUM">-50</field>
+  <tab name="Intro" type="SecondaryTab" active="true" scrollx="136.2331824062103" scrolly="-8.999999999999886" scale="0.9">
+    <block type="setObjTransform" id="hybY]0N2+fdncS9sOo2O" x="370" y="310">
+      <field name="MODE">position</field>
+      <field name="OFFSET">FALSE</field>
+      <value name="TARGETOBJ">
+        <block type="objectList" id="-/A%hNeoBf7rAWE$,DSY">
+          <field name="FIELDNAME">Camera</field>
         </block>
       </value>
-      <next>
-        <block type="setObjTransform" id="hybY]0N2+fdncS9sOo2O">
-          <field name="MODE">position</field>
-          <field name="OFFSET">FALSE</field>
-          <value name="TARGETOBJ">
-            <block type="objectList" id="-/A%hNeoBf7rAWE$,DSY">
-              <field name="FIELDNAME">Camera</field>
-            </block>
-          </value>
-          <value name="Y">
-            <block type="variables_get" id="7J%[9Fsp*9Q5LcH6n6C|">
-              <field name="VAR" id="/i]vEfPdsA6FjkCxf.OC" variabletype="">camera_locale</field>
-            </block>
-          </value>
+      <value name="Y">
+        <block type="math_number" id="c:xn:/%ggj!*E!C!Bbn#">
+          <field name="NUM">50</field>
         </block>
-      </next>
+      </value>
     </block>
     <block type="procedures_defnoreturn" id="s4.%wNPbKYmCH!uu/NeA" x="357" y="381">
       <field name="NAME">START_INTRO</field>
@@ -1094,32 +1090,6 @@
                               <field name="TEXT">intro</field>
                             </block>
                           </value>
-                          <next>
-                            <block type="variables_set" id="vBTc46flQ0G$bkiqb6(*">
-                              <field name="VAR" id="/i]vEfPdsA6FjkCxf.OC" variabletype="">camera_locale</field>
-                              <value name="VALUE">
-                                <block type="math_number" id="K!BQ5Z*0(N$H[kw_]z3g">
-                                  <field name="NUM">-10</field>
-                                </block>
-                              </value>
-                              <next>
-                                <block type="setObjTransform" id="?1s}QtIVI/H2Oee#O]ZG">
-                                  <field name="MODE">position</field>
-                                  <field name="OFFSET">FALSE</field>
-                                  <value name="TARGETOBJ">
-                                    <block type="objectList" id="T+k*Wx`PgjxW7:/R)5e8">
-                                      <field name="FIELDNAME">Camera</field>
-                                    </block>
-                                  </value>
-                                  <value name="Y">
-                                    <block type="variables_get" id="y+p-LricShj}|~XK8e6.">
-                                      <field name="VAR" id="/i]vEfPdsA6FjkCxf.OC" variabletype="">camera_locale</field>
-                                    </block>
-                                  </value>
-                                </block>
-                              </next>
-                            </block>
-                          </next>
                         </block>
                       </statement>
                     </block>
