@@ -2,82 +2,6 @@
     "accessors" : [
         {
             "bufferView" : 0, 
-            "componentType" : 5125, 
-            "count" : 253233, 
-            "max" : [
-                94783
-            ], 
-            "min" : [
-                0
-            ], 
-            "type" : "SCALAR"
-        }, 
-        {
-            "bufferView" : 1, 
-            "componentType" : 5126, 
-            "count" : 94784, 
-            "max" : [
-                1.00133216381073, 
-                1.001332402229309, 
-                0.12000005692243576
-            ], 
-            "min" : [
-                -1.00133216381073, 
-                -1.00133216381073, 
-                -0.12000005692243576
-            ], 
-            "type" : "VEC3"
-        }, 
-        {
-            "bufferView" : 2, 
-            "componentType" : 5126, 
-            "count" : 94784, 
-            "max" : [
-                1.0, 
-                1.0, 
-                1.0
-            ], 
-            "min" : [
-                -1.0, 
-                -1.0, 
-                -1.0
-            ], 
-            "type" : "VEC3"
-        }, 
-        {
-            "bufferView" : 3, 
-            "componentType" : 5126, 
-            "count" : 94784, 
-            "max" : [
-                1.0, 
-                0.0, 
-                -0.0, 
-                -1.0
-            ], 
-            "min" : [
-                1.0, 
-                0.0, 
-                -0.0, 
-                -1.0
-            ], 
-            "type" : "VEC4"
-        }, 
-        {
-            "bufferView" : 4, 
-            "componentType" : 5126, 
-            "count" : 94784, 
-            "max" : [
-                0.0, 
-                1.0
-            ], 
-            "min" : [
-                0.0, 
-                1.0
-            ], 
-            "type" : "VEC2"
-        }, 
-        {
-            "bufferView" : 5, 
             "componentType" : 5123, 
             "count" : 2520, 
             "max" : [
@@ -89,7 +13,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 6, 
+            "bufferView" : 1, 
             "componentType" : 5126, 
             "count" : 1680, 
             "max" : [
@@ -105,7 +29,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 7, 
+            "bufferView" : 2, 
             "componentType" : 5126, 
             "count" : 1680, 
             "max" : [
@@ -121,7 +45,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 8, 
+            "bufferView" : 3, 
             "componentType" : 5126, 
             "count" : 1680, 
             "max" : [
@@ -139,7 +63,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 9, 
+            "bufferView" : 4, 
             "componentType" : 5126, 
             "count" : 1680, 
             "max" : [
@@ -153,7 +77,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 10, 
+            "bufferView" : 5, 
             "componentType" : 5121, 
             "count" : 192, 
             "max" : [
@@ -165,7 +89,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 11, 
+            "bufferView" : 6, 
             "componentType" : 5126, 
             "count" : 128, 
             "max" : [
@@ -181,7 +105,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 12, 
+            "bufferView" : 7, 
             "componentType" : 5126, 
             "count" : 128, 
             "max" : [
@@ -197,7 +121,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 13, 
+            "bufferView" : 8, 
             "componentType" : 5126, 
             "count" : 128, 
             "max" : [
@@ -215,7 +139,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 14, 
+            "bufferView" : 9, 
             "componentType" : 5126, 
             "count" : 128, 
             "max" : [
@@ -229,7 +153,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 15, 
+            "bufferView" : 10, 
             "componentType" : 5123, 
             "count" : 16704, 
             "max" : [
@@ -241,7 +165,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 16, 
+            "bufferView" : 11, 
             "componentType" : 5126, 
             "count" : 11136, 
             "max" : [
@@ -257,7 +181,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 17, 
+            "bufferView" : 12, 
             "componentType" : 5126, 
             "count" : 11136, 
             "max" : [
@@ -273,7 +197,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 18, 
+            "bufferView" : 13, 
             "componentType" : 5126, 
             "count" : 11136, 
             "max" : [
@@ -291,7 +215,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 19, 
+            "bufferView" : 14, 
             "componentType" : 5126, 
             "count" : 11136, 
             "max" : [
@@ -305,7 +229,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 20, 
+            "bufferView" : 15, 
             "componentType" : 5123, 
             "count" : 12288, 
             "max" : [
@@ -317,7 +241,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 21, 
+            "bufferView" : 16, 
             "componentType" : 5126, 
             "count" : 2151, 
             "max" : [
@@ -333,7 +257,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 22, 
+            "bufferView" : 17, 
             "componentType" : 5126, 
             "count" : 2151, 
             "max" : [
@@ -349,7 +273,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 23, 
+            "bufferView" : 18, 
             "componentType" : 5126, 
             "count" : 2151, 
             "max" : [
@@ -367,7 +291,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 24, 
+            "bufferView" : 19, 
             "componentType" : 5126, 
             "count" : 2151, 
             "max" : [
@@ -381,7 +305,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 25, 
+            "bufferView" : 20, 
             "componentType" : 5123, 
             "count" : 864, 
             "max" : [
@@ -393,7 +317,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 26, 
+            "bufferView" : 21, 
             "componentType" : 5126, 
             "count" : 576, 
             "max" : [
@@ -409,7 +333,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 27, 
+            "bufferView" : 22, 
             "componentType" : 5126, 
             "count" : 576, 
             "max" : [
@@ -425,7 +349,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 28, 
+            "bufferView" : 23, 
             "componentType" : 5126, 
             "count" : 576, 
             "max" : [
@@ -443,7 +367,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 29, 
+            "bufferView" : 24, 
             "componentType" : 5126, 
             "count" : 576, 
             "max" : [
@@ -457,7 +381,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 30, 
+            "bufferView" : 25, 
             "componentType" : 5121, 
             "count" : 144, 
             "max" : [
@@ -469,7 +393,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 31, 
+            "bufferView" : 26, 
             "componentType" : 5126, 
             "count" : 96, 
             "max" : [
@@ -485,7 +409,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 32, 
+            "bufferView" : 27, 
             "componentType" : 5126, 
             "count" : 96, 
             "max" : [
@@ -501,7 +425,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 33, 
+            "bufferView" : 28, 
             "componentType" : 5126, 
             "count" : 96, 
             "max" : [
@@ -519,7 +443,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 34, 
+            "bufferView" : 29, 
             "componentType" : 5126, 
             "count" : 96, 
             "max" : [
@@ -533,7 +457,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 35, 
+            "bufferView" : 30, 
             "componentType" : 5123, 
             "count" : 4608, 
             "max" : [
@@ -545,7 +469,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 36, 
+            "bufferView" : 31, 
             "componentType" : 5126, 
             "count" : 3072, 
             "max" : [
@@ -561,7 +485,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 37, 
+            "bufferView" : 32, 
             "componentType" : 5126, 
             "count" : 3072, 
             "max" : [
@@ -577,7 +501,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 38, 
+            "bufferView" : 33, 
             "componentType" : 5126, 
             "count" : 3072, 
             "max" : [
@@ -595,7 +519,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 39, 
+            "bufferView" : 34, 
             "componentType" : 5126, 
             "count" : 3072, 
             "max" : [
@@ -609,7 +533,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 40, 
+            "bufferView" : 35, 
             "componentType" : 5121, 
             "count" : 216, 
             "max" : [
@@ -621,7 +545,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 41, 
+            "bufferView" : 36, 
             "componentType" : 5126, 
             "count" : 144, 
             "max" : [
@@ -637,7 +561,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 42, 
+            "bufferView" : 37, 
             "componentType" : 5126, 
             "count" : 144, 
             "max" : [
@@ -653,7 +577,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 43, 
+            "bufferView" : 38, 
             "componentType" : 5126, 
             "count" : 144, 
             "max" : [
@@ -671,7 +595,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 44, 
+            "bufferView" : 39, 
             "componentType" : 5126, 
             "count" : 144, 
             "max" : [
@@ -685,7 +609,7 @@
             "type" : "VEC2"
         }, 
         {
-            "bufferView" : 45, 
+            "bufferView" : 40, 
             "componentType" : 5123, 
             "count" : 12288, 
             "max" : [
@@ -697,7 +621,7 @@
             "type" : "SCALAR"
         }, 
         {
-            "bufferView" : 46, 
+            "bufferView" : 41, 
             "componentType" : 5126, 
             "count" : 8192, 
             "max" : [
@@ -713,7 +637,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 47, 
+            "bufferView" : 42, 
             "componentType" : 5126, 
             "count" : 8192, 
             "max" : [
@@ -729,7 +653,7 @@
             "type" : "VEC3"
         }, 
         {
-            "bufferView" : 48, 
+            "bufferView" : 43, 
             "componentType" : 5126, 
             "count" : 8192, 
             "max" : [
@@ -747,7 +671,7 @@
             "type" : "VEC4"
         }, 
         {
-            "bufferView" : 49, 
+            "bufferView" : 44, 
             "componentType" : 5126, 
             "count" : 8192, 
             "max" : [
@@ -759,66 +683,6 @@
                 0.5546886622905731
             ], 
             "type" : "VEC2"
-        }, 
-        {
-            "bufferView" : 50, 
-            "componentType" : 5126, 
-            "count" : 360, 
-            "max" : [
-                14.958333333333334
-            ], 
-            "min" : [
-                0.0
-            ], 
-            "type" : "SCALAR"
-        }, 
-        {
-            "bufferView" : 51, 
-            "componentType" : 5126, 
-            "count" : 360, 
-            "max" : [
-                0.2588092088699341, 
-                0.9659258127212524, 
-                0.258819043636322, 
-                0.9659258127212524
-            ], 
-            "min" : [
-                -0.258819043636322, 
-                0.0, 
-                -0.0, 
-                -0.965889036655426
-            ], 
-            "type" : "VEC4"
-        }
-    ], 
-    "animations" : [
-        {
-            "channels" : [
-                {
-                    "sampler" : 0, 
-                    "target" : {
-                        "node" : 2, 
-                        "path" : "rotation"
-                    }
-                }
-            ], 
-            "extensions" : {
-                "S8S_v3d_animation_data" : {
-                    "auto" : true, 
-                    "loop" : "REPEAT", 
-                    "offset" : 0.0, 
-                    "repeatCount" : 1.0, 
-                    "repeatInfinite" : true
-                }
-            }, 
-            "name" : "#1_COIN135", 
-            "samplers" : [
-                {
-                    "input" : 50, 
-                    "interpolation" : "LINEAR", 
-                    "output" : 51
-                }
-            ]
         }
     ], 
     "asset" : {
@@ -828,318 +692,278 @@
     "bufferViews" : [
         {
             "buffer" : 0, 
-            "byteLength" : 1012932, 
+            "byteLength" : 5040, 
             "byteOffset" : 0, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
-            "byteLength" : 1137408, 
-            "byteOffset" : 1012932, 
-            "target" : 34962
-        }, 
-        {
-            "buffer" : 0, 
-            "byteLength" : 1137408, 
-            "byteOffset" : 2150340, 
-            "target" : 34962
-        }, 
-        {
-            "buffer" : 0, 
-            "byteLength" : 1516544, 
-            "byteOffset" : 3287748, 
-            "target" : 34962
-        }, 
-        {
-            "buffer" : 0, 
-            "byteLength" : 758272, 
-            "byteOffset" : 4804292, 
-            "target" : 34962
-        }, 
-        {
-            "buffer" : 0, 
-            "byteLength" : 5040, 
-            "byteOffset" : 5562564, 
-            "target" : 34963
-        }, 
-        {
-            "buffer" : 0, 
             "byteLength" : 20160, 
-            "byteOffset" : 5567604, 
+            "byteOffset" : 5040, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 20160, 
-            "byteOffset" : 5587764, 
+            "byteOffset" : 25200, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 26880, 
-            "byteOffset" : 5607924, 
+            "byteOffset" : 45360, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 13440, 
-            "byteOffset" : 5634804, 
+            "byteOffset" : 72240, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 192, 
-            "byteOffset" : 5648244, 
+            "byteOffset" : 85680, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1536, 
-            "byteOffset" : 5648436, 
+            "byteOffset" : 85872, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1536, 
-            "byteOffset" : 5649972, 
+            "byteOffset" : 87408, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 2048, 
-            "byteOffset" : 5651508, 
+            "byteOffset" : 88944, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1024, 
-            "byteOffset" : 5653556, 
+            "byteOffset" : 90992, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 33408, 
-            "byteOffset" : 5654580, 
+            "byteOffset" : 92016, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 133632, 
-            "byteOffset" : 5687988, 
+            "byteOffset" : 125424, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 133632, 
-            "byteOffset" : 5821620, 
+            "byteOffset" : 259056, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 178176, 
-            "byteOffset" : 5955252, 
+            "byteOffset" : 392688, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 89088, 
-            "byteOffset" : 6133428, 
+            "byteOffset" : 570864, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 24576, 
-            "byteOffset" : 6222516, 
+            "byteOffset" : 659952, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 25812, 
-            "byteOffset" : 6247092, 
+            "byteOffset" : 684528, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 25812, 
-            "byteOffset" : 6272904, 
+            "byteOffset" : 710340, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 34416, 
-            "byteOffset" : 6298716, 
+            "byteOffset" : 736152, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 17208, 
-            "byteOffset" : 6333132, 
+            "byteOffset" : 770568, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1728, 
-            "byteOffset" : 6350340, 
+            "byteOffset" : 787776, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 6912, 
-            "byteOffset" : 6352068, 
+            "byteOffset" : 789504, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 6912, 
-            "byteOffset" : 6358980, 
+            "byteOffset" : 796416, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 9216, 
-            "byteOffset" : 6365892, 
+            "byteOffset" : 803328, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 4608, 
-            "byteOffset" : 6375108, 
+            "byteOffset" : 812544, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 144, 
-            "byteOffset" : 6379716, 
+            "byteOffset" : 817152, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1152, 
-            "byteOffset" : 6379860, 
+            "byteOffset" : 817296, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1152, 
-            "byteOffset" : 6381012, 
+            "byteOffset" : 818448, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1536, 
-            "byteOffset" : 6382164, 
+            "byteOffset" : 819600, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 768, 
-            "byteOffset" : 6383700, 
+            "byteOffset" : 821136, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 9216, 
-            "byteOffset" : 6384468, 
+            "byteOffset" : 821904, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 36864, 
-            "byteOffset" : 6393684, 
+            "byteOffset" : 831120, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 36864, 
-            "byteOffset" : 6430548, 
+            "byteOffset" : 867984, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 49152, 
-            "byteOffset" : 6467412, 
+            "byteOffset" : 904848, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 24576, 
-            "byteOffset" : 6516564, 
+            "byteOffset" : 954000, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 216, 
-            "byteOffset" : 6541140, 
+            "byteOffset" : 978576, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1728, 
-            "byteOffset" : 6541356, 
+            "byteOffset" : 978792, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1728, 
-            "byteOffset" : 6543084, 
+            "byteOffset" : 980520, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 2304, 
-            "byteOffset" : 6544812, 
+            "byteOffset" : 982248, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 1152, 
-            "byteOffset" : 6547116, 
+            "byteOffset" : 984552, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 24576, 
-            "byteOffset" : 6548268, 
+            "byteOffset" : 985704, 
             "target" : 34963
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 98304, 
-            "byteOffset" : 6572844, 
+            "byteOffset" : 1010280, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 98304, 
-            "byteOffset" : 6671148, 
+            "byteOffset" : 1108584, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 131072, 
-            "byteOffset" : 6769452, 
+            "byteOffset" : 1206888, 
             "target" : 34962
         }, 
         {
             "buffer" : 0, 
             "byteLength" : 65536, 
-            "byteOffset" : 6900524, 
+            "byteOffset" : 1337960, 
             "target" : 34962
-        }, 
-        {
-            "buffer" : 0, 
-            "byteLength" : 1440, 
-            "byteOffset" : 6966060
-        }, 
-        {
-            "buffer" : 0, 
-            "byteLength" : 5760, 
-            "byteOffset" : 6967500
         }
     ], 
     "buffers" : [
         {
-            "byteLength" : 6973260, 
+            "byteLength" : 1403496, 
             "uri" : "muzeum.bin"
         }
     ], 
@@ -1179,38 +1003,6 @@
             "lights" : [
                 {
                     "color" : [
-                        1.0, 
-                        1.0, 
-                        1.0
-                    ], 
-                    "constantAttenuation" : 1.0, 
-                    "decay" : 1, 
-                    "distance" : 25.0, 
-                    "intensity" : 10.0, 
-                    "linearAttenuation" : 0.0, 
-                    "name" : "Point", 
-                    "profile" : "blender", 
-                    "quadraticAttenuation" : 0.04, 
-                    "type" : "point"
-                }, 
-                {
-                    "color" : [
-                        1.0, 
-                        1.0, 
-                        1.0
-                    ], 
-                    "constantAttenuation" : 1.0, 
-                    "decay" : 1, 
-                    "distance" : 25.0, 
-                    "intensity" : 10.0, 
-                    "linearAttenuation" : 0.0, 
-                    "name" : "Point.001", 
-                    "profile" : "blender", 
-                    "quadraticAttenuation" : 0.04, 
-                    "type" : "point"
-                }, 
-                {
-                    "color" : [
                         0.2900000214576721, 
                         0.2900000214576721, 
                         0.2900000214576721
@@ -1219,795 +1011,21 @@
                     "profile" : "blender", 
                     "type" : "ambient"
                 }
-            ], 
-            "nodeGraphs" : [
-                {
-                    "edges" : [
-                        {
-                            "fromNode" : 4, 
-                            "fromOutput" : 1, 
-                            "toInput" : 0, 
-                            "toNode" : 11
-                        }, 
-                        {
-                            "fromNode" : 0, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 3
-                        }, 
-                        {
-                            "fromNode" : 1, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 3
-                        }, 
-                        {
-                            "fromNode" : 2, 
-                            "fromOutput" : 0, 
-                            "toInput" : 2, 
-                            "toNode" : 3
-                        }, 
-                        {
-                            "fromNode" : 3, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 10
-                        }, 
-                        {
-                            "fromNode" : 5, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 8
-                        }, 
-                        {
-                            "fromNode" : 5, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 4
-                        }, 
-                        {
-                            "fromNode" : 11, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 0
-                        }, 
-                        {
-                            "fromNode" : 8, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 0
-                        }, 
-                        {
-                            "fromNode" : 8, 
-                            "fromOutput" : 1, 
-                            "toInput" : 1, 
-                            "toNode" : 1
-                        }, 
-                        {
-                            "fromNode" : 11, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 1
-                        }, 
-                        {
-                            "fromNode" : 8, 
-                            "fromOutput" : 2, 
-                            "toInput" : 1, 
-                            "toNode" : 2
-                        }, 
-                        {
-                            "fromNode" : 11, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 2
-                        }, 
-                        {
-                            "fromNode" : 6, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 10
-                        }, 
-                        {
-                            "fromNode" : 12, 
-                            "fromOutput" : 1, 
-                            "toInput" : 0, 
-                            "toNode" : 5
-                        }, 
-                        {
-                            "fromNode" : 10, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 9
-                        }, 
-                        {
-                            "fromNode" : 12, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 7
-                        }, 
-                        {
-                            "fromNode" : 7, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 4
-                        }, 
-                        {
-                            "fromNode" : 7, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 6
-                        }
-                    ], 
-                    "name" : "cubemap_reflect", 
-                    "nodes" : [
-                        {
-                            "inputs" : [
-                                0.5, 
-                                0.5
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math.001", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [
-                                0.5, 
-                                0.5
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math.002", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [
-                                0.5, 
-                                0.5
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math.003", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Combine RGB", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "COMBRGB"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    1.0
-                                ], 
-                                [
-                                    0.5, 
-                                    0.5, 
-                                    0.5
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Vector Math.001", 
-                            "operation" : "DOT_PRODUCT", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                0.0
-                            ], 
-                            "type" : "VECT_MATH"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "max" : [
-                                1.0, 
-                                1.0, 
-                                1.0
-                            ], 
-                            "min" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "name" : "Mapping", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "rotation" : [
-                                0.0, 
-                                3.1415939331054688, 
-                                0.0
-                            ], 
-                            "scale" : [
-                                1.0, 
-                                -1.0, 
-                                1.0
-                            ], 
-                            "translation" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "type" : "MAPPING", 
-                            "useMax" : false, 
-                            "useMin" : false, 
-                            "vectorType" : "POINT"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Reroute", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "REROUTE"
-                        }, 
-                        {
-                            "convertFrom" : "CAMERA", 
-                            "convertTo" : "WORLD", 
-                            "inputs" : [
-                                [
-                                    0.5, 
-                                    0.5, 
-                                    0.5
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Vector Transform", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "VECT_TRANSFORM", 
-                            "vectorType" : "VECTOR"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.800000011920929, 
-                                    0.800000011920929, 
-                                    0.800000011920929, 
-                                    1.0
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Separate RGB", 
-                            "outputs" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "type" : "SEPRGB"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "is_active_output" : true, 
-                            "name" : "Group Output.001", 
-                            "outputs" : [], 
-                            "type" : "GROUP_OUTPUT"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    1.0
-                                ], 
-                                [
-                                    0.5, 
-                                    0.5, 
-                                    0.5
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Vector Math", 
-                            "operation" : "SUBTRACT", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                0.0
-                            ], 
-                            "type" : "VECT_MATH"
-                        }, 
-                        {
-                            "inputs" : [
-                                0.5, 
-                                2.0
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [], 
-                            "is_active_output" : false, 
-                            "name" : "Group Input.001", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "GROUP_INPUT"
-                        }
-                    ]
-                }, 
-                {
-                    "edges" : [
-                        {
-                            "fromNode" : 4, 
-                            "fromOutput" : 1, 
-                            "toInput" : 0, 
-                            "toNode" : 11
-                        }, 
-                        {
-                            "fromNode" : 0, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 3
-                        }, 
-                        {
-                            "fromNode" : 1, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 3
-                        }, 
-                        {
-                            "fromNode" : 2, 
-                            "fromOutput" : 0, 
-                            "toInput" : 2, 
-                            "toNode" : 3
-                        }, 
-                        {
-                            "fromNode" : 3, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 10
-                        }, 
-                        {
-                            "fromNode" : 5, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 8
-                        }, 
-                        {
-                            "fromNode" : 5, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 4
-                        }, 
-                        {
-                            "fromNode" : 11, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 0
-                        }, 
-                        {
-                            "fromNode" : 8, 
-                            "fromOutput" : 0, 
-                            "toInput" : 1, 
-                            "toNode" : 0
-                        }, 
-                        {
-                            "fromNode" : 8, 
-                            "fromOutput" : 1, 
-                            "toInput" : 1, 
-                            "toNode" : 1
-                        }, 
-                        {
-                            "fromNode" : 11, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 1
-                        }, 
-                        {
-                            "fromNode" : 8, 
-                            "fromOutput" : 2, 
-                            "toInput" : 1, 
-                            "toNode" : 2
-                        }, 
-                        {
-                            "fromNode" : 11, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 2
-                        }, 
-                        {
-                            "fromNode" : 6, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 10
-                        }, 
-                        {
-                            "fromNode" : 12, 
-                            "fromOutput" : 1, 
-                            "toInput" : 0, 
-                            "toNode" : 5
-                        }, 
-                        {
-                            "fromNode" : 10, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 9
-                        }, 
-                        {
-                            "fromNode" : 12, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 7
-                        }, 
-                        {
-                            "fromNode" : 7, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 4
-                        }, 
-                        {
-                            "fromNode" : 7, 
-                            "fromOutput" : 0, 
-                            "toInput" : 0, 
-                            "toNode" : 6
-                        }
-                    ], 
-                    "name" : "cubemap_reflect.002", 
-                    "nodes" : [
-                        {
-                            "inputs" : [
-                                0.5, 
-                                0.5
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math.001", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [
-                                0.5, 
-                                0.5
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math.002", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [
-                                0.5, 
-                                0.5
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math.003", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Combine RGB", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "COMBRGB"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    1.0
-                                ], 
-                                [
-                                    0.5, 
-                                    0.5, 
-                                    0.5
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Vector Math.001", 
-                            "operation" : "DOT_PRODUCT", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                0.0
-                            ], 
-                            "type" : "VECT_MATH"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "max" : [
-                                1.0, 
-                                1.0, 
-                                1.0
-                            ], 
-                            "min" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "name" : "Mapping", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "rotation" : [
-                                0.0, 
-                                3.1415939331054688, 
-                                0.0
-                            ], 
-                            "scale" : [
-                                1.0, 
-                                -1.0, 
-                                1.0
-                            ], 
-                            "translation" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "type" : "MAPPING", 
-                            "useMax" : false, 
-                            "useMin" : false, 
-                            "vectorType" : "POINT"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Reroute", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "REROUTE"
-                        }, 
-                        {
-                            "convertFrom" : "CAMERA", 
-                            "convertTo" : "WORLD", 
-                            "inputs" : [
-                                [
-                                    0.5, 
-                                    0.5, 
-                                    0.5
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Vector Transform", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "VECT_TRANSFORM", 
-                            "vectorType" : "VECTOR"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.800000011920929, 
-                                    0.800000011920929, 
-                                    0.800000011920929, 
-                                    1.0
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Separate RGB", 
-                            "outputs" : [
-                                0.0, 
-                                0.0, 
-                                0.0
-                            ], 
-                            "type" : "SEPRGB"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "is_active_output" : true, 
-                            "name" : "Group Output.001", 
-                            "outputs" : [], 
-                            "type" : "GROUP_OUTPUT"
-                        }, 
-                        {
-                            "inputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    1.0
-                                ], 
-                                [
-                                    0.5, 
-                                    0.5, 
-                                    0.5
-                                ]
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Vector Math", 
-                            "operation" : "SUBTRACT", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                0.0
-                            ], 
-                            "type" : "VECT_MATH"
-                        }, 
-                        {
-                            "inputs" : [
-                                0.5, 
-                                2.0
-                            ], 
-                            "is_active_output" : false, 
-                            "name" : "Math", 
-                            "operation" : "MULTIPLY", 
-                            "outputs" : [
-                                0.0
-                            ], 
-                            "type" : "MATH", 
-                            "useClamp" : false
-                        }, 
-                        {
-                            "inputs" : [], 
-                            "is_active_output" : false, 
-                            "name" : "Group Input.001", 
-                            "outputs" : [
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                [
-                                    0.0, 
-                                    0.0, 
-                                    0.0
-                                ]
-                            ], 
-                            "type" : "GROUP_INPUT"
-                        }
-                    ]
-                }
             ]
         }
     }, 
     "extensionsUsed" : [
         "S8S_v3d_texture_data", 
-        "S8S_v3d_data", 
         "S8S_v3d_material_data", 
         "S8S_v3d_camera_data", 
+        "S8S_v3d_data", 
         "S8S_v3d_mesh_data", 
         "S8S_v3d_node_data", 
-        "S8S_v3d_animation_data", 
         "S8S_v3d_scene_data"
     ], 
     "images" : [
         {
             "uri" : "PHOTO_0055.jpg"
-        }, 
-        {
-            "uri" : "PHOTO_0055_001.jpg"
         }
     ], 
     "materials" : [
@@ -2254,576 +1272,6 @@
                     "nodeGraph" : {
                         "edges" : [
                             {
-                                "fromNode" : 3, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 0
-                            }, 
-                            {
-                                "fromNode" : 4, 
-                                "fromOutput" : 2, 
-                                "toInput" : 0, 
-                                "toNode" : 3
-                            }, 
-                            {
-                                "fromNode" : 4, 
-                                "fromOutput" : 5, 
-                                "toInput" : 1, 
-                                "toNode" : 3
-                            }, 
-                            {
-                                "fromNode" : 0, 
-                                "fromOutput" : 1, 
-                                "toInput" : 0, 
-                                "toNode" : 2
-                            }, 
-                            {
-                                "fromNode" : 2, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 1
-                            }
-                        ], 
-                        "nodes" : [
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Texture", 
-                                "outputs" : [
-                                    0.0, 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "texture" : 0, 
-                                "type" : "TEXTURE"
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        1.0
-                                    ], 
-                                    1.0
-                                ], 
-                                "is_active_output" : true, 
-                                "name" : "Output", 
-                                "outputs" : [], 
-                                "type" : "OUTPUT"
-                            }, 
-                            {
-                                "blendType" : "MIX", 
-                                "inputs" : [
-                                    0.5, 
-                                    [
-                                        0.258446604013443, 
-                                        0.08065783977508545, 
-                                        0.0, 
-                                        1.0
-                                    ], 
-                                    [
-                                        0.9985896348953247, 
-                                        0.9081404805183411, 
-                                        0.8098324537277222, 
-                                        1.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Mix", 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "type" : "MIX_RGB", 
-                                "useClamp" : false
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Group", 
-                                "nodeGraph" : 0, 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "type" : "GROUP"
-                            }, 
-                            {
-                                "colorLayer" : "", 
-                                "inputs" : [], 
-                                "is_active_output" : false, 
-                                "name" : "Geometry", 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                "type" : "GEOMETRY", 
-                                "uvLayer" : "UVMap"
-                            }
-                        ]
-                    }, 
-                    "useCastShadows" : true, 
-                    "useShadows" : true
-                }
-            }, 
-            "name" : "coin_mat"
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_material_data" : {
-                    "nodeGraph" : {
-                        "edges" : [
-                            {
-                                "fromNode" : 3, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 0
-                            }, 
-                            {
-                                "fromNode" : 4, 
-                                "fromOutput" : 2, 
-                                "toInput" : 0, 
-                                "toNode" : 3
-                            }, 
-                            {
-                                "fromNode" : 4, 
-                                "fromOutput" : 5, 
-                                "toInput" : 1, 
-                                "toNode" : 3
-                            }, 
-                            {
-                                "fromNode" : 0, 
-                                "fromOutput" : 1, 
-                                "toInput" : 0, 
-                                "toNode" : 2
-                            }, 
-                            {
-                                "fromNode" : 2, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 1
-                            }
-                        ], 
-                        "nodes" : [
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Texture", 
-                                "outputs" : [
-                                    0.0, 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "texture" : 0, 
-                                "type" : "TEXTURE"
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        1.0
-                                    ], 
-                                    1.0
-                                ], 
-                                "is_active_output" : true, 
-                                "name" : "Output", 
-                                "outputs" : [], 
-                                "type" : "OUTPUT"
-                            }, 
-                            {
-                                "blendType" : "MIX", 
-                                "inputs" : [
-                                    0.5, 
-                                    [
-                                        0.4101404845714569, 
-                                        0.12488224357366562, 
-                                        0.0, 
-                                        1.0
-                                    ], 
-                                    [
-                                        0.9985896348953247, 
-                                        0.9081404805183411, 
-                                        0.8098324537277222, 
-                                        1.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Mix", 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "type" : "MIX_RGB", 
-                                "useClamp" : false
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Group", 
-                                "nodeGraph" : 0, 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "type" : "GROUP"
-                            }, 
-                            {
-                                "colorLayer" : "", 
-                                "inputs" : [], 
-                                "is_active_output" : false, 
-                                "name" : "Geometry", 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                "type" : "GEOMETRY", 
-                                "uvLayer" : "UVMap"
-                            }
-                        ]
-                    }, 
-                    "useCastShadows" : true, 
-                    "useShadows" : true
-                }
-            }, 
-            "name" : "coin_mat.001"
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_material_data" : {
-                    "nodeGraph" : {
-                        "edges" : [
-                            {
-                                "fromNode" : 3, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 0
-                            }, 
-                            {
-                                "fromNode" : 4, 
-                                "fromOutput" : 2, 
-                                "toInput" : 0, 
-                                "toNode" : 3
-                            }, 
-                            {
-                                "fromNode" : 4, 
-                                "fromOutput" : 5, 
-                                "toInput" : 1, 
-                                "toNode" : 3
-                            }, 
-                            {
-                                "fromNode" : 0, 
-                                "fromOutput" : 1, 
-                                "toInput" : 0, 
-                                "toNode" : 2
-                            }, 
-                            {
-                                "fromNode" : 2, 
-                                "fromOutput" : 0, 
-                                "toInput" : 0, 
-                                "toNode" : 1
-                            }
-                        ], 
-                        "nodes" : [
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Texture", 
-                                "outputs" : [
-                                    0.0, 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "texture" : 3, 
-                                "type" : "TEXTURE"
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        1.0
-                                    ], 
-                                    1.0
-                                ], 
-                                "is_active_output" : true, 
-                                "name" : "Output", 
-                                "outputs" : [], 
-                                "type" : "OUTPUT"
-                            }, 
-                            {
-                                "blendType" : "MIX", 
-                                "inputs" : [
-                                    0.5, 
-                                    [
-                                        0.258446604013443, 
-                                        0.08065783977508545, 
-                                        0.0, 
-                                        1.0
-                                    ], 
-                                    [
-                                        0.9985896348953247, 
-                                        0.9081404805183411, 
-                                        0.8098324537277222, 
-                                        1.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Mix", 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "type" : "MIX_RGB", 
-                                "useClamp" : false
-                            }, 
-                            {
-                                "inputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "is_active_output" : false, 
-                                "name" : "Group", 
-                                "nodeGraph" : 1, 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ]
-                                ], 
-                                "type" : "GROUP"
-                            }, 
-                            {
-                                "colorLayer" : "", 
-                                "inputs" : [], 
-                                "is_active_output" : false, 
-                                "name" : "Geometry", 
-                                "outputs" : [
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    [
-                                        0.0, 
-                                        0.0, 
-                                        0.0, 
-                                        0.0
-                                    ], 
-                                    0.0, 
-                                    0.0
-                                ], 
-                                "type" : "GEOMETRY", 
-                                "uvLayer" : "UVMap"
-                            }
-                        ]
-                    }, 
-                    "useCastShadows" : true, 
-                    "useShadows" : true
-                }
-            }, 
-            "name" : "coin_mat.003"
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_material_data" : {
-                    "nodeGraph" : {
-                        "edges" : [
-                            {
                                 "fromNode" : 0, 
                                 "fromOutput" : 0, 
                                 "toInput" : 0, 
@@ -2887,12 +1335,10 @@
             "extensions" : {
                 "S8S_v3d_mesh_data" : {
                     "colorLayers" : {}, 
-                    "uvLayers" : {
-                        "UVMap" : "TEXCOORD_0"
-                    }
+                    "uvLayers" : {}
                 }
             }, 
-            "name" : "Cylinder.002", 
+            "name" : "Plane.000", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -2902,7 +1348,7 @@
                         "TEXCOORD_0" : 4
                     }, 
                     "indices" : 0, 
-                    "material" : 3, 
+                    "material" : 0, 
                     "mode" : 4
                 }
             ]
@@ -2914,7 +1360,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.000", 
+            "name" : "Plane.001", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -2936,7 +1382,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.001", 
+            "name" : "Plane.002", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -2958,7 +1404,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.002", 
+            "name" : "Plane.003", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -2980,7 +1426,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.003", 
+            "name" : "Plane.004", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -3002,7 +1448,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.004", 
+            "name" : "Plane.005", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -3024,7 +1470,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.005", 
+            "name" : "Plane.006", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -3046,7 +1492,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.006", 
+            "name" : "Plane.007", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -3068,7 +1514,7 @@
                     "uvLayers" : {}
                 }
             }, 
-            "name" : "Plane.007", 
+            "name" : "Plane.008", 
             "primitives" : [
                 {
                     "attributes" : {
@@ -3078,28 +1524,6 @@
                         "TEXCOORD_0" : 44
                     }, 
                     "indices" : 40, 
-                    "material" : 0, 
-                    "mode" : 4
-                }
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_mesh_data" : {
-                    "colorLayers" : {}, 
-                    "uvLayers" : {}
-                }
-            }, 
-            "name" : "Plane.008", 
-            "primitives" : [
-                {
-                    "attributes" : {
-                        "NORMAL" : 47, 
-                        "POSITION" : 46, 
-                        "TANGENT" : 48, 
-                        "TEXCOORD_0" : 49
-                    }, 
-                    "indices" : 45, 
                     "material" : 0, 
                     "mode" : 4
                 }
@@ -3123,7 +1547,7 @@
                     "prop" : "СЧЕТЫ"
                 }
             }, 
-            "mesh" : 5, 
+            "mesh" : 4, 
             "name" : "#1_ABAC"
         }, 
         {
@@ -3142,34 +1566,8 @@
                     "prop" : "АЛЕКСАНДР2"
                 }
             }, 
-            "mesh" : 6, 
+            "mesh" : 5, 
             "name" : "#1_ALEX2"
-        }, 
-        {
-            "children" : [
-                14, 
-                16, 
-                18
-            ], 
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "extras" : {
-                "customProps" : {
-                    "prop" : "135ЛЕТ"
-                }
-            }, 
-            "name" : "#1_COIN135", 
-            "rotation" : [
-                -0.258819043636322, 
-                0.0, 
-                -0.0, 
-                0.9659258127212524
-            ]
         }, 
         {
             "extensions" : {
@@ -3187,7 +1585,7 @@
                     "prop" : "ПУДЕЛЬ"
                 }
             }, 
-            "mesh" : 1, 
+            "mesh" : 0, 
             "name" : "#1_DOG"
         }, 
         {
@@ -3201,7 +1599,7 @@
                     "renderOrder" : 0
                 }
             }, 
-            "mesh" : 7, 
+            "mesh" : 6, 
             "name" : "#1_FELIX"
         }, 
         {
@@ -3212,7 +1610,7 @@
                     "renderOrder" : 0
                 }
             }, 
-            "mesh" : 9, 
+            "mesh" : 8, 
             "name" : "#1_KARTOTEKA"
         }, 
         {
@@ -3231,7 +1629,7 @@
                     "prop" : "ЛАМПА"
                 }
             }, 
-            "mesh" : 3, 
+            "mesh" : 2, 
             "name" : "#1_LAMP"
         }, 
         {
@@ -3250,7 +1648,7 @@
                     "prop" : "DOME"
                 }
             }, 
-            "mesh" : 8, 
+            "mesh" : 7, 
             "name" : "#1_RKC"
         }, 
         {
@@ -3269,7 +1667,7 @@
                     "prop" : "ШТИГЛИЦ"
                 }
             }, 
-            "mesh" : 2, 
+            "mesh" : 1, 
             "name" : "#1_SHTIGLIC"
         }, 
         {
@@ -3280,7 +1678,7 @@
                     "renderOrder" : 0
                 }
             }, 
-            "mesh" : 4, 
+            "mesh" : 3, 
             "name" : "$1_DOME"
         }, 
         {
@@ -3337,122 +1735,6 @@
             ]
         }, 
         {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "extras" : {
-                "customProps" : {
-                    "prop" : "135ЛЕТ"
-                }
-            }, 
-            "mesh" : 0, 
-            "name" : "coin"
-        }, 
-        {
-            "children" : [
-                13
-            ], 
-            "name" : "v3d_Proxy_Node_0_coin", 
-            "rotation" : [
-                0.258819043636322, 
-                0.0, 
-                -0.0, 
-                0.9659258127212524
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "light" : 0, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "name" : "Point", 
-            "rotation" : [
-                -0.7071068286895752, 
-                0.0, 
-                0.0, 
-                0.7071068286895752
-            ], 
-            "scale" : [
-                1.0, 
-                0.9999999403953552, 
-                0.9999999403953552
-            ], 
-            "translation" : [
-                1.507082462310791, 
-                -1.6015756130218506, 
-                0.07066486775875092
-            ]
-        }, 
-        {
-            "children" : [
-                15
-            ], 
-            "name" : "v3d_Proxy_Node_0_Point", 
-            "rotation" : [
-                0.008750909939408302, 
-                0.0, 
-                -0.0, 
-                0.9999617338180542
-            ], 
-            "scale" : [
-                1.0, 
-                0.9999999403953552, 
-                1.0
-            ]
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_node_data" : {
-                    "frustumCulling" : true, 
-                    "hidden" : false, 
-                    "light" : 1, 
-                    "renderOrder" : 0
-                }
-            }, 
-            "name" : "Point.001", 
-            "rotation" : [
-                -0.7071068286895752, 
-                0.0, 
-                0.0, 
-                0.7071068286895752
-            ], 
-            "scale" : [
-                1.0, 
-                0.9999999403953552, 
-                0.9999999403953552
-            ], 
-            "translation" : [
-                -1.4409544467926025, 
-                1.6742560863494873, 
-                0.07066486775875092
-            ]
-        }, 
-        {
-            "children" : [
-                17
-            ], 
-            "name" : "v3d_Proxy_Node_0_Point.001", 
-            "rotation" : [
-                0.008750909939408302, 
-                0.0, 
-                -0.0, 
-                0.9999617338180542
-            ], 
-            "scale" : [
-                1.0, 
-                0.9999999403953552, 
-                1.0
-            ]
-        }, 
-        {
             "children" : [
                 0, 
                 1, 
@@ -3462,8 +1744,7 @@
                 5, 
                 6, 
                 7, 
-                8, 
-                9
+                8
             ], 
             "extensions" : {
                 "S8S_v3d_node_data" : {
@@ -3484,7 +1765,7 @@
             "extensions" : {
                 "S8S_v3d_scene_data" : {
                     "aaMethod" : "AUTO", 
-                    "light" : 2, 
+                    "light" : 0, 
                     "postprocessing" : [
                         {
                             "edgeGlow" : 0.0, 
@@ -3512,7 +1793,7 @@
                         "type" : "PCFSOFT"
                     }, 
                     "useHDR" : true, 
-                    "worldMaterial" : 4
+                    "worldMaterial" : 1
                 }
             }, 
             "extras" : {
@@ -3520,10 +1801,10 @@
             }, 
             "name" : "Scene", 
             "nodes" : [
-                19, 
-                11, 
+                12, 
                 10, 
-                12
+                9, 
+                11
             ]
         }
     ], 
@@ -3537,36 +1818,6 @@
             "name" : "_dome_texture", 
             "sampler" : 0, 
             "source" : 0
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_texture_data" : {
-                    "colorSpace" : "srgb"
-                }
-            }, 
-            "name" : "_dome_texture", 
-            "sampler" : 0, 
-            "source" : 0
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_texture_data" : {
-                    "colorSpace" : "srgb"
-                }
-            }, 
-            "name" : "_dome_texture", 
-            "sampler" : 0, 
-            "source" : 0
-        }, 
-        {
-            "extensions" : {
-                "S8S_v3d_texture_data" : {
-                    "colorSpace" : "srgb"
-                }
-            }, 
-            "name" : "_dome_texture.002", 
-            "sampler" : 0, 
-            "source" : 1
         }
     ]
 }
