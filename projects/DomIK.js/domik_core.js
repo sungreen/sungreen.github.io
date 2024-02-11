@@ -1,25 +1,23 @@
 import * as THREE from './libs/three.module.min.js';
 import GUI  from './libs/lil-gui.module.min.js';
 
-const domik_js_version = (1.01);
 
+const domik_js_version = "1.02";
 const scene = new THREE.Scene();
 const aspect = window.innerWidth / window.innerHeight;
 const size = 2;
 const width = size*aspect;
 const height = size;
-const offsetx =  0;
-const offsety =  0;
-const camera = new THREE.OrthographicCamera( -width/2+offsetx, width/2+offsetx, height/2+offsety, -height/2+offsety, 0.001, 1000 );
+const camera = new THREE.OrthographicCamera( -width/2, width/2, height, 0, 0.001, 1000 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 const domik = {
-	dome: { radius: 2.5, fix: false },
+	dome: { radius: 2.5 },
 	mirror: { radius: 0.25, offset: 0.0, elevation: 0.0 },
-	projector: { offset: -0.8, elevation: 0.0 },
-	screen: { scale:1, vert:0, horz:0, mode: "" },
+	projector: { offset: 0.5, elevation: 0.0 },
+	screen: { scale:1, vert:0, horz:0 },
 }
 
 const options = {
@@ -42,31 +40,44 @@ const gui = new GUI();
 gui.title("DomIK Calibration")
 gui.onChange( event => {updateOptions( event );} );
 
-gui.add( options, 'preset', ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"] ).onChange( value=> {presetOptions( value );} );
 
-const fol1 = gui.addFolder( 'Dome' );
+const fol0 = gui.addFolder( 'Setup' );
+fol0.add( options, 'preset', ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"] ).onChange( value=> {presetOptions( value );} );
+
+const fol1 = fol0.addFolder( 'Dome' );
 fol1.add( domik.dome, 'radius', 2, 5, 0.1 );
-fol1.add( domik.dome, 'fix');
 
-const fol2 = gui.addFolder( 'Mirror' );
+const fol2 = fol0.addFolder( 'Mirror' );
 fol2.add( domik.mirror, 'radius', 0.1, 0.5, 0.01 );
 fol2.add( domik.mirror, 'offset', -1, 1, 0.01 );
 fol2.add( domik.mirror, 'elevation', -1, 1, 0.01 );
 
-const fol3 = gui.addFolder( 'Projector' );
-fol3.add( domik.projector, 'offset', -1, 1, 0.01 );
+const fol3 = fol0.addFolder( 'Projector' );
+fol3.add( domik.projector, 'offset', 0.1, 1, 0.01 );
 fol3.add( domik.projector, 'elevation', -1, 1, 0.01 );
 
 const fol4 = gui.addFolder( 'Screen' );
 fol4.add( domik.screen, 'scale', 0.1, 10, 0.01 );
 fol4.add( domik.screen, 'vert', -1.0, 1.0, 0.01 );
 fol4.add( domik.screen, 'horz', -1.0, 1.0, 0.01 );
+//fol4.add( domik.screen, 'fix').name("fix zenit");
 
 const fol5 = gui.addFolder( 'Tools' );
 fol5.add( options, 'reload' ).name("Reload page");
 fol5.add( options, 'about' ).name("About");
 //fol5.add( options, 'email' ).name("Send email");
 
+function updateMenu(gui) {
+	if( options.preset=="Custom" ) {
+		fol1.show();
+		fol2.show();
+		fol3.show();
+	} else {
+		fol1.hide();
+		fol2.hide();
+		fol3.hide();
+	}
+}
 
 function updateDisplay(gui) {
 	for (var i in gui.controllers) {
@@ -81,22 +92,23 @@ function presetOptions( value ) {
 	if( value == "Dome 2.5 Mirror 0.25" ) {
 		domik.dome.radius = 2.5;
 		domik.mirror.radius = 0.25;
-		domik.projector.offset = -0.8;
+		domik.projector.offset = 0.5;
 	}
 	if( value == "Dome 5.0 Mirror 0.37" ) {
 		domik.dome.radius = 5.0;
 		domik.mirror.radius = 0.37;
-		domik.projector.offset = -0.8;
+		domik.projector.offset = 0.6;
 	}
 	if( value == "Expert" ) {
 		domik.dome.radius = 100.0;
 		domik.mirror.radius = 0.01;
-		domik.projector.offset = -0.8;
+		domik.projector.offset = 1.0;
 	}
 	if( value == "Custom" ) {
 	}
 	updateScene();
 	updateDisplay(gui);
+	updateMenu(gui);
 }
 
 function updateOptions( event ) {
@@ -108,6 +120,7 @@ function updateScene() {
 	while(scene.children.length > 0){ 
 		scene.remove(scene.children[0]); 
 	}
+
 	wrap = makeWrap(domik);
 	wrap.rotation.y = Math.PI/2;
 	scene.add( wrap );
@@ -133,27 +146,27 @@ function vec3add( v0, v1 ) {
 
 function calcDomik( domik ){
 	domik.dome.position = vec3( 0, 0, 0 );
-	domik.mirror.position = vec3( domik.dome.radius+domik.mirror.offset, domik.mirror.elevation, 0);
-	domik.projector.position = vec3( domik.dome.radius+domik.mirror.offset+domik.projector.offset-domik.mirror.radius, domik.mirror.elevation+domik.projector.elevation, 0);
+	domik.mirror.position = vec3( domik.dome.radius+domik.mirror.offset, domik.mirror.elevation, 0 );
+	domik.projector.position = vec3( domik.dome.radius+domik.mirror.offset-domik.mirror.radius-domik.projector.offset, domik.mirror.elevation+domik.projector.elevation, 0 );
 
 
-	const r = domik.mirror.radius;
-	const mp = vec3sub( domik.mirror.position, domik.projector.position );
-	const mu = vec3add( mp,vec3(0,r,0) );
-	const mr = mp.clone().projectOnVector(mu);
-	const ms = vec3add( vec3sub(mr,mp).normalize().multiplyScalar(r), mp );
-	const mw = ms.multiplyScalar(mp.x/ms.x);
-	const x = -domik.dome.radius;
-	const fp = vec3sub( onMirrorReflect( domik, vec3(x,0,0) ), domik.projector.position );
-	const fw = fp.multiplyScalar(mw.x/fp.x);
+	const Rm = domik.mirror.radius;
+	const Rd = domik.dome.radius;
+
+	const M = vec3sub( domik.mirror.position, domik.projector.position );
+	const base = M.x;
+	const Mb = vec3sub( onMirrorReflect( domik, vec3(-Rd, 0, 0) ), domik.projector.position );
+	const Mz = vec3sub( onMirrorReflect( domik, vec3( 0, Rd, 0) ), domik.projector.position );
+	const Pb = Mb.clone().multiplyScalar(base/Mb.x);
+	const Pz = Mz.clone().multiplyScalar(base/Mz.x);
 
 	domik.wrap = {
-		up: mw,
-		down: fw,
-		factor: 1/(mw.y-fw.y),
-		base: mp.x,
-		maxray: Math.sqrt( ms.length()*ms.length()+r*r )*0.9
+		shift: vec3( 0, Pb.y, 0 ),
+		factor: 1/(Pz.y-Pb.y),
+		base: M.x,
+		maxray: 1000
 	}
+	console.log(domik.wrap);
 }
 
 function angleTest( domik, dd, pp, mm ) {
@@ -199,7 +212,7 @@ function onProjector(domik, dd) {
 	if (rayDist>maxray) return null;
 	const fp = vec3sub( pr, domik.projector.position );
 	const fw = fp.multiplyScalar( domik.wrap.base/fp.x );
-	const ps = vec3sub( vec3sub( fw, domik.wrap.down ).multiplyScalar( domik.wrap.factor*2 ),vec3(0,1,0) );
+	const ps = vec3sub( fw, domik.wrap.shift ).multiplyScalar( domik.wrap.factor );
 	return ps;
 }
 
@@ -291,7 +304,7 @@ function animate() {
 	requestAnimationFrame( animate );
 	wrap.scale.set( 0, domik.screen.scale, domik.screen.scale );
 	wrap.position.x = domik.screen.horz;
-	wrap.position.y = domik.screen.vert;
+	wrap.position.y = domik.screen.vert; //+domik.screen.scale;
 
 	renderer.render( scene, camera );
 }
