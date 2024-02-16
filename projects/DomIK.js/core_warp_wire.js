@@ -1,24 +1,42 @@
 import * as THREE from './vendor/three.module.min.js';
 import * as DOMIK from './core_domik.js';
 
-// WRAP
+// WARP WIRE
 
-const wrap_options = {
-    segment_count: 13,
-    scale: 1,
-    subdiv: 5
+const options = {
+    wireframe: true,
+    segments: 9,
+    subdiv: 7,
+}
+const controls = {
+    segments: {}
+}
+
+export function init( app, folder ) {
+    folder.add( options, 'wireframe' );
+    controls.segments = folder.add( options, 'segments' );
+}
+
+export function update( app ) {
+    if (options.wireframe) {
+        controls.segments.show();
+    } else {
+        controls.segments.hide();
+    }
+    
+}
+
+export function refresh( app ) {
 }
 
 function addPoint( points, point ) { if(point===null) {} else { points.push(point); } }
 
-function makeWrap( app ) {
+function make( app ) {
     const domik = DOMIK.get_options();
-    const wrap = wrap_options;
+    const warp = options;
 
-    const points = [];
-    const segment = wrap.segment_count;
-    const scale = wrap.scale;
-    const subdiv = wrap.subdiv;
+    const segment = warp.segments;
+    const subdiv = warp.subdiv;
     const ring_count = segment;
     const segment_count = ring_count*4;
     const r = domik.dome.radius;
@@ -86,10 +104,12 @@ function makeWrap( app ) {
     return group;
 }
 
-export function get_root( app ) {
-    return makeWrap( app );
+export function get_shape( app ) {
+    const warp = make( app );
+    warp.rotation.y = Math.PI/2;
+    return warp;
 }
 
 export function get_options() {
-    return wrap_options;
+    return options;
 }

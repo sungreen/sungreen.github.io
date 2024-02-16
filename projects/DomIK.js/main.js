@@ -2,130 +2,67 @@ import * as THREE from './vendor/three.module.min.js';
 import GUI  from './vendor/lil-gui.module.min.js';
 
 import * as DOMIK from './core_domik.js'
-import * as WRAP_WIRE from './core_wrap_wire.js'
-import * as WRAP_TEXTURE from './core_wrap_texture.js'
-
-var WRAP = null;
+import * as WARP_WIRE from './core_warp_wire.js'
+import * as WARP_TEXTURE from './core_rewarp.js'
 
 // GUI
 
-const app_options = {
+function downdloadOptions() {
+    const link = document.createElement("a");
+    const content = JSON.stringify(DOMIK.get_options());
+    const file = new Blob([content], { type: 'text/plain' });
+    link.href = URL.createObjectURL(file);
+    link.download = "domik_options.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
+const options = {
     name: "DomIK.JS",
-    version: "1.05b",
+    version: "1.05c",
     reload: function() { window.location.reload(); },
-    about: function() { const app = app_options; alert(app.name+" ("+app.version+")"); },
-    preset: "Custom",
-    mode: "Wire"
+    about: function() { alert(options.name+" ("+options.version+")"); },
+    download: downdloadOptions, 
+    preset: "Dome 2.5 Mirror 0.25",
+    screen: {
+        scale: 1,
+        vert: 0,
+        horz: 0
+    }
 }
 
-function updateOptions( event ) {
-    const app = app_options;
-    updateScene( app );
+const controls = {
+    setup: {},
+    screen: {}
 }
 
-function presetOptions( preset, mode ) {
-    presetApp( preset, mode );
-}
-
-function initGUI( app ) {
-    const domik = DOMIK.get_options();
+function init() {
 
     const gui = new GUI();
-    gui.title( app.name )
-    gui.onChange( event => {updateOptions( event );} );
+    gui.title( options.name )
+    gui.onChange( event => { updateOptions( event );} );
 
-    const fol0 = gui.addFolder( 'Setup' );
-    fol0.add( app, 'preset', ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"] ).onChange( value=> {presetOptions( value, null );} );
+    controls.setup = gui.addFolder( 'Setup' );
+    controls.setup.add( options, 'preset', ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"] ).onChange( value=> {changePreset( value );} );
 
-    const fol1 = fol0.addFolder( 'Dome' );
-    fol1.add( domik.dome, 'radius', 2, 5, 0.1 );
+    controls.screen = gui.addFolder( 'Screen' );
+    controls.screen.add( options.screen, 'scale', 0.1, 10, 0.01 );
+    controls.screen.add( options.screen, 'vert', -1.0, 1.0, 0.01 );
+    controls.screen.add( options.screen, 'horz', -1.0, 1.0, 0.01 );
 
-    const fol2 = fol0.addFolder( 'Mirror' );
-    fol2.add( domik.mirror, 'radius', 0.1, 0.5, 0.01 );
-    fol2.add( domik.mirror, 'offset', -1, 1, 0.01 );
-    fol2.add( domik.mirror, 'elevation', -1, 1, 0.01 );
+    const tools = gui.addFolder( 'Tools' );
+    tools.add( options, 'reload' ).name("Reload Page");
+    tools.add( options, 'download' ).name("Download for Blender/DomIK");
+    tools.add( options, 'about' ).name("About");
 
-    const fol3 = fol0.addFolder( 'Projector' );
-    fol3.add( domik.projector, 'offset', 0.1, 1, 0.01 );
-    fol3.add( domik.projector, 'elevation', -1, 1, 0.01 );
+    options.gui = gui;
 
-    const fol4 = gui.addFolder( 'Screen' );
-    fol4.add( domik.screen, 'scale', 0.1, 10, 0.01 );
-    fol4.add( domik.screen, 'vert', -1.0, 1.0, 0.01 );
-    fol4.add( domik.screen, 'horz', -1.0, 1.0, 0.01 );
-    fol4.add( app, 'mode', ["Wire", "Image0", "Image1", "Video0", "Video1", "Video2", "Video3"] ).onChange( value=> {presetOptions( null, value );} );
+    DOMIK.init( options, controls.setup );
+    WARP_WIRE.init( options, controls.screen );
+    WARP_TEXTURE.init( options, controls.screen );
 
-    const fol5 = gui.addFolder( 'Tools' );
-    fol5.add( app, 'reload' ).name("Reload page");
-    fol5.add( app, 'about' ).name("About");
+    setPreset( "Dome 2.5 Mirror 0.25" );
 
-    app.gui = gui;
-}
-
-function updateDisplay( gui ) {
-    for (let i in gui.controllers) {
-        gui.controllers[i].updateDisplay();
-    }
-    for (let f in gui.folders) {
-        updateDisplay(gui.folders[f]);
-    }
-}
-
-function updateGUI( app ) {
-    updateDisplay( app.gui );
-    // if( app.preset=="Custom" ) {
-    //     app.gui.fol1.show();
-    //     app.gui.fol2.show();
-    //     app.gui.fol3.show();
-    // } else {
-    //     app.gui.fol1.hide();
-    //     app.gui.fol2.hide();
-    //     app.gui.fol3.hide();
-    // }
-}
-
-// APP
-
-function presetApp( preset, mode ) {
-    const domik = DOMIK.get_options();
-
-    const app = app_options;
-    if ( preset === null ) {
-    } else {
-        if( preset == "Dome 2.5 Mirror 0.25" ) {
-            domik.dome.radius = 2.5;
-            domik.mirror.radius = 0.25;
-            domik.projector.offset = 0.5;
-            domik.screen.scale = 1.17;
-        }
-        if( preset == "Dome 5.0 Mirror 0.37" ) {
-            domik.dome.radius = 5.0;
-            domik.mirror.radius = 0.37;
-            domik.projector.offset = 0.6;
-            domik.screen.scale = 1.17;
-        }
-        if( preset == "Expert" ) {
-            domik.dome.radius = 100.0;
-            domik.mirror.radius = 0.01;
-            domik.projector.offset = 1.0;
-            domik.screen.scale = 1.17;
-        }
-    }
-
-    if ( mode === null ) {
-    } else {
-        if( mode == "Wire" ) {
-            WRAP = WRAP_WIRE;
-        } else {
-            WRAP = WRAP_TEXTURE;
-            WRAP.get_options().mode = mode;
-        }
-    }
-	updateScene( app );
-	updateGUI( app );
-}
-
-function initScene( app ) {
     const scene = new THREE.Scene();
     const aspect = window.innerWidth / window.innerHeight;
     const size = 2;
@@ -136,48 +73,98 @@ function initScene( app ) {
     render.setSize( window.innerWidth, window.innerHeight );
 
     document.body.appendChild( render.domElement );
-    app.scene = scene;
-    app.camera = camera;
-    app.render = render;
+    options.root = new THREE.Group();
+    options.camera = camera;
+    options.render = render;
+    options.scene = scene;
+    scene.add( options.root );
 }
 
-function renderScene( app ) {
-    app.render.render( app.scene, app.camera );
-}
-
-function updateScene( app ) {
-    DOMIK.recalc();
-    while(app.scene.children.length > 0){ 
-        app.scene.remove(app.scene.children[0]); 
+function updateDisplay( gui ) {
+    for (let i in gui.controllers) {
+        const controller = gui.controllers[i];
+        controller.updateDisplay();
+        console.log(controller.property,":",controller.object[controller.property]);
     }
-    const wrap = WRAP.get_root( app );
-    wrap.rotation.y = Math.PI/2;
-    app.camera.position.z = 100;
-    app.scene.add( wrap );
-    app.root = wrap;
-    renderScene( app );
+    for (let f in gui.folders) {
+        updateDisplay(gui.folders[f]);
+    }
+}
+
+function updateOptions( event ) {
+    update();
+}
+
+function changePreset( preset ) {
+    setPreset( preset );
+    update();
+}
+
+function setPreset( preset ) {
+    const domik = DOMIK.get_options();
+    if ( preset === null ) {
+    } else {
+        if( preset == "Dome 2.5 Mirror 0.25" ) {
+            domik.dome.radius = 2.5;
+            domik.mirror.radius = 0.25;
+            domik.projector.offset = 0.5;
+        }
+        if( preset == "Dome 5.0 Mirror 0.37" ) {
+            domik.dome.radius = 5.0;
+            domik.mirror.radius = 0.37;
+            domik.projector.offset = 0.6;
+        }
+        if( preset == "Expert" ) {
+            domik.dome.radius = 100.0;
+            domik.mirror.radius = 0.01;
+            domik.projector.offset = 1.0;
+//            domik.screen.scale = 1.17;
+        }
+    }
+}
+
+function renderScene() {
+    options.render.render( options.scene, options.camera );
+}
+
+function update() {
+
+    DOMIK.update( options );
+    WARP_WIRE.update( options );
+    WARP_TEXTURE.update( options );
+
+    options.camera.position.z = 100;
+    options.scene.remove( options.root );
+    options.root = new THREE.Group();
+    options.scene.add( options.root );
+
+    if ( WARP_TEXTURE.get_options().background ) {
+        const warp = WARP_TEXTURE.get_shape( options );
+        options.root.add( warp );
+    }
+    if ( WARP_WIRE.get_options().wireframe ) {
+        const warp = WARP_WIRE.get_shape( options );
+        options.root.add( warp );
+    }
+
+    updateDisplay( options.gui );
+    renderScene();
 }
 
 function animate() {
     requestAnimationFrame( animate );
-    
-    const domik = DOMIK.get_options();
-    const app = app_options;
-
-    app.root.scale.set( 0, domik.screen.scale, domik.screen.scale );
-    app.root.position.x = domik.screen.horz;
-    app.root.position.y = domik.screen.vert;
-    renderScene( app );
+    const app = options;
+    app.scene.scale.set( app.screen.scale, app.screen.scale, app.screen.scale );
+    app.scene.position.x = app.screen.horz;
+    app.scene.position.y = app.screen.vert;
+    //app.scene.rotation.x += 0.005;
+    //app.scene.rotation.y += 0.005;
+    renderScene();
 }
 
 function main() {
-    const app = app_options;
-    initScene( app );
-    initGUI( app );
-
-    presetApp( 'Custom', 'Wire' );
-    updateScene( app );
-
+    init();
+    update();
     animate();
 }
 
