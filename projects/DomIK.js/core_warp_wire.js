@@ -13,7 +13,7 @@ const controls = {
 }
 
 export function init( app, folder ) {
-    folder.add( options, 'wireframe' );
+    folder.add( options, 'wireframe' ).name("show wireframe");
     controls.segments = folder.add( options, 'segments' );
 }
 

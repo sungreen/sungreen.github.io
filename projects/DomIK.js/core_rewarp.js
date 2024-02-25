@@ -4,36 +4,16 @@ import * as DOMIK from './core_domik.js';
 // warp
 
 const options = {
-    segments: 100,
-    scale: 1,
-    subdiv: 5,
-    background: false,
-    texture: "Image0"
-}
-
-const sources = {
-    Image0: { texture:"./content/fisheye/Fisheye.jpg", video:false },
-    Image1: { texture:"./content/fisheye/Dome.png", video:false },
-    Video0: { texture:"./content/fisheye/RotateRedWire.mkv", video:true },
-    Video1: { texture:"./content/fisheye/MoveTopRedWire.mkv", video:true },
-    Video2: { texture:"./content/fisheye/MoveFrontRedWire.mkv", video:true },
-    Video3: { texture:"./content/fisheye/Sea.mkv", video:true }
-}
-
-const controls = {
-    texture: {}
+    background: true,
 }
 
 export function init( app, folder ) {
-    folder.add( options, 'background' );
-    controls.texture = folder.add( options, 'texture', ["Image0", "Image1", "Video0", "Video1", "Video2", "Video3" ] ).onChange( value=> {presetOptions( null, value );} );
+    folder.add( options, 'background' ).name("show texture");
 }
 
 export function update( app ) {
     if (options.background) {
-        controls.texture.show();
     } else {
-        controls.texture.hide();
     }
 }
 
@@ -122,32 +102,29 @@ function make( app ) {
     subtri( a0, a1, v0, level, vertices, indices, uvs );
     subtri( a1, a2, v0, level, vertices, indices, uvs );
 
-    const source = sources[options.texture]
-    const texture = source.texture
-    const isVideo = source.video
+    let uvTex;
 
-    if ( isVideo ) {
-        var video = document.getElementById( 'video' );
-        video.src = texture;
-        video.load();
-        var promise = document.querySelector( 'video' ).play();
-
-        if (promise !== undefined) {
-            promise.then(_ => { video.play();}).catch( error => {});
-        }
-        video.addEventListener( 'play', function () { this.currentTime = 3; } );
-        var uvTex = new THREE.VideoTexture( video );
+    var video = document.getElementById( 'videozone' );
+    if( video ) {
+        uvTex = new THREE.VideoTexture( video );
         uvTex.colorSpace = THREE.SRGBColorSpace;
     } else {
-        var uvTex = new THREE.TextureLoader().load( texture );
+        var img = document.getElementById( 'imagezone' );
+        if( img ) {
+            uvTex = new THREE.TextureLoader().load( img.currentSrc );
+            //uvTex = new THREE.TextureLoader().load( img.baseURI );
+            //uvTex = new THREE.TextureLoader( img );
+        }
     }
-    const material	= new THREE.MeshBasicMaterial( { map: uvTex, side: THREE.DoubleSide, } );
-    const geometry	= new THREE.BufferGeometry();
-
-    geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
-    geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-    geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
-    return new THREE.Mesh( geometry, material );
+    if( uvTex ) {
+        const material	= new THREE.MeshBasicMaterial( { map: uvTex, side: THREE.DoubleSide, } );
+        const geometry	= new THREE.BufferGeometry();
+        geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
+        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+        geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+        group.add( new THREE.Mesh( geometry, material ) );
+    }
+    return group;
 }
 
 export function get_shape( app ) {
