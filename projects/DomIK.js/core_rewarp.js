@@ -8,6 +8,7 @@ const options = {
 }
 
 export function init( app, folder ) {
+    options.app = app;
     folder.add( options, 'background' ).name("show texture");
 }
 
@@ -84,45 +85,40 @@ function subtri( a, b, c, level, vertices, indices, uvs ) {
 
 function make( app ) {
     const group = new THREE.Group();
-    const a0 = new THREE.Vector3(  0.0, 0.0,-2.0 );
-    const a1 = new THREE.Vector3(  0.0, 2.0, 0.0 );
-    const a2 = new THREE.Vector3(  0.0, 0.0, 2.0 );
-    const v0 = new THREE.Vector3(  0.0, 0.0, 0.0 );
-    const level = 5;
 
-    const size = 2*Math.pow(4, level);
-
-    offs_i = 0;
-    offs_v = 0;
-    offs_u = 0;
-    vertices = new Float32Array( size*9 )
-    indices = new Uint32Array( size*3 );
-    uvs = new Float32Array( size*6 );
-
-    subtri( a0, a1, v0, level, vertices, indices, uvs );
-    subtri( a1, a2, v0, level, vertices, indices, uvs );
-
-    let uvTex;
-
-    var video = document.getElementById( 'videozone' );
-    if( video ) {
-        uvTex = new THREE.VideoTexture( video );
-        uvTex.colorSpace = THREE.SRGBColorSpace;
-    } else {
-        var img = document.getElementById( 'imagezone' );
-        if( img ) {
-            uvTex = new THREE.TextureLoader().load( img.currentSrc );
-            //uvTex = new THREE.TextureLoader().load( img.baseURI );
-            //uvTex = new THREE.TextureLoader( img );
+    if ( app.content ) {
+        const content = app.content;
+        let uvTex;
+        if( content.type == 'video' ) {
+            uvTex = new THREE.VideoTexture( content.data );
+            uvTex.colorSpace = THREE.SRGBColorSpace;
         }
-    }
-    if( uvTex ) {
-        const material	= new THREE.MeshBasicMaterial( { map: uvTex, side: THREE.DoubleSide, } );
-        const geometry	= new THREE.BufferGeometry();
-        geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
-        geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-        geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
-        group.add( new THREE.Mesh( geometry, material ) );
+        if( content.type == 'image' ) {
+            uvTex = new THREE.TextureLoader().load( content.data.currentSrc );
+            uvTex.colorSpace = THREE.SRGBColorSpace;
+        }
+        if( uvTex ) {
+            const a0 = new THREE.Vector3(  0.0, 0.0,-2.0 );
+            const a1 = new THREE.Vector3(  0.0, 2.0, 0.0 );
+            const a2 = new THREE.Vector3(  0.0, 0.0, 2.0 );
+            const v0 = new THREE.Vector3(  0.0, 0.0, 0.0 );
+            const level = 5;
+            const size = 2*Math.pow(4, level);
+            offs_i = 0;
+            offs_v = 0;
+            offs_u = 0;
+            vertices = new Float32Array( size*9 )
+            indices = new Uint32Array( size*3 );
+            uvs = new Float32Array( size*6 );
+            subtri( a0, a1, v0, level, vertices, indices, uvs );
+            subtri( a1, a2, v0, level, vertices, indices, uvs );
+            const material	= new THREE.MeshBasicMaterial( { map: uvTex, side: THREE.DoubleSide, } );
+            const geometry	= new THREE.BufferGeometry();
+            geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
+            geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+            geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+            group.add( new THREE.Mesh( geometry, material ) );
+        }
     }
     return group;
 }

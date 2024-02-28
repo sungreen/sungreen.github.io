@@ -1,0 +1,23 @@
+body {
+	position: absolute;
+	margin: 0;
+	background: radial-gradient(circle, skyblue, steelblue);
+}
+
+#logo {
+	position: absolute;
+	margin: 15px;
+	width: 75px;
+}
+
+.lil-gui {
+	--background-color: #002b36;
+	--text-color: #b2c2c2;
+	--title-background-color: #001f27;
+	--title-text-color: #b2c2c2;
+	--widget-color: #094e5f;
+	--hover-color: #0a6277;
+	--focus-color: #0b6c84;
+	--number-color: #2aa0f2;
+	--string-color: #97ad00;
+}

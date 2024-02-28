@@ -4,81 +4,12 @@
 		<meta charset="utf-8">
 		<title>DomIK.JS</title>
 		<link rel="icon" type="image/x-icon" href="./static/favicon.png"/>
-		<style>
-			body {
-				position: absolute;
-				margin: 0;
-  				display: flex;
-  				justify-content: left;
-  				align-items: top;
-  				min-height: 50vh;
-  				max-width: 320px;
-  				background: radial-gradient(circle, skyblue, steelblue);
-			}
-			#zone {
-				margin: 0.5em;
-				position: absolute;
-				z-index: 999999;
-				color:aliceblue;
-				font-size: 20pt;
-				font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-			}
-			#dropzone {
-				position: relative;
-				margin: 0.1em;
- 				width: 30px;
-  				height: 30px;
-  				display: flex;
-  				justify-content: center;
-  				align-items: center;
-  				border: 2px solid;
-  				border-radius: 10px;
-  				user-select: none;
-  				cursor: pointer;
-				background-color: cornflowerblue;
-			}
-			#inputvideo {
-  				display: none;
-			}
-			img,
-			#videozone {
-  				max-width: 20vw;
-  				max-height: 20vh;
-				border: 2px solid;
-				border-radius: 10px;
-			}
-
-			.lil-gui {
-				--background-color: #002b36;
-				--text-color: #b2c2c2;
-				--title-background-color: #001f27;
-				--title-text-color: #b2c2c2;
-				--widget-color: #094e5f;
-				--hover-color: #0a6277;
-				--focus-color: #0b6c84;
-				--number-color: #2aa0f2;
-				--string-color: #97ad00;
-			}
-		</style>
-		<!-- <video id="video" loop muted crossOrigin="anonymous" playsinline style="display:none">
-			<source src="./content/fisheye/Sea.mkv">
-		</video> -->
+		<link rel="stylesheet" type="text/css" href="./gui/css/stylesheet.css">
+		<link rel="stylesheet" type="text/css" href="./gui/css/skyblue.css">
 	</head>
 	<body>
 		<script type="module" src="./main.js"></script>
-		<div id="zone">
-			<!-- <p><select name="Source" id="sourcetype">
-				<option value=1>Fisheye</option>
-				<option value=2>*Equirectangular</option>
-				<option value=3>*Mirror ball</option>
-				<option value=4>*Cubemap</option>
-				<option value=5>*Flat</option>
-			</select></p> -->
-			<p id="textzone">Add Video/Image</p>
-			<div id="sourcezone"></div>
-			<a id="dropzone">+</a>
-			<input id="inputvideo" type="file">
-		</div>
+		<img src="./static/logo.png" id="logo"></img>
 		<div id="container"></div>
 	</body>
 </html>
