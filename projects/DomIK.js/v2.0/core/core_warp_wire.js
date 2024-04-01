@@ -3,7 +3,7 @@ import * as DOMIK from './core_domik.js';
 import { options } from './core_options.js'
 
 options.tools = {
-    wireframe: true,
+    wireframe: false,
     segments: 9,
     subdiv: 7
 }
