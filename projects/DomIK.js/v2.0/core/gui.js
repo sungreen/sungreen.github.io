@@ -579,6 +579,7 @@ function mkToolsMenu( styles ) {
     folder_transform.select( options.tools, 'transformType', options.tools.transformTypeList ).setLabel( 'Карта текстуры' );
     folder_transform.range( options.tools, 'factor',  180, 360, 1 ).setLabel( 'Охват' );
     folder_transform.range( options.tools, 'rotate', -180, 180, 1 ).setLabel( 'Поворот' );
+    folder_transform.range( options.tools, 'flexture', 0, 1, 0.1 ).setLabel( 'Кривизна' );
     folder_transform.select( options.tools, 'skin', options.tools.skins ).setLabel( 'Окружение' );
     folder_transform.checkbox( options.tools, 'wireframe' ).setLabel( 'Сетка' );
     folder_transform.range( options.tools, 'segments', 3, 12, 1 ).setLabel( 'Сегменты' );

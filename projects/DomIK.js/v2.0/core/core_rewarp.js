@@ -22,6 +22,7 @@ options.tools.triCount = 0;
 options.tools.limitEdge = 0;
 options.tools.factor = 360;
 options.tools.rotate = 0;
+options.tools.flexture = 0;
 
 export function init( app, folder ) {}
 export function update( app ) {}
@@ -183,6 +184,7 @@ function make( app ) {
         u_skin: { type: 't', value: options.content.uvSkin },
         u_factor: { type: "f", value: options.tools.factor/360.0 },
         u_rotate: { type: "f", value: options.tools.rotate/180.0 },
+        u_flexture: { type: "f", value: options.tools.flexture },
         u_time : { type: "f", value: 0.0 },
         u_mouse: { type: "v2", value: new THREE.Vector2() },
         u_resolution: { type: "v2", value: new THREE.Vector2() }
