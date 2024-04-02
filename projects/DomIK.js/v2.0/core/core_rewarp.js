@@ -20,7 +20,7 @@ options.tools.level = 7;
 options.tools.limit = 7;
 options.tools.triCount = 0;
 options.tools.limitEdge = 0;
-options.tools.factor = 0.75;
+options.tools.factor = 360;
 options.tools.rotate = 0;
 
 export function init( app, folder ) {}
@@ -181,8 +181,8 @@ function make( app ) {
     options.uniforms = {
         u_image: { type: 't', value: options.content.uvTex },
         u_skin: { type: 't', value: options.content.uvSkin },
-        u_factor: { type: "f", value: options.tools.factor },
-        u_rotate: { type: "f", value: options.tools.rotate },
+        u_factor: { type: "f", value: options.tools.factor/360.0 },
+        u_rotate: { type: "f", value: options.tools.rotate/180.0 },
         u_time : { type: "f", value: 0.0 },
         u_mouse: { type: "v2", value: new THREE.Vector2() },
         u_resolution: { type: "v2", value: new THREE.Vector2() }

@@ -377,7 +377,7 @@ function changeDemoset( demo, onload=null ) {
 
     options.tools.transformType = ( demo.transformType ) ? demo.transformType : null;
     options.tools.wireframe = ( demo.transformType ) ? demo.wireframe : false;
-    options.tools.factor = ( demo.factor ) ? demo.factor : 0.75;
+    options.tools.factor = ( demo.factor ) ? demo.factor : 360*0.75;
     options.content.type = ( demo.type ) ? demo.type : 'video';
     options.content.file = ( demo.file ) ? demo.file : null;
 
@@ -503,23 +503,23 @@ function mkMediaFile( onload ) {
 function mkPlayer( styles ) {
     const canvas = mkCanvas( styles );
     const folder = canvas.folder( 'Проигрыватель' );
-    folder.number( options.tools, 'factor', 0.0, 1.0, 0.1 ).setLabel( 'Охват' );
-    folder.number( options.tools, 'rotate', -1.0, 1.0, 0.1 ).setLabel( 'Поворот' );
+    folder.number( options.tools, 'factor',  180, 360, 1 ).setLabel( 'Охват' );
+    folder.number( options.tools, 'rotate', -180, 180, 1 ).setLabel( 'Поворот' );
 
     const el = folder.div( 'column' );
-    gui_tools_visual( el, true );
-    el.do_change = ()=> {
+    canvas.do_change = ()=> {
         if( options.content.data ) {
             el.innerHTML = '';
-//            options.content.data.setAttribute( 'class', 'red-frame');
             gui_tools_parent( options.content.data, el );
             gui_tools_icon( el );
+            canvas.do_show();
         }
         if( options.content.type=='video' ){
             options.content.data.play();
         }
     }
-    return el;
+    canvas.do_hide();
+    return canvas;
 }
 
 function mkMainMenu( styles ) {
@@ -577,8 +577,8 @@ function mkToolsMenu( styles ) {
     const folder_transform = folder_setup.folder( 'Дополнительно' );
     folder_transform.checkbox( options.tools, 'showTexture' ).setLabel( 'Текстура' );
     folder_transform.select( options.tools, 'transformType', options.tools.transformTypeList ).setLabel( 'Карта текстуры' );
-    folder_transform.range( options.tools, 'factor', 0.0, 1.0, 0.1 ).setLabel( 'Охват' );
-    folder_transform.range( options.tools, 'rotate', -1.0, 1.0, 0.1 ).setLabel( 'Поворот' );
+    folder_transform.range( options.tools, 'factor',  180, 360, 1 ).setLabel( 'Охват' );
+    folder_transform.range( options.tools, 'rotate', -180, 180, 1 ).setLabel( 'Поворот' );
     folder_transform.select( options.tools, 'skin', options.tools.skins ).setLabel( 'Окружение' );
     folder_transform.checkbox( options.tools, 'wireframe' ).setLabel( 'Сетка' );
     folder_transform.range( options.tools, 'segments', 3, 12, 1 ).setLabel( 'Сегменты' );
