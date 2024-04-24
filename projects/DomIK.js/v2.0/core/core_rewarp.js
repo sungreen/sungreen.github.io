@@ -81,7 +81,9 @@ function make( app ) {
         ud_dome: { type: "v3", value: unidome.dome },
         ud_mirror: { type: "v3", value: unidome.mirror },
         ud_projector: { type: "v3", value: unidome.projector },
-        ud_base: { type: "f", value: unidome.base }
+        ud_base: { type: "f", value: unidome.base },
+        ud_sour: { type: "v3", value: new THREE.Vector3( options.transform.sour_width, options.transform.sour_height, options.transform.sour_shift ) },
+        ud_dest: { type: "v3", value: new THREE.Vector3( options.transform.dest_width, options.transform.dest_height, options.transform.dest_shift ) }
     };
 
     const mat_warp = new THREE.ShaderMaterial( {

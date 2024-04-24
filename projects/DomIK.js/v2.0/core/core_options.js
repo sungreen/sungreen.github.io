@@ -12,7 +12,8 @@ export let options = {
     mirror:{},
     projector:{},
     tools:{},
-    interface:{}
+    interface:{},
+    transform:{}
 }
 
 const preset_list = ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"];
@@ -72,6 +73,14 @@ export let dict = {
             seamless:{_:{type:'range', min:0.001, max:0.1, step:0.001, info:{ ru:'Смазать шов', en:'Seamless'}}},
             wireframe:{_:{type:'check', info:{ ru:'Сетка', en:'Wireframe'}}},
             segments:{_:{type:'range', min:3, max:12, step:1, info:{ ru:'Сегменты', en:'Segments'}}}
+        },
+        transform:{_:{type:'folder', info:{ ru:'Трансформация', en:'Transformation' }},
+            sour_width:{_:{type:'range', min:0.1, max:1, step:0.05, info:{ ru:'Ширина источника', en:'Source width'}}},
+            sour_height:{_:{type:'range', min:0.1, max:1, step:0.05, info:{ ru:'Высота источника', en:'Source height'}}},
+            sour_shift:{_:{type:'range', min:-0.5, max:0.5, step:0.05, info:{ ru:'Сдвиг источника', en:'Source shift'}}},
+            dest_width:{_:{type:'range', min:0.5, max:2, step:0.05, info:{ ru:'Ширина приёмника', en:'Dest width'}}},
+            dest_height:{_:{type:'range', min:0.5, max:2, step:0.05, info:{ ru:'Высота приёмника', en:'Dest height'}}},
+            dest_shift:{_:{type:'range', min:-0.5, max:0.5, step:0.05, info:{ ru:'Сдвиг приёмника', en:'Dest shift'}}}
         },
         interface:{_:{type:'folder', info:{ ru:'Интерфейс', en:'Interface' }},
             skin:{_:{type:'option', options:skin_list, info:{ ru:'Окружение', en:'Environment'}}},
@@ -135,5 +144,12 @@ options.interface.tone = 300;
 options.interface.size = 1;
 options.interface.font = font_list[0];
 options.interface.lang = lang_list[0];
+
+options.transform.sour_width = 1.0;
+options.transform.sour_height = 1.0;
+options.transform.sour_shift = 0.0;
+options.transform.dest_width = 1.0;
+options.transform.dest_height = 1.0;
+options.transform.dest_shift = 0.0;
 
 setPreset( "Dome 2.5 Mirror 0.25" );

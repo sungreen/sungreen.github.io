@@ -27,6 +27,9 @@ uniform vec3 ud_mirror;
 uniform vec3 ud_projector;
 uniform vec3 ud_base;
 
+uniform vec3 ud_sour;
+uniform vec3 ud_dest;
+
 varying vec2 v_uv;
 
 #define easy_block
@@ -94,7 +97,26 @@ bool onUVFisheyeFromQP(vec2 qp, out vec2 uv) {
 bool onUVEquirectangularFromQP(vec2 qp, out vec2 uv) {
     float y = 1.0-qp.x/M_PI;
     float x = (qp.y/M_PI+1.0)/2.0+0.25;
+
+    float sour_width = ud_sour.x;
+    float sour_height = ud_sour.y;
+    float sour_shift = ud_sour.z;
+
+    float dest_width = ud_dest.x;
+    float dest_height = ud_dest.y;
+    float dest_shift = ud_dest.z;
+
     x = x>1.0?x-1.0:x;
+
+    x = (x-0.5)*2.0;
+    if( abs(x)>sour_width) return false;
+    x = (x*dest_width+1.0)/2.0;
+
+    y = (y+sour_shift-0.5)*2.0;
+    if( abs(y)>sour_height) return false;
+    y = (y*dest_height+dest_shift+1.0)/2.0;
+
+
     uv = vec2(x, y);
     return true;
 }
