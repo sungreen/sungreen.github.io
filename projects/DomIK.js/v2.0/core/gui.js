@@ -1,4 +1,8 @@
 import { options } from './core_options.js'
+import { exdata } from './core_options.js'
+
+import { dict } from './core_options.js'
+import { setPreset } from './core_options.js'
 
 function create_item( type='div', parent=null, classes=null, styles=null ) {
     const item = document.createElement( type );
@@ -18,6 +22,34 @@ function gui_tools_div( el, classes, styles ) {
     return item;
 }
 
+function gui_tools_element( el ) {
+    el.tabs = ()=>{ return gui_tools_widget_tabs( el ); }
+    el.folder = ( title, classes, styles )=>{ return gui_tools_widget_folder( el, title, classes, styles ); }
+    el.div = ( classes=null, styles=null )=>{ return gui_tools_element( gui_tools_div( el, classes, styles ) ); }
+    el.button = ( label, icon, onclick )=>{ return gui_tools_widget_button( el, label, icon, onclick ); }
+    el.number = ( obj, param, min, max, step, nolabel )=>{ return gui_tools_widget_number( el, obj, param, min, max, step, nolabel ); }
+    el.range = ( obj, param, min, max, step, nolabel )=>{ return gui_tools_widget_range( el, obj, param, min, max, step, nolabel ); }
+    el.select = ( obj, param, options, nolabel )=>{ return gui_tools_widget_select( el, obj, param, options, nolabel ); }
+    el.checkbox = ( obj, param, options, nolabel )=>{ return gui_tools_widget_checkbox( el, obj, param, options, nolabel ); }
+    return el;
+}
+
+function nTabs( el ){ return gui_tools_widget_tabs( el ); }
+function nFolder( el, title, classes, styles ){ return gui_tools_widget_folder( el, title, classes, styles ); }
+function nPanel( el ){ return gui_tools_widget_panel( el ); }
+function nDiv( el, classes, styles ) { return gui_tools_element( gui_tools_div( el, classes, styles ) ); }
+function wButton( el, label, icon, onclick ) { return gui_tools_widget_button( el, label, icon, onclick ); }
+function wNumber( el, obj, param, min, max, step, nolabel ) { return gui_tools_widget_number( el, obj, param, min, max, step, nolabel ); }
+function wRange( el, obj, param, min, max, step, nolabel ) { return gui_tools_widget_range( el, obj, param, min, max, step, nolabel ); }
+function wSelect( el, obj, param, options, nolabel ) { return gui_tools_widget_select( el, obj, param, options, nolabel ); }
+function wCheckbox( el, obj, param, options, nolabel ) { return gui_tools_widget_checkbox( el, obj, param, options, nolabel ); }
+
+function link( target, event_type, order_func, msg ) {
+    target.addEventListener( event_type, ( event )=>{
+        order_func( msg );
+    } );
+}
+
 function icon_file( icon_name ) {
     return 'static/icons/icon_'+icon_name+'0001.png';
 }
@@ -27,17 +59,34 @@ function gui_tools_icon( el, icon_name, classes ) {
         const div = gui_tools_div( el, classes );
         const icon = icon_file( icon_name );
         const item = document.createElement( 'img' );
-        item.setAttribute( 'class', 'icon' );
+        gui_tools_classes( item, 'icon' );
         item.src = icon;
         div.appendChild( item );
         return item;
     }
 }
 
+const langStrings = [];
+
 function gui_tools_text( el, text, classes, styles ) {
     if( text ) {
         const item = gui_tools_div( el, classes, styles );
-        item.textContent = text;
+        gui_tools_classes( item, 'text' );
+        item.text = ( text )=>{
+            if( text ) {
+                if( text.info ) {
+                    item.text_set = text.info;
+                    langStrings.push( item );
+                } else {
+                    item.text_set = { default:text };
+                }
+            }
+            if( item.text_set ){
+                if( item.text_set[ options.interface.lang ] ) item.textContent = item.text_set[options.interface.lang];
+                else item.textContent = item.text_set.default;
+            }
+        }
+        item.text( text );
         return item;
     }
 }
@@ -45,17 +94,18 @@ function gui_tools_text( el, text, classes, styles ) {
 function gui_tools_href( el, text, href, classes, styles ) {
     const item = gui_tools_text( el, text, classes, styles );
     if( item ) {
+        gui_tools_classes( item, 'href' );
         item.href = href;
         return item;
     }
 }
 
-function gui_tools_image( el, image, classes='image', styles ) {
+function gui_tools_image( el, image, classes, styles ) {
     if( image ) {
         const div = gui_tools_div( el, classes, styles );
         const item = document.createElement( 'img' );
-        item.setAttribute( 'class', classes );
         item.src = image;
+        gui_tools_classes( item, 'image margin' );
         return gui_tools_parent( item, div );
     }
 }
@@ -120,22 +170,26 @@ function updateWidgets() {
         let widget = widgets[i];
         widget.updateValue();
     }
+    for( let i in langStrings ) {
+        let langString = langStrings[i];
+        langString.text();
+    }
     options.need_update = true;
 }
 
-function gui_tools_widget( el, classes='widget-container' ) {
+function gui_tools_widget( el, classes='widget' ) {
 
     const container = gui_tools_div( el, 'column ' + classes );
-    const widget = gui_tools_div( container, 'row widget' );
+    const widget = gui_tools_div( container, 'row' );
     widget.tabIndex = 0;
     widget.old = null;
 
-    widget.setLabel = ( text, classes, styles )=>{
+    widget.setLabel = ( text )=>{
         if( text ) {
             if( !widget.label ) {
                 widget.label = gui_tools_text( widget, text, 'widget-label' );
             }
-            widget.label.textContent = text;
+            widget.label.text( text );
         }
         return widget;
     }
@@ -143,7 +197,7 @@ function gui_tools_widget( el, classes='widget-container' ) {
     widget.setIcon = ( icon, classes, styles )=>{
         if( icon ) {
             if( !widget.icon ) {
-                widget.icon = gui_tools_icon( widget, icon, 'widget-icon' );
+                widget.icon = gui_tools_icon( widget, icon );
             }
             widget.icon.scr = icon_file( icon );
         }
@@ -170,10 +224,10 @@ function gui_tools_widget( el, classes='widget-container' ) {
 }
 
 function gui_tools_widget_button( parent, label, icon, onclick ) {
-    const widget = gui_tools_widget( parent, 'widget-button border' ).setIcon( icon ).setLabel( label );
+    const widget = gui_tools_widget( parent, 'panel margin' ).setIcon( icon ).setLabel( label );
     widget.onclick = ()=>{
         if( onclick ) onclick();
-        widget.changeValue();   
+        widget.changeValue();
     }
     return widget;
 }
@@ -297,63 +351,135 @@ function gui_tools_widget_select( parent, obj, param, options=[], nolabel=false 
     return widget;
 }
 
-function gui_tools_widget_folder( parent, title ) {
-    const widget = gui_tools_element( gui_tools_widget( parent ) ); 
-    
-    widget.setLabel( title );
+function nText( parent, text, classes, styles ) { return gui_tools_text( parent, text, classes, styles ) }
+function nVisual( parent, show, classes, styles ) { return gui_tools_visual( gui_tools_element( gui_tools_div( parent, classes, styles ) ), show ) }
+
+function gui_tools_widget_folder( parent, title,  classes, styles ) {
+    const widget = nDiv( parent, 'column '+classes, styles );
+    const header = nDiv( widget, 'row' );
+    const marker = nText( header, '-', 'folder-marker' );
+    const caption = nText( header, title );
+    const folder = nVisual( widget, true, 'column margin shoulder' );
+    const cellar = nVisual( widget, true, 'column margin shoulder' );
+
+    folder.do_close = ()=>{
+        folder.is_open = false;
+        folder.do_hide();
+        cellar.do_show();
+        marker.text( '► ' );
+    }
+
+    folder.do_open = ()=>{
+        folder.is_open = true;
+        folder.do_show();
+        cellar.do_hide();
+        marker.text( '▼ ' );
+    }
+
+    header.onclick = ()=>{
+        if( !folder.is_open ) { folder.do_open(); } else { folder.do_close(); }
+    }
+
+    folder.cellar = cellar;
+
+    folder.do_open();
+    return folder;
+}
+
+function gui_tools_widget_tabs( parent ) {
+    const widget = gui_tools_element( gui_tools_widget( parent, 'column' ) ); 
+
     const container = widget.container();
-    gui_tools_classes( container, 'border' )
+    gui_tools_classes( container, 'margin' )
 
-    const folder = gui_tools_div( container, 'column' );
-    gui_tools_visual( folder, true );
+    const tabs = gui_tools_div( container, 'column' );
+    widget.tab_list = [];
+    widget.tab = null;
 
-    folder.is_open = true;
-    folder.widget = widget;
-
-    widget.setValue = ( value )=>{
-        if( value ) {
-            folder.do_show();
-            widget.setLabel( '▼ ' + title );
+    widget.do_select = ( tab )=>{
+        if( widget.tab!=tab ) {
+            if( widget.tab ) widget.tab.do_hide();
+            widget.tab = tab;
+            widget.tab.do_show();
         } else {
-            folder.do_hide();
-            widget.setLabel( '► ' + title );
+            if( widget.tab ) widget.tab.do_hide();
+            widget.tab = null;
         }
     }
-    widget.getValue = ()=>{
-        return folder.is_open;
-    }
 
-    widget.label.onclick = ()=>{
-        folder.is_open =! folder.is_open;
-        if( folder.is_open) {
-            folder.do_show();
-            widget.setLabel( '▼ ' + title );
-        } else {
-            folder.do_hide();
-            widget.setLabel( '► ' + title );
-        }
+    widget.addTab = ( label, icon=null, classes, styles )=>{
+        const button = gui_tools_widget_button( widget, label, icon );
+        const tab = gui_tools_element( gui_tools_visual( gui_tools_div( tabs, classes, styles ) ) );
+        widget.tab_list.push( tab );
+        tab.do_hide();
+        tab.label = label;
+        link( button, 'click', ()=>{ widget.do_select( tab ); } );
+        return tab;
     }
 
     widget.updateValue();
-    return gui_tools_element( folder );
+    return widget;
 }
 
-function gui_tools_element( el ) {
-    el.folder = ( title )=>{ return gui_tools_widget_folder( el, title ); }
-    el.div = ( classes=null, styles=null )=>{ return gui_tools_element( gui_tools_div( el, classes, styles ) ); }
-    el.button = ( label, icon, onclick )=>{ return gui_tools_widget_button( el, label, icon, onclick ); }
-    el.number = ( obj, param, min, max, step, nolabel )=>{ return gui_tools_widget_number( el, obj, param, min, max, step, nolabel ); }
-    el.range = ( obj, param, min, max, step, nolabel )=>{ return gui_tools_widget_range( el, obj, param, min, max, step, nolabel ); }
-    el.select = ( obj, param, options, nolabel )=>{ return gui_tools_widget_select( el, obj, param, options, nolabel ); }
-    el.checkbox = ( obj, param, options, nolabel )=>{ return gui_tools_widget_checkbox( el, obj, param, options, nolabel ); }
-    el.string = ( title )=>{ return gui_tools_widget( el ).setLabel( title ); }
-    return el;
+function gui_tools_widget_panel( parent, classes, styles ) {
+    const widget = nDiv( parent, 'row '+classes, styles );
+    return widget;
 }
 
-function link( target, event_type, order_func, msg ) {
-    target.addEventListener( event_type, ( event )=>{
-        order_func( msg );
-    } );
+function addWidget( el, node, data, name ) {
+    const lang = options.interface.lang;
+    const item = node._;
+
+    switch (item.type) {
+    case 'check':
+        return wCheckbox( el, data, name ).setLabel( item );
+    case 'range':
+        return wRange( el, data, name, item.min, item.max, item.step ).setLabel( item );
+    case 'option':
+        return wSelect( el, data, name, item.options ).setLabel( item );
+    case 'button':
+        return wButton( el, item, item.icon );
+    }
+
+    if( !item.widget ) {
+        if( item.type=='panel' ) {
+            const panel = nPanel( el, item );
+            for ( const [key, val] of Object.entries( node ) ) {
+                if( key!='_' ) {
+                    panel[key] = addWidget( panel, val, data[name], key );
+                }
+            }
+            return panel;
+        }
+        if( item.type=='folder' ) {
+            const folder = nFolder( el, item );
+            folder.do_close();
+            for ( const [key, val] of Object.entries( node ) ) {
+                if( key!='_' ) {
+                    folder[key] = addWidget( folder, val, data[name], key );
+                }
+            }
+            return folder;
+        }
+        if( item.type=='tabs' ) {
+            const tabs = nTabs( el );
+            for ( const [key, val] of Object.entries( node ) ) {
+                if( key!='_' ) {
+                    tabs[key] = tabs.addTab( val._, val._.icon, 'frame column border' );
+                }
+            }
+            return tabs;
+        }
+        if( item.type=='list' ) {
+            const ret = {};
+            for ( const [key, val] of Object.entries( node ) ) {
+                if( key!='_' ) {
+                    ret[key] = addWidget( el, val, data, key );
+                }
+            }
+            return ret;
+        }
+    }
 }
 
 function mkCanvas( styles=null, show=true ) {
@@ -364,70 +490,67 @@ function mkCanvas( styles=null, show=true ) {
 }
 
 function changeDemoset( demo, onload=null ) {
-    console.log( demo.type );
-
-    if( options.content.data ){
-        if( options.content.type=='video' ) {
-            options.content.data.pause();
-            options.content.data.removeAttribute( 'src' );
-            options.content.data.load();
+    if( exdata.data ){
+        if( exdata.type=='video' ) {
+            exdata.data.pause();
+            exdata.data.removeAttribute( 'src' );
+            exdata.data.load();
         }
-        options.content.data.remove();
+        exdata.data.remove();
     }
 
     options.tools.transformType = ( demo.transformType ) ? demo.transformType : null;
     options.tools.wireframe = ( demo.transformType ) ? demo.wireframe : false;
-    options.tools.factor = ( demo.factor ) ? demo.factor : 360*0.75;
-    options.content.type = ( demo.type ) ? demo.type : 'video';
-    options.content.file = ( demo.file ) ? demo.file : null;
+    options.tools.factor = ( demo.factor ) ? demo.factor : options.tools.factor;
+    exdata.type = ( demo.type ) ? demo.type : 'video';
+    exdata.file = ( demo.file ) ? demo.file : null;
 
-    switch ( options.content.type ) {
+    switch ( exdata.type ) {
     case 'video':
-        options.content.data = document.createElement( 'video' );
-        options.content.data.setAttribute( 'controls', '' );
-        options.content.data.setAttribute( 'loop', 'true');
-        options.content.data.src = demo.content?demo.content:URL.createObjectURL( options.content.file );
+        exdata.data = document.createElement( 'video' );
+        exdata.data.setAttribute( 'controls', '' );
+        exdata.data.setAttribute( 'loop', 'true');
+        exdata.data.src = demo.content?demo.content:URL.createObjectURL( exdata.file );
         if( onload ) onload();
         break;
     case 'image':
-        //options.content.data = new Image();
-        options.content.data = document.createElement( 'img' );
-        options.content.data.onload = onload;
-        options.content.data.src = demo.content?demo.content:URL.createObjectURL( options.content.file );
+        exdata.data = document.createElement( 'img' );
+        exdata.data.onload = onload;
+        exdata.data.src = demo.content?demo.content:URL.createObjectURL( exdata.file );
         break;
     }
-    if( options.content.data ) {
-        URL.revokeObjectURL( options.content.data );
+    if( exdata.data ) {
+        URL.revokeObjectURL( exdata.data );
     }
 }
 
-function mkGallery( styles, onload=null ) {
-    const canvas = mkCanvas( styles );
-    const folder = canvas.folder( 'Галерея' );
-    gui_tools_styles( folder, { 'overflow':'hidden auto' } );
+function mkGallery( el, content, onload=null ) {
+    const gallery = gui_tools_div( el );
 
-    folder.do_change = ( demo )=>{
-        changeDemoset( demo, onload );
-    }
-
+    gallery.do_change = ( demo )=>{ changeDemoset( demo, onload ); }
     const categories = {};
-    for(var index in demoset){
-        const demo = demoset[index];
+
+    gui_tools_classes( gallery, 'frame' );
+    gui_tools_styles( gallery, {'max-height':'70vh'} );
+
+    const cont = gui_tools_element( gui_tools_div( gallery, 'column' ) );
+
+    for(var index in content){
+        const demo = content[index];
         if( !(demo.category in categories) ) {
-            categories[demo.category] = folder.folder( demo.category );
+            categories[demo.category] = cont.folder( demo.category );
+            categories[demo.category].do_close();
         }
         const category = categories[demo.category];
-        const source = category.div( 'row gallery-source');
+        const source = gui_tools_div( category, 'row margin bar' );
+        const image = gui_tools_image( source, demo.image, 'pointer margin', { 'height':'10vh' } );
+        link( image, 'click', gallery.do_change, demo );
 
-        const image = gui_tools_image( source, demo.image, 'gallery-image' );
-        link( image, 'click', folder.do_change, demo );
-
-        const dest = source.div( 'column gallery-dest' );
-        gui_tools_href( dest, demo.title, demo.source, 'gallery-label' );
-        gui_tools_href( dest, demo.author, demo.chanel, 'gallery-label' );
+        const panel = gui_tools_div( source, 'column', { 'height':'100%' } );
+        gui_tools_href( panel, demo.title, demo.source, 'margin' );
+        gui_tools_href( panel, demo.author, demo.chanel, 'margin' );
     }
-
-    return canvas;
+    return gallery;
 }
 
 function mkInputFile() {
@@ -473,6 +596,8 @@ function mkOptionsFile() {
         updateData( options.mirror, data.mirror );
         updateData( options.projector, data.projector );
         updateData( options.warp, data.warp );
+        updateData( options.tools, data.tools );
+        updateData( options.interface, data.interface );
         updateWidgets();
     };
 
@@ -502,92 +627,59 @@ function mkMediaFile( onload ) {
 
 function mkPlayer( styles ) {
     const canvas = mkCanvas( styles );
-    const folder = canvas.folder( 'Проигрыватель' );
-    folder.number( options.tools, 'factor',  180, 360, 1 ).setLabel( 'Охват' );
-    folder.number( options.tools, 'rotate', -180, 180, 1 ).setLabel( 'Поворот' );
+    canvas.do_hide();
 
-    const el = folder.div( 'column' );
+    const player = addWidget( canvas, dict.player, options );
+    player.do_open();
+
     canvas.do_change = ()=> {
-        if( options.content.data ) {
-            el.innerHTML = '';
-            gui_tools_parent( options.content.data, el );
-            gui_tools_icon( el );
+        if( exdata.data ) {
+            player.innerHTML = '';
+            gui_tools_parent( exdata.data, player );
+            gui_tools_icon( player );
             canvas.do_show();
         }
-        if( options.content.type=='video' ){
-            options.content.data.play();
+        if( exdata.type=='video' ){
+            exdata.data.play();
         }
+        gui_tools_classes( exdata.data, 'player-content' );
     }
-    canvas.do_hide();
+
+    addWidget( player.cellar,  dict.tools.tools.factor, options.tools, 'factor' );
+    addWidget( player.cellar,  dict.tools.tools.rotate, options.tools, 'rotate' );
+    addWidget( player.cellar, dict.tools.tools.transformType, options.tools, 'transformType' );
+
     return canvas;
 }
 
-function mkMainMenu( styles ) {
-    const canvas = mkCanvas( styles );
-    const frame = canvas.div( 'column' );
-    const menu = frame.div( 'row' )
+var helper_1 = "Уменьшите масштаб страницы до 25-33% для лучшего отображения, Ctrl -"
 
-    canvas.domik = menu.button().setIcon( 'domik' );
-    canvas.smenu = gui_tools_visual(menu.div( 'row' ), true );
-    canvas.media = canvas.smenu.button( 'Галерея', 'media' );
-    canvas.files = canvas.smenu.button( 'Файлы', 'files' );
-    canvas.tools = canvas.smenu.button( 'Настройки', 'tools' );
-    canvas.show_menu = true;
-    return canvas;
+function mkFilesMenu( el, do_play ) {
+    const files = addWidget( el, dict.files, options );
+    const mediaFile = mkMediaFile( do_play );
+    link( files.t0, 'click', ()=>{ options.tools.transformType='Fisheye'; mediaFile.do_select(); updateWidgets();  } );
+    link( files.t1, 'click', ()=>{ options.tools.transformType='Equirectangular'; mediaFile.do_select(); updateWidgets(); } );
+    link( files.t2, 'click', ()=>{ options.tools.transformType='Cubemap'; mediaFile.do_select(); updateWidgets(); } );
+    link( files.t3, 'click', ()=>{
+        if( helper_1) {
+            confirm(helper_1); helper_1=null;
+        };
+        if( !helper_1) {
+            options.tools.transformType='Cinerama'; mediaFile.do_select(); updateWidgets();
+        }
+    } );
 }
 
-function mkFilesMenu( styles ) {
-    const canvas = mkCanvas( styles );
-    const frame = canvas.div( 'column' );
-    const menu = frame.div( 'row' )
-    canvas.fishe = menu.button( 'Fisheye', 'fisheye' );
-    canvas.equir = menu.button( 'Equidist', 'equirectangular' );
-    canvas.cubem = menu.button( 'Cubemap', 'cubemap' );
-    canvas.ciner = menu.button( 'Cinerama', 'cinerama' );
-    return canvas;
-}
-
-function mkToolsMenu( styles ) {
-    const canvas = mkCanvas( styles );
-
-    const folder_setup = canvas.folder( 'Настройки' );
-    const preset = folder_setup.widget.select( options, 'preset', ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"], true );
-    preset.onChange( (n,p)=>{ changePreset( n ); })
+function mkToolsMenu( el ) {
+    const tools = addWidget( el, dict.tools, options );
+    gui_tools_classes( tools.preset, 'margin border' );
+    tools.preset.onChange( (n,p)=>{ setPreset( n ); updateWidgets(); });
 
     const optionsFile = mkOptionsFile();
-
-    folder_setup.widget.onChange( (n,p)=>{ changePreset( n ); })
-    const folder_screen = folder_setup.folder( 'Экран' );
-    folder_screen.range( options.screen, 'zenit', -1.0, 1.0, 0.01 ).setLabel( 'Сместить зенит' );
-    folder_screen.range( options.screen, 'front', -1.0, 1.0, 0.01 ).setLabel( 'Сместить фронт' );
-    folder_screen.range( options.screen, 'side', -1.0, 1.0, 0.01 ).setLabel( 'Сместить в сторону' );
-
-    const folder_dome = folder_setup.folder( 'Купол' );
-    folder_dome.range( options.dome, 'radius', 2, 5, 0.1 ).setLabel( 'Радиус' );
-
-    const folder_mirror = folder_setup.folder( 'Зеркало' );
-    folder_mirror.range( options.mirror, 'radius', 0.1, 0.5, 0.01 ).setLabel( 'Радиус' );
-    folder_mirror.range( options.mirror, 'offset', -1, 1, 0.01 ).setLabel( 'Смещение' );
-    folder_mirror.range( options.mirror, 'elevation', -1, 1, 0.01 ).setLabel( 'Превышение' );
-    
-    const folder_projector = folder_setup.folder( 'Проектор' );
-    folder_projector.range( options.projector, 'offset', 0.1, 1, 0.01 ).setLabel( 'Смещение' );
-    folder_projector.range( options.projector, 'elevation', -1, 1, 0.01 ).setLabel( 'Превышение' );
-    
-    const folder_transform = folder_setup.folder( 'Дополнительно' );
-    folder_transform.checkbox( options.tools, 'showTexture' ).setLabel( 'Текстура' );
-    folder_transform.select( options.tools, 'transformType', options.tools.transformTypeList ).setLabel( 'Карта текстуры' );
-    folder_transform.range( options.tools, 'factor',  180, 360, 1 ).setLabel( 'Охват' );
-    folder_transform.range( options.tools, 'rotate', -180, 180, 1 ).setLabel( 'Поворот' );
-    folder_transform.range( options.tools, 'flexture', 0, 1, 0.1 ).setLabel( 'Кривизна' );
-    folder_transform.select( options.tools, 'skin', options.tools.skins ).setLabel( 'Окружение' );
-    folder_transform.checkbox( options.tools, 'wireframe' ).setLabel( 'Сетка' );
-    folder_transform.range( options.tools, 'segments', 3, 12, 1 ).setLabel( 'Сегменты' );
-
-    folder_setup.button( 'Сохранить настройки', 'export', ExportOptions );
-    folder_setup.button( 'Загрузить настройки', 'import', optionsFile.do_select );
-
-    return canvas;
+    link( tools.export, 'click', ()=>{ ExportOptions(); } );
+    link( tools.import, 'click', ()=>{ optionsFile.do_select(); } );
+    link( tools.interface.app_lang.ru, 'click', ()=>{ options.interface.lang='ru'; updateWidgets(); } );
+    link( tools.interface.app_lang.en, 'click', ()=>{ options.interface.lang='en'; updateWidgets(); } );
 }
 
 function ExportOptions() {
@@ -603,42 +695,20 @@ function ExportOptions() {
 function mkSplash( styles ) {
     const canvas = mkCanvas( styles );
     gui_tools_classes( canvas, 'splash' );
-    const splash = gui_tools_text( canvas, 'ОТКРЫТЫЙ ПЛАНЕТАРИЙ 2.0', '', { 'margin': '2vh', 'font-size':'6.7vw' } );
+    const splash = gui_tools_text( canvas, 'ОТКРЫТЫЙ ПЛАНЕТАРИЙ 2.0', 'text', { 'margin': '2vh', 'font-size':'6.6vw' } );
     return canvas;
 }
 
-export function update() {
-
-}
-
 export function init() {
-    options.content = {}
+    const canv = mkCanvas( ).div( ' column' );
+    const app = addWidget( canv, dict.app, options );
+    app.do_open();
 
-    const do_play = ()=>{ player.do_change(); splash.do_hide(); do_hide(); update(); updateWidgets(); }
-    
-    const splash = mkSplash( { 'width':'100vw', 'height':'20vh', 'margin-top':'80vh' } );
-    const menu =   mkMainMenu( { 'width':'31w', 'max-height':'10vh',  'margin-top':'0vh' } );
-    const gallery = mkGallery( { 'width':'31vw', 'max-height':'90vh', 'margin-top':'10vh' }, do_play );
-    const files = mkFilesMenu( { 'width':'31vw', 'max-height':'90vh', 'margin-top':'10vh' } );
-    const tools = mkToolsMenu( { 'width':'31vw', 'max-height':'90vh', 'margin-top':'10vh' } );
+    mkSplash( { 'width':'100vw', 'height':'20vh', 'margin-top':'80vh' } );
+    const player = mkPlayer( { 'width':'15vw', 'max-height':'15vw', 'margin-left':'85vw' } );
+    const do_play = ()=>{ player.do_change(); app.do_close(); options.app.update(); updateWidgets(); }
 
-    const do_hide = ()=> { gallery.do_hide(); files.do_hide(); tools.do_hide() };
-
-    do_hide();
-
-    const player = mkPlayer( { 'width':'15vw', 'max-height':'15vw', 'margin-left':'85vw', 'overflow':'hidden auto' } );
-    const mediaFile = mkMediaFile( do_play );
-
-    link( menu.media, 'focus', ()=>{ do_hide(); gallery.do_show(); } );
-    link( menu.files, 'focus', ()=>{ do_hide(); files.do_show(); } );
-    link( menu.tools, 'focus', ()=>{ do_hide(); tools.do_show(); } );
-
-
-    link( files.fishe, 'click', ()=>{ options.tools.transformType='Fisheye'; mediaFile.do_select(); updateWidgets();  } );
-    link( files.equir, 'click', ()=>{ options.tools.transformType='Equirectangular'; mediaFile.do_select(); updateWidgets(); } );
-    link( files.cubem, 'click', ()=>{ options.tools.transformType='Cubemap'; mediaFile.do_select(); updateWidgets(); } );
-    link( files.ciner, 'click', ()=>{ options.tools.transformType='Cinerama'; mediaFile.do_select(); updateWidgets(); } );
-
-
-    link( menu.domik, 'click', ()=>{ menu.smenu.do_touch(); do_hide(); } );
+    mkGallery( app.menu.gallery, demoset, do_play );
+    mkFilesMenu( app.menu.files, do_play );
+    mkToolsMenu( app.menu.tools );
 }

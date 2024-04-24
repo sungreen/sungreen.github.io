@@ -1,11 +1,10 @@
+import { options } from './core_options.js'
+
 import * as THREE from 'three';
 import * as DOMIK from './core_domik.js'
 import * as WARP_WIRE from './core_warp_wire.js'
 import * as WARP_TEXTURE from './core_rewarp.js'
 import * as GUI from './gui.js'
-
-import { options } from './core_options.js'
-import { setPreset } from './core_options.js'
 
 function getURLVarArr() {
     var data = [];
@@ -20,66 +19,20 @@ function getURLVarArr() {
     return data;
 }
 
-function init() {
-
-    DOMIK.init();
-    WARP_WIRE.init();
-    WARP_TEXTURE.init();
-
-    setPreset( "Dome 2.5 Mirror 0.25" );
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera( -0.5, 0.5, 1, 0, 0.001, 1000 );
-    const renderer = new THREE.WebGLRenderer();
-
-    const container = document.createElement( 'div' );
-    document.body.appendChild( container );
-    container.style.position = 'fixed';
-    container.style.display = 'flix';
-    container.appendChild( renderer.domElement );
-
-    options.clock = new THREE.Clock(true);
-    options.root = new THREE.Group();
-    options.camera = camera;
-    options.renderer = renderer;
-    options.scene = scene;
-    options.mouse = { value: new THREE.Vector2() };
-    scene.add( options.root );
-
-
-    GUI.init();
-
-    document.onmousemove = function( e ) {
-        options.mouse.value.x = e.pageX / window.innerWidth;
-        options.mouse.value.y = e.pageY / window.innerHeight;
-    }
-
-    window.addEventListener('resize', updateSize );
-    updateSize();
-
-    options.need_update = true;
-}
-
 function updateSize() {
     if( options.renderer ) {
-        const aspect = window.innerWidth / window.innerHeight;
         const fullWidth = window.innerWidth;
         const fullHeight = window.innerHeight;
+        const aspect = fullWidth / fullHeight;
         const virtWidth = fullWidth/aspect;
-        options.renderer.setSize( fullWidth, fullHeight );
         options.camera.setViewOffset( virtWidth, fullHeight, (virtWidth-fullWidth)/2, 0, fullWidth, fullHeight );
+        options.camera.updateProjectionMatrix();
+        options.renderer.setSize( fullWidth, fullHeight );
     }
-    update();
-}
-
-function changePreset( preset ) {
-    setPreset( preset );
     update();
 }
 
 function update() {
-    GUI.update();
-    DOMIK.update();
     WARP_WIRE.update();
     WARP_TEXTURE.update();
 
@@ -97,32 +50,68 @@ function update() {
         options.root.add( warp );
     }
     options.need_update = false;
+
+    document.documentElement.style.setProperty( "--tone", options.interface.tone );
+    document.documentElement.style.setProperty( "--base-size", parseFloat( options.interface.size )+'vh' );
+    document.documentElement.style.setProperty( "--font-family", options.interface.font );
 }
 
 function animate() {
     requestAnimationFrame( animate );
-    if( options.need_update ) {
-        console.log( 'need', options.mesg );
-        options.mesg = '';
-
-        update();
-    }
+    if( options.need_update ) update();
 
     const s = 1 + 2.0 * ( options.screen.zenit - options.screen.front );
     const x = options.screen.side;
     const y = options.screen.front;
 
     if( options.uniforms ) {
-        options.uniforms['u_time'].value = options.clock.getElapsedTime();
-        options.uniforms['u_mouse'].value = options.mouse.value;
-        options.uniforms['u_resolution'].value.x = options.renderer.domElement.width;
-        options.uniforms['u_resolution'].value.y = options.renderer.domElement.height;
+        options.uniforms['time'].value = options.clock.getElapsedTime();
+        options.uniforms['mouse'].value = options.mouse.value;
+        options.uniforms['resolution'].value.x = options.renderer.domElement.width;
+        options.uniforms['resolution'].value.y = options.renderer.domElement.height;
     }
 
     options.scene.scale.set( s, s, s );
     options.scene.position.x = x;
     options.scene.position.y = y;
     options.renderer.render( options.scene, options.camera );
+}
+
+function init() {
+    WARP_TEXTURE.init();
+    WARP_WIRE.init();
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera( -0.5, 0.5, 1, 0, 0.001, 1000 );
+    const renderer = new THREE.WebGLRenderer();
+
+    const container = document.createElement( 'div' );
+    document.body.appendChild( container );
+    container.style.position = 'fixed';
+    container.style.display = 'flix';
+    container.appendChild( renderer.domElement );
+    document.body.scale = 1.0;
+
+    options.clock = new THREE.Clock(true);
+    options.root = new THREE.Group();
+    options.camera = camera;
+    options.renderer = renderer;
+    options.scene = scene;
+    options.mouse = { value: new THREE.Vector2() };
+    scene.add( options.root );
+
+    document.onmousemove = function( e ) {
+        options.mouse.value.x = e.pageX / window.innerWidth;
+        options.mouse.value.y = e.pageY / window.innerHeight;
+    }
+
+    window.addEventListener('resize', updateSize );
+    updateSize();
+
+    options.need_update = true;
+    options.app.update = update;
+
+    GUI.init();
 }
 
 function main() {

@@ -1,65 +1,67 @@
 import * as THREE from 'three';
-import { options } from './core_options.js'
 
-options.dome = { radius:0, position:new THREE.Vector3( 0, 0, 0) };
-options.mirror = { radius:0, offset:0, elevation:0 };
-options.projector = { offset:0, elevation:0 };
+export let unidome = {}
 
-export function init( app, folder ) { calcDomik(); }
-export function update( app ) { calcDomik(); }
+export function calcDomik( dome, mirror, projector ) {
+    const Scale = 1.0/dome.radius;
+    const Rd = 1.0;
+    const Rm = mirror.radius*Scale;
+    const Sm = mirror.offset*Scale;
+    const Em = mirror.elevation*Scale;
+    const Gm = mirror.shift*Scale;
+    const Sp = projector.offset*Scale;
+    const Ep = projector.elevation*Scale;
 
-function calcDomik() {
-    const Rd = options.dome.radius;
-    const Rm = options.mirror.radius;
-    const Sm = options.mirror.offset;
-    const Em = options.mirror.elevation;
-    const Sp = options.projector.offset;
-    const Ep = options.projector.elevation;
     const Mp = new THREE.Vector3( 0, Em, Rd+Sm);
     const Pp = new THREE.Vector3( 0, Em+Ep, Rd+Sm-Rm-Sp );
     const Df = new THREE.Vector3( 0, 0, -Rd );
     const Dz = new THREE.Vector3( 0, Rd, 0 );
-    options.mirror.position = Mp;
-    options.projector.position = Pp;
+
+    unidome.dome = new THREE.Vector3( Gm, 0, 0 );
+    unidome.mirror = Mp;
+    unidome.projector = Pp;
+
     const M = Mp.clone().sub( Pp );
     const Mf = onMirrorFromDome( Df ).sub( Pp );
     const Mz = onMirrorFromDome( Dz ).sub( Pp );
     const Pf = Mf.multiplyScalar( M.z/Mf.z );
     const Pz = Mz.multiplyScalar( M.z/Mz.z );
-    options.warp = {
-        shift: new THREE.Vector3( 0, Pf.y, 0 ),
-        factor: 0.5/(Pz.y-Pf.y),
-        base: M.z,
-        basis: Pf,
-        zenit: Pz
-    }
+
+    unidome.rm = Rm;
+    unidome.shift = new THREE.Vector3( 0, Pf.y, 0 );
+    unidome.factor = 0.5/(Pz.y-Pf.y);
+    unidome.base = M.z;
+    unidome.basis = Pf;
+    unidome.zenit = Pz;
 }
 
-function angleTest( dd, pp, mm ) {
+function angleTest( dd, pp, mm, mp ) {
     const rd = dd.clone().sub( mm );
     const rp = pp.clone().sub( mm );
-    const rm = mm.clone().sub( options.mirror.position );
+    const rm = mm.clone().sub( mp );
     const ad = 180*rm.angleTo(rd)/Math.PI;
     const ap = 180*rm.angleTo(rp)/Math.PI;
     return Math.abs(ad - ap);
 }
 
 function onMirror( v ) {
-    const mp = options.mirror.position;
-    const mr = options.mirror.radius;
+    const mp = unidome.mirror;
+    const mr = unidome.rm;
     return v.clone().sub( mp ).normalize().multiplyScalar( mr ).add( mp );
 }
 
 function onMirrorFromDome( pointOnDome ) {
-    const origin = options.projector.position;
+    const origin = unidome.projector;
+    const mirror = unidome.mirror;
     let dm = onMirror( pointOnDome );
     let pm = onMirror( origin );
     let limit = 50;
     while(limit) {
         const mm_0 = onMirror( dm.clone().lerp( pm, 2/3 ) );
         const mm_1 = onMirror( dm.clone().lerp( pm, 1/3 ) );
-        const ts_0 = angleTest( pointOnDome, origin, mm_0);
-        const ts_1 = angleTest( pointOnDome, origin, mm_1);
+        const ts_0 = angleTest( pointOnDome, origin, mm_0, mirror );
+        const ts_1 = angleTest( pointOnDome, origin, mm_1, mirror );
+        if( Math.abs(ts_0-ts_1)<0.00001 ) return onMirror( mm_0 );
         if (ts_0<ts_1) {
             dm.copy(mm_1);
         } else {
@@ -71,12 +73,24 @@ function onMirrorFromDome( pointOnDome ) {
     return onMirror( mm );
 }
 
+export function onProjector( x, y, z ) {
+    const pp = unidome.projector;
+    const base = unidome.base;
+    const shift = unidome.shift;
+    const factor =  unidome.factor;
+    const pointOnDome = unidome.dome.clone().add( new THREE.Vector3( x, y, z ) );
+    const pointOnMirror = onMirrorFromDome( pointOnDome );
+    const tmp = pointOnMirror.sub( pp );
+    const pointOnScreen = tmp.multiplyScalar( base/tmp.z ).sub( shift ).multiplyScalar( factor ).setComponent(2,0);
+    return pointOnScreen;
+}
+
 function onMirrorFromScreen( pointOnScreen ) {
-    const mirror = new THREE.Sphere( options.mirror.position, options.mirror.radius );
-    const factor = options.warp.factor;
-    const shift = options.warp.shift;
-    const Mp = options.mirror.position;
-    const Pp = options.projector.position;
+    const mirror = new THREE.Sphere( unidome.mirror, unidome.rm );
+    const factor = unidome.factor;
+    const shift = unidome.shift;
+    const Mp = unidome.mirror;
+    const Pp = unidome.projector;
     const tmp = pointOnScreen.clone().multiplyScalar( 1/factor ).add( shift ).add( Mp );
     const direction = tmp.sub( Pp ).normalize();
     const ray = new THREE.Ray( Pp, direction );
@@ -89,10 +103,10 @@ function onMirrorFromScreen( pointOnScreen ) {
 }
 
 function onDomeFromMirror( pointOnMirror ) {
-    const Dp = options.dome.position;
-    const Mp = options.mirror.position;
-    const Pp = options.projector.position;
-    const Rd = options.dome.radius;
+    const Dp = unidome.dome;
+    const Mp = unidome.mirror;
+    const Pp = unidome.projector;
+    const Rd = 1.0;
     const normal = pointOnMirror.clone().sub( Mp ).normalize();
     const point = pointOnMirror.clone().sub( Pp );
     const direction = point.reflect( normal ).normalize();
@@ -107,7 +121,7 @@ function onDomeFromMirror( pointOnMirror ) {
 }
 
 export function onUVFisheyeFromDome( pointOnDome ) {
-    const Rd = options.dome.radius;
+    const Rd = 1.0;
     const p = pointOnDome.clone().divideScalar( Rd );
     const r = Math.sqrt(p.x*p.x + p.z*p.z);
     const b = Math.atan2( p.y, r );
@@ -124,16 +138,4 @@ export function onDomeFromScreen( pointOnScreen ) {
         return onDomeFromMirror( pointOnMirror );
     }
     return null;
-}
-
-export function onProjector( x, y, z ) {
-    const pp = options.projector.position;
-    const base = options.warp.base;
-    const shift = options.warp.shift;
-    const factor =  options.warp.factor;
-    const pointOnDome = new THREE.Vector3( x, y, z );
-    const pointOnMirror = onMirrorFromDome( pointOnDome );
-    const tmp = pointOnMirror.sub( pp );
-    const pointOnScreen = tmp.multiplyScalar( base/tmp.z ).sub( shift ).multiplyScalar( factor ).setComponent(2,0);
-    return pointOnScreen;
 }

@@ -8,7 +8,8 @@ const demoset = {
         image: "demo/demo1.jpg",
         category: "География",
         title: "Россия. Виртуальное путешествие",
-        transformType: "Cubemap"
+        transformType: "Cubemap",
+        factor: 75
     },
     demo2: {
         author: "Объемная история",
@@ -19,7 +20,8 @@ const demoset = {
         image: "demo/demo2.jpg",
         category: "История",
         title: "Освобождение Москвы от поляков",
-        transformType: "Equirectangular"
+        transformType: "Equirectangular",
+        factor: 75
     },
     demo3: {
         author: "Объемная история",
@@ -30,7 +32,8 @@ const demoset = {
         image: "demo/demo3.jpg",
         category: "История",
         title: "Крещение Руси",
-        transformType: "Cubemap"
+        transformType: "Cubemap",
+        factor: 75
     },
     demo4: {
         author: "Discovery Channel Россия",
@@ -41,7 +44,8 @@ const demoset = {
         image: "demo/demo4.jpg",
         category: "Космос",
         title: "День астероида",
-        transformType: "Cubemap"
+        transformType: "Cubemap",
+        factor: 75
     },
     demo5: {
         author: "Объемная история",
@@ -52,7 +56,8 @@ const demoset = {
         image: "demo/demo5.jpg",
         category: "История",
         title: "Взятие Рейсхстага",
-        transformType: "Cubemap"
+        transformType: "Cubemap",
+        factor: 75
     },
     demo6: {
         author: "Объемная история",
@@ -63,7 +68,8 @@ const demoset = {
         image: "demo/demo6.jpg",
         category: "Космос",
         title: "Полет Гагарина в космос",
-        transformType: "Equirectangular"
+        transformType: "Equirectangular",
+        factor: 75
     },
     demo7: {
         author: "Объемная история",
@@ -74,7 +80,8 @@ const demoset = {
         image: "demo/demo7.jpg",
         category: "История",
         title: "Петр I",
-        transformType: "Equirectangular"
+        transformType: "Equirectangular",
+        factor: 75
     },
     demo8: {
         author: "Мир Танков. Официальный видеоканал",
@@ -85,7 +92,8 @@ const demoset = {
         image: "demo/demo8.jpg",
         category: "История",
         title: "Виртуальная экскурсия по первым танкам",
-        transformType: "Cubemap"
+        transformType: "Cubemap",
+        factor: 75
     },
     blender_splash_screen_32: {
         author: "Oksana Dobrovolska",
@@ -98,6 +106,6 @@ const demoset = {
         title: "Blender 3.2 Splash Screens",
         transformType: "Fisheye",
         wireframe: true,
-        factor: 1
+        factor: 100
     },
 }
