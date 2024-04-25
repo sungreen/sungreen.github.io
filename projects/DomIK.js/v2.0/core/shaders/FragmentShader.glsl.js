@@ -85,6 +85,32 @@ bool onDomeFromMirror(vec3 pm, vec3 dp, vec3 mp, vec3 pp, out vec3 xyz, out vec2
     return false;
 }
 
+bool cropUV( vec2 uv0, out vec2 uv1 ) {
+    float x = uv0.x;
+    float y = uv0.y;
+
+    float sour_width = ud_sour.x;
+    float sour_height = ud_sour.y;
+    float sour_shift = ud_sour.z;
+
+    float dest_width = ud_dest.x;
+    float dest_height = ud_dest.y;
+    float dest_shift = ud_dest.z;
+
+    x = (x-0.5)*2.0;
+    if( abs(x)>sour_width) return false;
+    x = (x*dest_width+1.0)/2.0;
+
+    y = (y+sour_shift-0.5)*2.0;
+    if( abs(y)>sour_height) return false;
+    y = (y*dest_height+dest_shift+1.0)/2.0;
+
+    if( x<0.0 || x>1.0 || y<0.0 || y>1.0) return false;
+    uv1.x = x;
+    uv1.y = y;
+    return true;
+}
+
 bool onUVFisheyeFromQP(vec2 qp, out vec2 uv) {
     float q = qp.x;
     float p = qp.y;
@@ -97,26 +123,7 @@ bool onUVFisheyeFromQP(vec2 qp, out vec2 uv) {
 bool onUVEquirectangularFromQP(vec2 qp, out vec2 uv) {
     float y = 1.0-qp.x/M_PI;
     float x = (qp.y/M_PI+1.0)/2.0+0.25;
-
-    float sour_width = ud_sour.x;
-    float sour_height = ud_sour.y;
-    float sour_shift = ud_sour.z;
-
-    float dest_width = ud_dest.x;
-    float dest_height = ud_dest.y;
-    float dest_shift = ud_dest.z;
-
     x = x>1.0?x-1.0:x;
-
-    x = (x-0.5)*2.0;
-    if( abs(x)>sour_width) return false;
-    x = (x*dest_width+1.0)/2.0;
-
-    y = (y+sour_shift-0.5)*2.0;
-    if( abs(y)>sour_height) return false;
-    y = (y*dest_height+dest_shift+1.0)/2.0;
-
-
     uv = vec2(x, y);
     return true;
 }
@@ -194,38 +201,44 @@ bool onUVCineramaFromDome(vec3 p, out vec2 uv) {
     return false;
 }
 
+void colorFromImage(sampler2D image, vec2 uvs, out vec4 color) {
+    vec2 uv;
+    if(cropUV(uvs,uv)){
+        color = texture2D(image, uv);
+    }
+}
+
 void main() {
     vec2 uvs = v_uv;
     if( transform==1 ) {
-        gl_FragColor = texture2D(image, uvs);
+        colorFromImage(image, uvs, gl_FragColor);
     } else {
         vec3 tmp = vec3(2.0*(v_uv.x-0.5), v_uv.y, 0.0 );
         if(onMirrorFromScreen(tmp, ud_factor, ud_shift, ud_mirror, ud_rm, ud_projector, tmp)) {
             vec3 xyz;
             vec2 qp;
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
             if(onDomeFromMirror(tmp, ud_dome, ud_mirror, ud_projector, xyz, qp)) {
                 switch(transform) {
                 case 0:
                     if(onUVFisheyeFromQP(qp, uvs)) space_color( uvs, gl_FragColor );
                     break;
                 case 2:
-                    if(onUVFisheyeFromQP(qp, uvs)) gl_FragColor = texture2D(image, uvs);
+                    if(onUVFisheyeFromQP(qp, uvs)) colorFromImage(image, uvs, gl_FragColor);
                     break;
                 case 3:
-                    if(onUVEquirectangularFromQP(qp, uvs)) gl_FragColor = texture2D(image, uvs);
+                    if(onUVEquirectangularFromQP(qp, uvs)) colorFromImage(image, uvs, gl_FragColor);
                     break;
                 case 4:
-                    if(onUVCubemapFromDome(xyz, uvs)) gl_FragColor = texture2D(image, uvs);
+                    if(onUVCubemapFromDome(xyz, uvs)) colorFromImage(image, uvs, gl_FragColor);
                     break;
                 case 5:
                     if(onUVCineramaFromDome(xyz, uvs)) {
-                        gl_FragColor = texture2D(image, uvs);
+                        colorFromImage(image, uvs, gl_FragColor);
                     } else {
                         if(onUVFisheyeFromQP(qp, uvs)) space_color( uvs, gl_FragColor );
                     }
                     break;
-                default:
-                    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
                 }
             }
    	    }
