@@ -575,7 +575,7 @@ function updateData( dest, sour ) {
     for( let key in sour ) {
         const v = sour[key];
         if( (typeof v) == 'number' || (typeof v) == 'string' || (typeof v) == 'boolean' ) {
-            if( dest[key] )  dest[key] = v;
+            dest[key] = v;
         } else {
             if( (typeof v) == 'object' ) {
                 updateData( dest[key], v );
