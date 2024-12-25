@@ -1,0 +1,413 @@
+<html>
+	<style>
+		:root {
+    		--font-family: sans-serif;
+			--background: #000000;
+			--background-color: #35172d;
+			--text-color: #ffffff;
+			--imperative-color: coral;
+			--title-background-color: #001f27;
+			--title-text-color: #b2c2c2;
+			--widget-color: #094e5f;
+			--focus-color: #9d8f26a0;
+			--number-color: #2aa0f2;
+			--string-color: #97ad00;
+
+			--hover-border-color: #c2b2b2;
+			--hover-background-color: #6a009b;
+
+			--base-size: 1vw;
+			--font-size: calc(var(--base-size)*2);
+			--icon-size: calc(var(--base-size)*3);
+			--gallery-image-size: calc(var(--base-size)*15);
+			--tab-size: calc(var(--base-size)*0.2);
+			--pan-size: calc(var(--base-size)*1.0);
+
+			--tone: 300;
+			--panel-color: hsl(var(--tone), 50%, 25%);
+			--panel-color-hover: hsl(var(--tone), 50%, 50%);
+			--panel-color-active: hsl(var(--tone), 25%, 25%);
+			--panel-color-pan: hsl(var(--tone), 50%, 15%);
+			--border-color: hsl(var(--tone), 50%, 50%);
+			--select-color: #ff6600;
+			--active-color: #cc2020;
+		}
+
+		html, body { margin: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: var(--background-color); }
+		body { transform: scale(1.0); transform-origin: 0 0; }
+
+		.text { white-space: nowrap; text-overflow: ellipsis; font-size: var(--font-size); font-family: var(--font-family);	color: var(--text-color); }
+		.button { border: 2px solid; border-radius: 5px; border-color:ver(--border-color); color: var(--text-color); background-color: var(--background-color); }
+		.button:hover { background-color: var(--panel-color-hover); }
+		.imperative { color: var(--imperative-color); }
+		.infobar { color: blueviolet; }
+
+		.margin { margin: calc(var(--tab-size)*3); padding: calc(var(--tab-size)*1); }
+		.margin-small { margin: calc(var(--tab-size)*1); padding: calc(var(--tab-size)*0); }
+		.margin-big { margin: calc(var(--tab-size)*5); padding: calc(var(--tab-size)*2); }
+
+		.row { display: flex; flex-direction: row; }
+		.column { display: flex; flex-direction: column; }
+
+		.btl { border-top-left-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
+		.bbr { border-bottom-right-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
+		.btr { border-top-right-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
+		.bbl { border-bottom-left-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
+		.mrl { margin-left: calc(var(--tab-size)*5); }
+		.mrr { margin-right: calc(var(--tab-size)*5); }
+
+	</style>
+	<head>
+		<title>DomikJS/QuizMaster</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript">
+	 	</script>
+	 	<script type = "text/javascript" language = "javascript">
+			// roles: master, user, monitor
+
+			function MQTT( onConnect, onFailure, onMessage ) {
+				const location = {
+					host: "d8b235f2986140de80c0ce6f9d8bd5ed.s1.eu.hivemq.cloud",
+					port: 8884
+				}
+
+				const options = {
+					reconnectTimeout: 2000,
+					userName: "hivemq.webclient.1734721971482",
+					password: "NHJeE:$!1%OaMfvxs098",
+					destinationName: "/quiz",
+					clean: true,
+					client: null,
+					useSSL: true,
+					timeout: 3
+				}
+
+				const id = Math.floor(Math.random() * 10000);
+				const cname = 'ID' + id;
+				const client = new Paho.MQTT.Client( location.host, location.port, cname );
+				if( onMessage ) client.onMessageArrived = onMessage;
+				if( onFailure ) client.onConnectionLost = onFailure;
+
+				client.connect( { useSSL: options.useSSL, timeout: options.timeout, userName: options.userName, password: options.password, onSuccess: () => {
+					client.subscribe( options.destinationName );
+					if( onConnect ) onConnect( client );
+				} } );
+
+				const mqtt = { client: client, cname: cname, id: id, step: 0 };
+				mqtt.message = ( content ) => { const message = new Paho.MQTT.Message( content ); message.destinationName = options.destinationName; client.send( message ); }
+				return mqtt;
+			}
+
+			const MQ = {
+				MASTER_CONNECT: 10,
+				MASTER_READY: 11,
+				MASTER_START: 30,
+				MASTER_STOP: 31,
+				MASTER_QUESTION: 32,
+
+				USER_CONNECT: 20,
+				USER_READY: 21,
+				USER_ANSWER: 22,
+				USER_ORDER: 23,
+
+				RESULT_REPORT: 40
+			}
+
+			function send( mqtt, to=0, code=0, value=0, check=0, data=null ) {
+				const msg = [mqtt.step, to, mqtt.id, code, value, check].join( ':' ) + ( data ? ( '~' + data.join( ':' ) ): '' );
+				console.log('Send',msg)
+				mqtt.message( msg );
+			}
+
+
+			function decode( mqtt, msg ) {
+				const lex = msg.payloadString.split( '~' );
+				const [step, to, from, code, value, check] = lex[0].split(':').map(Number);
+				const data = lex.length>1? lex[1].split(':').map(Number): null;
+				const me = (to === mqtt.id);
+				return { me: me, to: to, from: from, step: step, code: code, value: value, check: check, data: data }
+			}
+
+
+			function nDiv( p, classes = null ){
+				const n = document.createElement( 'div' );
+				p.appendChild( n );
+				n.classes = ( classes = null ) => { if( classes ) { classes.split(' ').forEach( ( c ) => { n.classList.add( c ); } ); }; return n; }
+				n.styles = ( styles = null ) => {
+					if( styles ) {}
+					return n;
+				}
+				return n;
+			}
+			function nText( p, text='' ){ const n = nDiv( p ); n.text = ( text='' ) => { n.innerHTML = text; return n; }; n.append = ( text='' ) => { n.text( n.innerHTML + text ); };  n.text( text ); return n.classes( 'text' ); }
+			function nButton( p, label='', order=null ) { const n = nText( p, label ); n.run = ( order ) => { n.order = order; return n; }; n.run( order ); n.addEventListener( 'pointerdown', ()=>{ if( n.order ) n.order(); } ); return n.classes( 'button margin' ); }
+
+			function setInfoTimer( p ) {
+				const n = nText( p )
+				n.start = () => {
+					if( n.timerID ) clearInterval( n.timerId );
+					n.time = Date.now();
+					n.timerId = setInterval( ()=>{ n.text( 'Время: ' + ( '' + ( new Date() ) ).split( ' ' )[4] + ' Ожидание: ' + Math.floor( ( Date.now() - n.time ) / 1000 ) ); }, 1000 ) ;
+				}
+				return n;
+			}
+
+			function setInfobar( p, roomID, id, step ) {
+				if( roomID ) {
+					const b = step % 2;
+					p.text( ( b ? '🔲': '🔳' ) + ' Комната:' + roomID + '[' + id + ']' ); 
+				} else {
+					p.text( 'Отсутствует комната для голосования' ); 
+				}
+			}
+
+			const WL = 'АБВГ';
+			const WS = ['🟥','🟨','🟦','🟩'];
+
+			function setInfoReport( p, data ) {
+				const n = nText( p );
+				n.update = ( question=1, answers=[4, 1, 1, 1, 1] ) => {
+					let report;
+					const total = answers[0];
+					if( total ) {
+						report = '<p>Результаты голосования. Вопрос №' + question + '.</p><p>Всего ответов: ' + total + '.</p>';
+						for( let i=0; i<4; i++ ) {
+							const value = answers[i+1]/total*100;
+							const level = Math.ceil( value/10 );
+							const bar = WL[i] + ') ' + WS[i] + ('⭐').repeat( level ) + ' ' + value.toFixed(0) + '%';
+							report = report + '<p>' + bar + '</p>';
+						}
+					} else {
+						report = 'Вопрос №' + question + ' (еще нет ответов)';
+					}
+					n.text( report );
+				}
+				n.clear = () => {
+					n.text( '~' );
+				}
+				return n;
+			}
+// MASTER
+			function master( p ) {
+				let status = 0;
+				let mqtt;
+
+				const sendbar = nText( p ).classes( 'infobar' );
+				const recivebar = nText( p ).classes( 'infobar' );
+				const timerInfo = setInfoTimer( p );
+				const imperative = nText( p, 'Добро пожаловать в DomIK/MasterQuiz!' ).classes( 'imperative' );
+				const buttons = nDiv( p ).classes( 'row' );
+				
+				const bsend = nButton( buttons );
+				const bnext = nButton( buttons );
+				const bstop = nButton( buttons );
+				const user_info = nText( p );
+
+				const infoReport = setInfoReport( p );
+
+				bnext.text( 'Проверить подключение' ).run( cmd_connect );
+				bstop.text( 'Завершить' ).run( cmd_stop );
+
+				let users = {};
+				function user_report( p ) {
+					let count = 0; let list = '';
+					for( const [id, user] of Object.entries( users ) ) { count++; list += id + ' '; }
+					p.text( 'Количество участников:' + count + ' [' + list + ']' );
+				}
+
+				let question = 0;
+				let questions = {};
+				let report;
+
+				function newQuestion() {
+					question++;
+					questions[question] = { answers:[0, 0, 0, 0, 0], users:{} };
+				}
+
+				function calcQuestion() {
+					if( question ) {
+						let quiz = questions[question];
+						if( quiz ) {
+							quiz.answers = [0, 0, 0, 0, 0];
+							for( const [id, user] of Object.entries( quiz.users ) ) {
+								const v = user.answer;
+								if( v ) { quiz.answers[v] = quiz.answers[v] + 1; quiz.answers[0] = quiz.answers[0] + 1; }
+							}
+						}
+						return quiz.answers[0]? true: false;
+					}
+					return false;
+				}
+
+				function cmd_connect () {
+					timerInfo.start();
+					imperative.text( 'Дождитесь окончания проверки подключения' );
+					bnext.text().run();
+
+					mqtt = MQTT(
+						() => {
+							imperative.text( 'Успешное подлючение!!!' );
+							bnext.text( 'Открыть комнату для голосования' ).run( cmd_start );
+							status = MQ.MASTER_CONNECT;
+						},
+						() => {
+							imperative.text( 'Ошибка подключения!!!' );
+							cmd_stop();
+						},
+						( msg ) => {
+							const ret = decode( mqtt, msg );
+							console.log( mqtt.id, ret )
+							if( ret.me || ret.to === 0 ){
+								setInfobar( recivebar, mqtt.id, mqtt.id, ret.step );
+								user_report( user_info );
+								if( calcQuestion() ) {
+									infoReport.update( question, questions[question].answers );
+									bsend.text( 'Направить результат участникам' ).run( cmd_report );
+								}
+							}
+							call_order( mqtt, ret );
+						}
+					);
+				}
+
+				function cmd_start() {
+					timerInfo.start();
+					imperative.text( 'Попросите участников подключиться' );
+					bnext.text( 'Начать голосование' ).run( cmd_next );
+				}
+
+				function cmd_report() {
+					if( calcQuestion() ) send( mqtt, 0, MQ.RESULT_REPORT, 0, question, questions[question].answers );
+				}
+
+				function cmd_next() {
+					timerInfo.start();
+					newQuestion();
+					imperative.text( 'Попросите участников ответить на вопрос №' + question );
+					infoReport.clear();
+					bsend.text().run();
+					bnext.text( 'Перейти к следующему вопросу' ).run( cmd_next );
+					status = MQ.MASTER_QUESTION;
+				}
+
+				let timerId;
+
+				function cmd_stop() {
+					imperative.text( 'Опрос завершен! Хорошего дня!' );
+					timerInfo.remove();
+					bnext.remove();
+					bstop.remove();
+					sendbar.remove();
+					recivebar.remove();
+					status = MQ.MASTER_STOP;
+					//mqtt.end();
+				}
+
+				function call_order ( mqtt, ret ) {
+					if( ret.me ) {
+						const userID = ret.from;
+						switch( ret.code ) {
+						case MQ.USER_CONNECT:
+							send( mqtt, userID, MQ.USER_READY );
+							if( !users[userID] ) users[userID] = { id: userID };
+							break;
+						case MQ.USER_ANSWER:
+							send( mqtt, userID, MQ.USER_ORDER, ret.value, ret.check );
+							if( !questions[ret.check].users[userID] ) questions[ret.check].users[userID] = { answer: ret.value };
+							break;
+						case MQ.MASTER_STOP:
+							cmd_stop();
+							break;
+						}
+					}
+				}
+
+				function cmd_loop () {
+					if( mqtt ) {
+						switch( status ) {
+							case MQ.MASTER_CONNECT: send( mqtt, 0, status ); break;
+							case MQ.MASTER_QUESTION: send( mqtt, 0, status, question ); break;
+							case MQ.MASTER_STOP: clearInterval( timerId ); send( mqtt, 0, status ); break;
+						}
+						mqtt.step++;
+					}
+				}
+
+				timerId = setInterval( cmd_loop, 500 ) ;
+			}
+// USER
+			function user( p ) {
+				let mqtt;
+
+				const recivebar = nText( p ).classes( 'infobar' );
+				const imperative = nText( p ).classes( 'imperative' );
+				const buttons = nDiv( p ).classes( 'row' );
+				const answers = [nButton( buttons ), nButton( buttons ), nButton( buttons ), nButton( buttons )];
+				const infoReport = setInfoReport( p );
+
+				let status = MQ.USER_CONNECT;
+				let ready = false;
+				let question = 0;
+
+				let roomID;
+
+				function cmd_connect () {
+					mqtt = MQTT(
+						() => { imperative.text( 'Дождитесь начала голосования' ); },
+						() => { imperative.text( 'Ошибка подключения!!!' ); cmd_stop(); },
+						( msg ) => {
+							const ret = decode( mqtt, msg );
+							setInfobar( recivebar, roomID, mqtt.id, ret.step );
+							call_order_user( mqtt, ret );
+						}
+					);
+				}
+
+				function call_order_user( mqtt, ret ) {
+					if( ret.code === MQ.RESULT_REPORT && ret.check && ret.data ) {
+						infoReport.update( ret.check, ret.data );
+					}
+					if( !roomID ) {
+						if( ret.code === MQ.MASTER_CONNECT || ret.code === MQ.MASTER_QUESTION ) {
+							imperative.text( 'Дождитесь подключения ' );
+							send( mqtt, ret.from, MQ.USER_CONNECT );
+							status = MQ.USER_CONNECT;
+						} else if( ret.code === MQ.USER_READY ) {
+							roomID = ret.from;
+							imperative.text( 'Внимание! Голосование скоро начнется.' );
+							status = MQ.USER_READY;
+						}
+					} else {
+						if( ret.from === roomID ) {
+							if( ret.code === MQ.MASTER_QUESTION && ret.value !== question ) {
+								question = ret.value;
+								imperative.text( 'Выберите свой вариант ответа на вопрос №' + question );
+								for( let i=0; i<WL.length; i++ ) answers[i].text( WL[i] ).run( () => { cmd_answer( mqtt, roomID, question, i+1 ); } );
+								infoReport.clear();
+							} else if( ret.code === MQ.USER_ORDER && ret.me ) {
+								for( let i=0; i<WL.length; i++ ) answers[i].text().run();
+								imperative.text( WS[ret.value-1] + ' Ответ [' + WL[ret.value-1] + '] принят! Ждите следующего вопроса!' );
+							}
+						}
+					}
+				}
+
+				function cmd_answer (mqtt, roomID, question, answer) {
+					send( mqtt, roomID, MQ.USER_ANSWER, answer, question );
+				}
+
+				function cmd_stop () {}
+
+				cmd_connect();
+			}
+	</script>
+	</head>
+	<body>
+ 		<script>
+			const param = String( document.location.href ).split('?');
+			const mode = param[1] ? param[1].trim() : 'user';
+			if( mode === 'master' ) master( document.body );
+			else if( mode === 'monitor' ) monitor( document.body );
+			else user( document.body );
+		</script>
+	</body>
+</html>
