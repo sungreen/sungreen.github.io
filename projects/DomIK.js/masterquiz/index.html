@@ -16,7 +16,7 @@
 			--hover-border-color: #c2b2b2;
 			--hover-background-color: #6a009b;
 
-			--base-size: 1vw;
+			--base-size: 2vh;
 			--font-size: calc(var(--base-size)*2);
 			--icon-size: calc(var(--base-size)*3);
 			--gallery-image-size: calc(var(--base-size)*15);
@@ -188,6 +188,7 @@
 			}
 // MASTER
 			function master( p ) {
+				document.documentElement.style.setProperty( '--base-size', '1vw' );
 				let status = 0;
 				let mqtt;
 
@@ -336,8 +337,9 @@
 			}
 // USER
 			function user( p ) {
-				let mqtt;
+				document.documentElement.style.setProperty( '--base-size', '2vw' );
 
+				let mqtt;
 				const recivebar = nText( p ).classes( 'infobar' );
 				const imperative = nText( p ).classes( 'imperative' );
 				const buttons = nDiv( p ).classes( 'row' );
