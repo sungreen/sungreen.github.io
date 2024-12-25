@@ -16,7 +16,7 @@
 			--hover-border-color: #c2b2b2;
 			--hover-background-color: #6a009b;
 
-			--base-size: 2vh;
+			--base-size: 1vh;
 			--font-size: calc(var(--base-size)*2);
 			--icon-size: calc(var(--base-size)*3);
 			--gallery-image-size: calc(var(--base-size)*15);
@@ -128,14 +128,9 @@
 			}
 
 
-			function nDiv( p, classes = null ){
-				const n = document.createElement( 'div' );
+			function nDiv( p, classes = null ){ const n = document.createElement( 'div' );
 				p.appendChild( n );
 				n.classes = ( classes = null ) => { if( classes ) { classes.split(' ').forEach( ( c ) => { n.classList.add( c ); } ); }; return n; }
-				n.styles = ( styles = null ) => {
-					if( styles ) {}
-					return n;
-				}
 				return n;
 			}
 			function nText( p, text='' ){ const n = nDiv( p ); n.text = ( text='' ) => { n.innerHTML = text; return n; }; n.append = ( text='' ) => { n.text( n.innerHTML + text ); };  n.text( text ); return n.classes( 'text' ); }
@@ -188,7 +183,7 @@
 			}
 // MASTER
 			function master( p ) {
-				document.documentElement.style.setProperty( '--base-size', '1vw' );
+				document.documentElement.style.setProperty( '--base-size', '1vh' );
 				let status = 0;
 				let mqtt;
 
@@ -383,7 +378,7 @@
 							if( ret.code === MQ.MASTER_QUESTION && ret.value !== question ) {
 								question = ret.value;
 								imperative.text( 'Выберите свой вариант ответа на вопрос №' + question );
-								for( let i=0; i<WL.length; i++ ) answers[i].text( WL[i] ).run( () => { cmd_answer( mqtt, roomID, question, i+1 ); } );
+								for( let i=0; i<WL.length; i++ ) answers[i].text( WL[i] ).run( () => { cmd_answer( mqtt, roomID, question, i+1 ); } ).style['font-size'] = '25vw';
 								infoReport.clear();
 							} else if( ret.code === MQ.USER_ORDER && ret.me ) {
 								for( let i=0; i<WL.length; i++ ) answers[i].text().run();
