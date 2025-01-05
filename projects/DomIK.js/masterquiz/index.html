@@ -75,6 +75,7 @@
 
 			// roles: master, user, monitor
 
+			const t_a = 45;
 			let mqtt, ret, quiz, timer;
 			let step = 0;
 			const config = {};
@@ -591,7 +592,7 @@
 
 				function autoReload() { document.location.reload(); }
 				function waitConnect() { imperative.text( `Попытка подключения ${++attempt}` ); }
-				timer.start( 15, autoReload, waitConnect );
+				timer.start( t_a, autoReload, waitConnect );
 
 				const top = nDiv( p ).classes( 'column' );
 				const info =  nDiv( top ).classes( 'column' );
@@ -647,7 +648,7 @@
 				let attempt = 0;
 				function autoReload() { document.location.reload(); }
 				function waitConnect() { imperative.text( `Попытка подключения ${++attempt}` ); }
-				timer.start( 15, autoReload, waitConnect );
+				timer.start( t_a, autoReload, waitConnect );
 
 				let need_report;
 				let master_id;
