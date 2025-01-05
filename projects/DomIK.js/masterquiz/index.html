@@ -75,7 +75,7 @@
 	 	<script type = "text/javascript" language = "javascript">
 
 			// roles: master, user, monitor
-
+			const version = '1.02';
 			const destinationName = '/quizzy'; 
 			const reload_time = 30;
 
@@ -87,7 +87,7 @@
 			// SYSTEM
 			function getHrefOptions() {
 				const options = {};
-				const qs = String( document.location.href + '?version=1.0' ).split('?').slice(1);
+				const qs = String( document.location.href + '?version=' + version ).split('?').slice(1);
 				qs.forEach( ( query ) => {
 					const parts = query.split('&');
 					parts.forEach( ( part ) => {
@@ -410,7 +410,7 @@
 					const ind = WB[ (ret? (ret.step % 2): 0) ];
 					const mid = mqtt? `[${mqtt.id}]`: '*';
 
-					status.text( `Квэстер 1.01 ${ind} Комната: ${pRoom}${mid}` ).styles( CSS.background( bg ) );
+					status.text( `Квэстер ${version} ${ind} Комната: ${pRoom}${mid}` ).styles( CSS.background( bg ) );
 
 					if( ret && ret.code === MQ.MASTER_QUESTION ) {
 						const time = ( '' + ( new Date() ) ).split( ' ' )[4];
@@ -498,6 +498,7 @@
 							users[userID].question = ret.check;
 							users[userID].answer = ret.value;
 							users[userID].vite = 0;
+							console.log( ret.check, userID );
 							if( !questions[ret.check].users[userID] ) questions[ret.check].users[userID] = { answer: ret.value };
 						}
 						users[userID].code = ret.code;
@@ -652,10 +653,27 @@
 
 			// USER
 			function user( p ) {
+				function send_answer( question, answer ) {
+					console.log( 'ME ANSWER', question, answer );
+					userdata.questions[question] = { answer: answer, question: question };
+					send( MQ.USER_ANSWER, answer, question );
+				}
+
+				function userReport( p ) {
+					p.clear();
+					const list = nDiv( p ).classes( 'column' );
+					nText( list ).text( 'Результат')
+					for( const [key, data] of Object.entries( userdata.questions ) ) {
+						const code = data.answer - 1;
+						nText( list, `Вопрос ${key} Ответ ${WL[code]} ${WS[code]}` );
+					}
+				}
+
 				document.documentElement.style.setProperty( '--base-size', '2vw' );
+				const userdata = { questions:{} };
 
 				const statusbar = setInfobar( p );
-				const imperative = nText( p ).classes( 'imperative border margin' ).styles( 'font-size:5vmin');
+				const imperative = nText( p ).classes( 'imperative border margin' ).styles( 'font-size:5vmin' );
 				const questnum = nText( p ).visible( false );
 				const buttons = nDiv( p ).classes( 'column' ).visible( false ).styles( 'justify-content1:space-between' );
 				const line1 = nDiv( buttons ).classes( 'row' ).visible().styles( 'justify-content1:space-between' );
@@ -670,9 +688,15 @@
 				let master_id;
 				let question;
 
+				imperative.text( 'Идет подключение.' );
+
 				mqtt = MQTT(
 					() => { imperative.text( 'Дождитесь начала голосования.' ); },
-					( error ) => { imperative.text( `Ошибка подключения ${error.errorMessage}. Обновите страницу.` ); },
+					( error ) => {
+						imperative.text( `Ошибка подключения ${error.errorMessage}. Обновите страницу.` );
+						buttons.visible();
+						bnext.text( 'Перезагрузить Квэстер' ). run( autoReload ).styles( 'font-size:15vmin' );;
+					},
 					( msg ) => {
 						timer.clear();
 						ret = decode( msg );
@@ -695,7 +719,6 @@
 										questnum.visible( false );
 										buttons.visible( false );
 										infoReport.visible( false );
-										question = 0;
 									}
 									break;
 								case MQ.USER_ORDER:
@@ -712,15 +735,14 @@
 									questnum.text( `Вопрос № ${ret.value}` ).styles( 'font-size:18vmin' ).visible();
 									buttons.visible( false );
 									infoReport.visible( false );
-									question = 0;
 									break;
 								case MQ.MASTER_QUESTION:
 									if( question !== ret.value ) {
 										question = ret.value;
 										need_report = true;
 										imperative.text( 'Выберите свой вариант ответа' );
-										questnum.text( `Вопрос № ${ret.value}` ).styles( 'font-size:18vmin' ).visible();
-										for( let i=0; i<WL.length; i++ ) answers[i].text( WL[i] ).run( () => { send( MQ.USER_ANSWER, i+1, ret.value ); } ).styles( 'width:33vmin;height:33vmin;font-size:33vmin' );
+										questnum.text( `Вопрос № ${question}` ).styles( 'font-size:18vmin' ).visible();
+										for( let i=0; i<WL.length; i++ ) answers[i].text( WL[i] ).run( () => { send_answer( question, i+1 ); } ).styles( 'width:33vmin;height:33vmin;font-size:33vmin' );
 										buttons.visible();
 										infoReport.clear();
 										infoReport.visible( false );
@@ -742,7 +764,7 @@
 									imperative.text( 'Опрос завершен! Хорошего дня!' );
 									questnum.visible( false );
 									buttons.visible( false );
-									infoReport.visible( false );
+									userReport( infoReport );
 									break;
 								default:
 									break;
