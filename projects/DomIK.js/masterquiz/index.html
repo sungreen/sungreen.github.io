@@ -591,13 +591,14 @@
 				const timer_mode_list = ['30 секунд', '1 минута', '2 минуты'];
 
 				function autoReload() { document.location.reload(); }
-				function waitConnect() { imperative.text( `Попытка подключения ${++attempt}` ); }
-				timer.start( 15, autoReload, waitConnect );
+				function waitConnect() { ++step; }
 
 				const top = nDiv( p ).classes( 'column' );
 				const info =  nDiv( top ).classes( 'column' );
 				statusbar = setInfobar( info );
 				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'imperative border margin' ).styles( 'font-size:5vmin');
+
+				timer.start( 15, autoReload, waitConnect );
 
 				panels = nDiv( top ).classes( 'row' ).visible( false );
 				const left = nDiv( panels ).classes( 'column border margin panel' ).styles( 'width:30em' );
