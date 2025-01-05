@@ -77,8 +77,11 @@
 			// roles: master, user, monitor
 
 			const destinationName = '/quizzy'; 
+			const reload_time = 30;
+
 			let mqtt, ret, quiz, timer;
 			let step = 0;
+
 			const config = {};
 
 			// SYSTEM
@@ -185,6 +188,9 @@
 					infoQuiz.update();
 				} );
 			}
+
+			function autoReload() { document.location.reload(); }
+			function waitConnect() { ++step; }
 
 			//MQTT
 			function MQTT( onConnect, onFailure, onMessage ) {
@@ -404,7 +410,7 @@
 					const ind = WB[ (ret? (ret.step % 2): 0) ];
 					const mid = mqtt? `[${mqtt.id}]`: '*';
 
-					status.text( `${ind} Комната: ${pRoom}${mid}` ).styles( CSS.background( bg ) );
+					status.text( `Квэстер 1.01 ${ind} Комната: ${pRoom}${mid}` ).styles( CSS.background( bg ) );
 
 					if( ret && ret.code === MQ.MASTER_QUESTION ) {
 						const time = ( '' + ( new Date() ) ).split( ' ' )[4];
@@ -605,15 +611,12 @@
 
 				const timer_mode_list = ['30 секунд', '1 минута', '2 минуты'];
 
-				function autoReload() { document.location.reload(); }
-				function waitConnect() { ++step; }
-
 				const top = nDiv( p ).classes( 'column' );
 				const info =  nDiv( top ).classes( 'column' );
 				statusbar = setInfobar( info );
 				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'imperative border margin' ).styles( 'font-size:5vmin');
 
-				timer.start( 15, autoReload, waitConnect );
+				timer.start( reload_time, autoReload, waitConnect );
 
 				panels = nDiv( top ).classes( 'row' ).visible( false );
 				const left = nDiv( panels ).classes( 'column border margin panel' ).styles( 'width:30em' );
@@ -661,10 +664,7 @@
 				const answers = [nButton( line1 ), nButton( line1 ), nButton( line2 ), nButton( line2 )];
 				const infoReport = setInfoReport( p ).visible( false );
 
-				let attempt = 0;
-				function autoReload() { document.location.reload(); }
-				function waitConnect() { imperative.text( `Попытка подключения ${++attempt}` ); }
-				timer.start( 15, autoReload, waitConnect );
+				timer.start( reload_time, autoReload, waitConnect );
 
 				let need_report;
 				let master_id;
