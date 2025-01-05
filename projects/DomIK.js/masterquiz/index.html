@@ -76,6 +76,7 @@
 
 			// roles: master, user, monitor
 
+			const destinationName = '/quizzy'; 
 			let mqtt, ret, quiz, timer;
 			let step = 0;
 			const config = {};
@@ -191,38 +192,52 @@
 					// hivemq.cloud
 					// host: "d8b235f2986140de80c0ce6f9d8bd5ed.s1.eu.hivemq.cloud",
 					// port: 8884
+				// 	// userName: "hivemq.webclient.1734721971482",
+				// 	// password: "NHJeE:$!1%OaMfvxs098",
 
 					host: "broker.hivemq.com",
-					port: 8884
-				}
-
-				const options = {
-					reconnectTimeout: 2000,
-					keepAliveInterval: 5,
-					cleansession: 1,
-					automaticReconnect: 1,
-					// userName: "hivemq.webclient.1734721971482",
-					// password: "NHJeE:$!1%OaMfvxs098",
-					destinationName: "/quiz",
-					clean: true,
-					client: null,
-					useSSL: true,
-					timeout: 3
+					port: 8884,
 				}
 
 				const id = Math.floor(Math.random() * 10000);
 				const cname = `ID${id}`;
 				const client = new Paho.MQTT.Client( location.host, location.port, cname );
 				if( onMessage ) client.onMessageArrived = onMessage;
-				if( onFailure ) client.onConnectionLost = onFailure;
 
-				client.connect( { useSSL: options.useSSL, timeout: options.timeout, /*userName: options.userName, password: options.password,*/ onSuccess: () => {
-					client.subscribe( options.destinationName );
-					if( onConnect ) onConnect( client );
-				} } );
+				client.onMessageArrived = ( message ) => {
+					console.log( `MQTT Message ${message.payloadString}` );
+					if( onMessage ) onMessage( message );
+				}
 
+				client.onConnectionLost = ( responseObject ) => {
+					if( responseObject.errorCode !== 0 ) {
+						console.log( `MQTT Error ${responseObject.errorMessage}` );
+						if( onFailure ) onFailure();
+					}
+				}
+
+				const connectOptions = {
+					timeout: 30,
+					// userName:"string", 
+					// password:"string", 
+					// willMessage:"object", 
+					keepAliveInterval: 60, // default 60 
+					cleanSession: true, 
+					useSSL: true,
+					// invocationContext:"object", 
+					onSuccess: () => {
+						client.subscribe( destinationName );
+						if( onConnect ) onConnect( client );
+					}, 
+					// onFailure:"function",
+					// hosts:"object",
+					// ports:"object",
+					// mqttVersion:"number"
+				}
+
+				client.connect( connectOptions );
 				const _mqtt_ = { client: client, cname: cname, id: id };
-				_mqtt_.message = ( content ) => { const message = new Paho.MQTT.Message( content ); message.destinationName = options.destinationName; client.send( message ); }
+				_mqtt_.message = ( content ) => { const message = new Paho.MQTT.Message( content ); message.destinationName = destinationName; client.send( message ); }
 				return _mqtt_;
 			}
 
