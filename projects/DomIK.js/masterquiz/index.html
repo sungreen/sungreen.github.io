@@ -24,7 +24,7 @@
 			--tab-size: calc(var(--base-size)*0.2);
 			--pan-size: calc(var(--base-size)*1.0);
 
-			--tone: 303;
+			--tone: 300;
 			--panel-color: hsl(var(--tone), 50%, 25%);
 			--panel-color-hover: hsl(var(--tone), 50%, 50%);
 			--panel-color-active: hsl(var(--tone), 25%, 25%);
@@ -87,7 +87,7 @@
 				qs.forEach( ( query ) => {
 					const parts = query.split('&');
 					parts.forEach( ( part ) => {
-						const lex = (part + '=').split( '=' );
+						const lex = (part + '=true').split( '=' );
 						options[lex[0]] = lex[1];
 					} );
 				} );
@@ -742,6 +742,7 @@
 	<body>
  		<script>
 			const options = getHrefOptions();
+			if( options.master ) options.mode = 'master';
 			let pRoom = options.roomid? Number(options.roomid): 7773;
 			let pMode = options.mode? options.mode: 'user';
 			let pTop = document.body;
