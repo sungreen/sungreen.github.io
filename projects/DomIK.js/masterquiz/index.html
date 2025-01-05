@@ -76,7 +76,6 @@
 
 			// roles: master, user, monitor
 
-			const t_a = 15;
 			let mqtt, ret, quiz, timer;
 			let step = 0;
 			const config = {};
@@ -199,9 +198,9 @@
 
 				const options = {
 					reconnectTimeout: 2000,
-					//keepAliveInterval: 5,
-					//cleansession: 1,
-					//automaticReconnect: 1,
+					keepAliveInterval: 5,
+					cleansession: 1,
+					automaticReconnect: 1,
 					// userName: "hivemq.webclient.1734721971482",
 					// password: "NHJeE:$!1%OaMfvxs098",
 					destinationName: "/quiz",
@@ -593,7 +592,7 @@
 
 				function autoReload() { document.location.reload(); }
 				function waitConnect() { imperative.text( `Попытка подключения ${++attempt}` ); }
-				timer.start( t_a, autoReload, waitConnect );
+				timer.start( 15, autoReload, waitConnect );
 
 				const top = nDiv( p ).classes( 'column' );
 				const info =  nDiv( top ).classes( 'column' );
@@ -649,7 +648,7 @@
 				let attempt = 0;
 				function autoReload() { document.location.reload(); }
 				function waitConnect() { imperative.text( `Попытка подключения ${++attempt}` ); }
-				timer.start( t_a, autoReload, waitConnect );
+				timer.start( 15, autoReload, waitConnect );
 
 				let need_report;
 				let master_id;
