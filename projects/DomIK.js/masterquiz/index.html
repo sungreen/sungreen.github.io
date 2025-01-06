@@ -75,7 +75,7 @@
 	 	<script type = "text/javascript" language = "javascript">
 
 			// roles: master, user, monitor
-			const version = '1.02';
+			const version = '1.03';
 			const destinationName = '/quizzy'; 
 			const reload_time = 30;
 
@@ -142,29 +142,24 @@
 			}
 
 			function parseQuizData( text ) {
-				// AIKEN EXT 2
-				const lcode = ['Ошибка', 'А', 'Б', 'В', 'Г'];
-				const acode = { 'A':1, 'B':2, 'C':3, 'D':4, 'А':1, 'Б':2, 'В':3, 'Г':4 };
-				const quiz = { name: '', questions: [] };
+				// QUIZ EXT 2
+				const quiz = { name: '', questions: {}, count: 0 };
 				const lines = ( text ).split(/\r?\n/);
 				let question;
+				let num = 0;
+				let code = 0;
 				lines.forEach( ( line ) => {
 					if( line.startsWith('NAME:') ) {
 						const name = line.split( ':' )[1].trim();
 						quiz.name = name;
 					} else {
 						if( question ) {
-							if( line.charAt(1) === ')' || line.charAt(1) === '.' ) {
-								const code = line.charAt(0);
-								const answer = line.substring( 3 );
-								const num = acode[code]? acode[code]: 0;
-								const lit = lcode[num];
-								question.answers.push( { lit: lit, code: num , text: answer } );
-							} else if( line.startsWith('ANSWER:') ) {
-								const code = line.split( ':' )[1].trim();
-								const num =  acode[code]? acode[code]: 0;
-								const lit = lcode[num];
-								question.answer = { lit: lit, code: num }; 
+							if( line.charAt(0) === '*' ) {
+								code++;
+								let test = false;
+								let text = line.substring( 2 ).trim();
+								if( line.charAt(1) === '*' ) question.answer = code;
+								question.answers[code] = { code: code, text: text };
 							} else {
 								question = null;
 							}
@@ -172,8 +167,11 @@
 						if( !question ) {
 							const text = line.trim();
 							if( text !== '' ) {
-								question = { text: line.trim(), answers: [] };
-								quiz.questions.push( question );
+								num++;
+								code = 0;
+								question = { num: num, text: text, answers: {} };
+								quiz.questions[num] = question;
+								quiz.count = num;
 							}
 						}
 					}
@@ -184,7 +182,7 @@
 			function load_bank( file ) {
 				readFromFile( file, ( data ) => {
 					quiz = parseQuizData( data );
-					config.question_limit = quiz.questions.length;
+					config.question_limit = quiz.count;
 					infoQuiz.update();
 				} );
 			}
@@ -398,8 +396,8 @@
 			// WIDGETS
 
 			const WB = ['🔲', '🔳'];
-			const WL = ['А','Б','В','Г'];
-			const WS = ['🟥','🟨','🟩','🟦', '🔳', '🔲'];
+			const WL = ['X', 'А','Б','В','Г'];
+			const WS = ['🔳', '🟥','🟨','🟩','🟦'];
 
 			function setInfobar( p ) {
 				const n = nDiv( p ).classes( 'column' );
@@ -436,8 +434,11 @@
 					n.clear();
 					if( quiz ) {
 						nText( n, `Название: ${quiz.name}` ).classes( 'caption' );
-						nText( n, `Количество вопросов: ${quiz.questions.length}` ).classes( 'caption' );
-						quiz.questions.forEach( ( qin, index ) => { nText( n, `<${index+1}> ${qin.text}` ).classes( 'caption preline' ); } );
+						nText( n, `Количество вопросов: ${quiz.count}` ).classes( 'caption' );
+						for( let i=1; i<=quiz.count; i++ ) {
+							const qin = quiz.questions[i];
+							nText( n, `<${i}> ${qin.text}` ).classes( 'caption preline' );
+						}
 					} else {
 						nText( n, `Банк вопросов не загружен.` ).classes( 'caption' );
 					}
@@ -452,11 +453,11 @@
 					let text = qinfo? qinfo.text: '';
 					let total = answers[0];
 					let report = `<div class="column"><div class="caption">Вопрос № ${question}.</div><div class="caption">${text}</div>`;
-					for( let i=0; i<4; i++ ) {
-						const value = total? answers[i+1]/total*100: 0;
+					for( let i=1; i<=4; i++ ) {
+						const value = total? answers[i]/total*100: 0;
 						const level = Math.ceil( value/10 );
 						const val = value? `${('⭐').repeat( level )} ${value.toFixed(0)}%`: ''; 
-						const bar = `${value? WS[i]: WS[4]} ${WL[i]}) ${val} ${qinfo? qinfo.answers[i].text: ''} `;
+						const bar = `${value? WS[i]: WS[0]} ${WL[i]}) ${val} ${qinfo? qinfo.answers[i].text: ''} ${(qinfo && i===qinfo.answer)? '*': ''}`;
 						report = `${report}<div class="caption">${bar}</div>`;
 					}
 					report = `${report}</div>`;
@@ -471,7 +472,7 @@
 					let active=0; let count = 0; let list = '';
 					for( const [id, user] of Object.entries( users ) ) {
 						if( Number(id) !== mqtt.id ) {
-							if( user.question === question && user.answer ) { active++; list += `${id}${WS[user.answer-1]} `; } else { list += `${id}${WS[4]} `; }
+							if( user.question === question && user.answer ) { active++; list += `${id}${WS[user.answer]} `; } else { list += `${id}${WS[0]} `; }
 							count++;
 						}
 					}
@@ -561,9 +562,11 @@
 				}
 
 				function cmd_timer() {
+					let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
+					let qansw = qinfo? qinfo.answer: 0;
 					imperative.text( `Попросите участников ответить на вопрос №${question}` );
 					bnext.text( '⏲ Завершить досрочно' ).run( timer.break );
-					timer.start( timer_long, cmd_post, ( timer_set ) => { send( MQ.MASTER_QUESTION, question, 0, timer_set ); } );
+					timer.start( timer_long, cmd_post, ( timer_set ) => { send( MQ.MASTER_QUESTION, question, qansw, timer_set ); } );
 				}
 
 				function cmd_post() {
@@ -615,7 +618,7 @@
 				const top = nDiv( p ).classes( 'column' );
 				const info =  nDiv( top ).classes( 'column' );
 				statusbar = setInfobar( info );
-				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'imperative border margin' ).styles( 'font-size:5vmin');
+				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'imperative border margin' ).styles( 'font-size:5vmin' );
 
 				timer.start( reload_time, autoReload, waitConnect );
 
@@ -653,20 +656,29 @@
 
 			// USER
 			function user( p ) {
-				function send_answer( question, answer ) {
+				function send_answer( question, answer, answ ) {
 					console.log( 'ME ANSWER', question, answer );
-					userdata.questions[question] = { answer: answer, question: question };
+					userdata.questions[question] = { answer: answer, question: question, answ: answ };
 					send( MQ.USER_ANSWER, answer, question );
 				}
 
 				function userReport( p ) {
 					p.clear();
 					const list = nDiv( p ).classes( 'column' );
-					nText( list ).text( 'Результат')
+					nText( list ).text( 'Результат').classes( 'caption' );
+					let countStar = 0;
 					for( const [key, data] of Object.entries( userdata.questions ) ) {
-						const code = data.answer - 1;
-						nText( list, `Вопрос ${key} Ответ ${WL[code]} ${WS[code]}` );
+						const code = data.answer;
+						let flag; 
+						if( code===data.answ ) {
+							countStar++;
+							flag = '⭐';
+						} else {
+							flag = '';
+						}
+						nText( list, `Вопрос ${key} Ответ ${WL[code]} ${WS[code]} ${flag}` ).classes( 'caption' );
 					}
+					if( countStar ) nText( list, `${countStar} ${'🌟'.repeat(countStar)}`).classes( 'caption border margin' ).styles( 'font-size:9vmin' );
 				}
 
 				document.documentElement.style.setProperty( '--base-size', '2vw' );
@@ -724,7 +736,7 @@
 								case MQ.USER_ORDER:
 									if( mqtt.id === ret.check ) {
 										imperative.text( `Ждите окончания голосования!` );
-										questnum.text( `${WS[ret.value-1]} Ответ ${WL[ret.value-1]}` ).visible();
+										questnum.text( `${WS[ret.value]} Ответ ${WL[ret.value]}` ).visible();
 										buttons.visible( false );
 										infoReport.visible( false );
 										need_report = true;
@@ -739,10 +751,11 @@
 								case MQ.MASTER_QUESTION:
 									if( question !== ret.value ) {
 										question = ret.value;
+										const answ = ret.check;
 										need_report = true;
 										imperative.text( 'Выберите свой вариант ответа' );
 										questnum.text( `Вопрос № ${question}` ).styles( 'font-size:18vmin' ).visible();
-										for( let i=0; i<WL.length; i++ ) answers[i].text( WL[i] ).run( () => { send_answer( question, i+1 ); } ).styles( 'width:33vmin;height:33vmin;font-size:33vmin' );
+										for( let i=1; i<=4; i++ ) answers[i-1].text( WL[i] ).run( () => { send_answer( question, i, answ ); } ).styles( 'width:33vmin;height:33vmin;font-size:33vmin' );
 										buttons.visible();
 										infoReport.clear();
 										infoReport.visible( false );
