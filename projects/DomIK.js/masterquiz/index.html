@@ -2,69 +2,42 @@
 <html>
 	<style>
 		:root {
-    		--font-family: sans-serif;
-			--background: #000000;
-			--background-color: #35172d;
-			--text-color: #ffffff;
-			--imperative-color: coral;
-			--title-background-color: #001f27;
-			--title-text-color: #b2c2c2;
-			--widget-color: #094e5f;
-			--focus-color: #9d8f26a0;
-			--number-color: #2aa0f2;
-			--string-color: #97ad00;
-
-			--hover-border-color: #c2b2b2;
-			--hover-background-color: #6a009b;
-
+			--tone: 300;
+			--font-family: sans-serif;
+			--background: hsl(var(--tone), 50%, 5%);
+			--background-color: hsl(var(--tone), 50%, 10%);
+			--button-bg: hsl(var(--tone), 50%, 25%);
+			--button-hover: hsl(var(--tone), 50%, 50%);
+			--panel-color: hsl(var(--tone), 50%, 15%);;
+			--text-color: white;
 			--base-size: 1vh;
-			--font-size: calc(var(--base-size)*2);
 			--icon-size: calc(var(--base-size)*3);
 			--gallery-image-size: calc(var(--base-size)*15);
 			--tab-size: calc(var(--base-size)*0.2);
 			--pan-size: calc(var(--base-size)*1.0);
-
-			--tone: 300;
-			--panel-color: hsl(var(--tone), 50%, 25%);
-			--panel-color-hover: hsl(var(--tone), 50%, 50%);
-			--panel-color-active: hsl(var(--tone), 25%, 25%);
-			--panel-color-pan: hsl(var(--tone), 50%, 15%);
 			--border-color: hsl(var(--tone), 50%, 50%);
-			--select-color: #ff6600;
-			--active-color: #cc2020;
 		}
 
 		html, body { margin: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: var(--background-color); }
 		body { transform: scale(1.0); transform-origin: 0 0; }
 		.frame { overflow: scroll; }
 
-/* div { display: flex; border: 1px solid; border-color: blue; align-items: center; justify-items: center; } */
+		div { display: flex; }
 
 		.border { border: 2px solid; border-radius: 5px; border-color: var(--border-color); }
 		.panel { background-color: var( --panel-color); }
 
-		.text { text-align:center; white-space: nowrap; text-overflow: ellipsis; font-size: var(--font-size); font-family: var(--font-family);	color: var(--text-color); }
-		.caption { text-align:left; white-space: nowrap; text-overflow: ellipsis; font-size: var(--font-size); font-family: var(--font-family);	color: var(--text-color); }
+		.text { text-align:center; white-space: nowrap; text-overflow: ellipsis; font-family: var(--font-family);	color: var(--text-color); }
+		.caption { text-align:left; white-space: nowrap; text-overflow: ellipsis; font-family: var(--font-family);	color: var(--text-color); }
 		.preline { white-space: pre-line; }
 
-		.button { border: 2px solid; border-radius: 5px; border-color: var(--border-color); color: var(--text-color); background-color: var(--background-color); }
-		.button:hover { background-color: var(--panel-color-hover); }
-		.imperative { color: var(--imperative-color); }
-		.infobar { color: blueviolet; }
+		.button { border: 2px solid; border-radius: 5px; border-color: var(--border-color); color: var(--text-color); background-color: var(--button-bg); }
+		.button:hover { background-color: var(--button-hover); }
 
 		.margin { margin: calc(var(--tab-size)*3); padding: calc(var(--tab-size)*1); }
-		.margin-small { margin: calc(var(--tab-size)*1); padding: calc(var(--tab-size)*0); }
-		.margin-big { margin: calc(var(--tab-size)*5); padding: calc(var(--tab-size)*2); }
 
 		.row { display: flex; flex-direction: row; }
 		.column { display: flex; flex-direction: column; }
-
-		.btl { border-top-left-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
-		.bbr { border-bottom-right-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
-		.btr { border-top-right-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
-		.bbl { border-bottom-left-radius: calc(var(--tab-size)*20) calc(var(--tab-size)*20); }
-		.mrl { margin-left: calc(var(--tab-size)*5); }
-		.mrr { margin-right: calc(var(--tab-size)*5); }
 
 	</style>
 	<head>
@@ -75,9 +48,15 @@
 	 	<script type = "text/javascript" language = "javascript">
 
 			// roles: master, user, monitor
-			const version = '1.03';
+			const version = '1.05';
 			const destinationName = '/quizzy'; 
+			const roomDefalut = 777;
 			const reload_time = 30;
+
+			const ft0 = 'font-size:4.5vmin;';
+			const ft1 = 'font-size:9vmin;';
+			const ft2 = 'font-size:15vmin;';
+			const ft3 = 'font-size:22vmin;';
 
 			let mqtt, ret, quiz, timer;
 			let step = 0;
@@ -111,14 +90,14 @@
 					} else timer.stop();
 				}
 
-				timer.start = ( duration=0, onFinish=null, onOrder=null ) => {
+				timer.start = ( duration=0, onFinish=null, onOrder=null, interval=1000 ) => {
 					timer.clear();
 					timer_range = duration * 1000;
 					timer_start = Date.now();
 					timer_finish = timer_start + timer_range;
 					call_finish = onFinish;
 					call_order = onOrder;
-					timer_id = setInterval( () => { timer.order(); }, 1000 );
+					timer_id = setInterval( () => { timer.order(); }, interval );
 				}
 
 				timer.stop = () => {
@@ -301,9 +280,16 @@
 			function msplit( head, sep, tail='' ) { return `${head}${sep}${tail}`.split( sep ); }
 
 			const CSS = {
-				grad: ( color0='#000000', color1='#888888', color2='#ffffff', level0=0, level1=50, level2=100, turn=0.25 ) => { return `background:linear-gradient( ${turn}turn, ${color0} ${level0}%, ${color1} ${level1}%, ${color2} ${level2}%);`; },
-				background: ( color='#000000') => { return `background:${color}`; }
+				hsl: (h, s, l) => { l /= 100; const a = s * Math.min(l, 1 - l) / 100; const f = n => { const k = (n + h / 30) % 12; const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1); return Math.round(255 * color).toString(16).padStart(2, '0'); }; return `#${f(0)}${f(8)}${f(4)}`; },
+				grad: ( color0='#000000', color1='#888888', color2='#ffffff', level0=0, level1=50, level2=100, turn=0.25 ) => { return `linear-gradient( ${turn}turn, ${color0} ${level0}%, ${color1} ${level1}%, ${color2} ${level2}%);`; },
+				hex: ( color='#000000') => { return `${color}`; },
+				random: () => { return `#${Math.floor(Math.random()*16777215).toString(16)}` }
 			}
+
+			const theme = {};
+			theme.tone = 300,
+			theme.color = { background: CSS.hsl( theme.tone, 50, 5 ) };
+			theme.background = `background:${theme.color.background};`;
 
 			function nDiv( p, types='DIV' ){
 				const [type, input] = msplit( types, ':' );
@@ -317,6 +303,9 @@
 				if( p ) n.parented( p );
 				return n;
 			}
+
+			function nRow( p ) { return nDiv( p ).classes( 'row' ); }
+			function nColumn( p ) { return nDiv( p ).classes( 'column' ); }
 
 			const extensions = { video: ['.avi','.ogg','.mov','.mp4'], image: ['.png','.jpg'], sound: ['.aac', '.mp3'], text: ['.txt' ], shader: ['.glsl'], pdf: ['.pdf'], model3d:['.fbx'], addon: ['.dmx'], }
 
@@ -395,20 +384,20 @@
 
 			// WIDGETS
 
-			const WB = ['🔲', '🔳'];
-			const WL = ['X', 'А','Б','В','Г'];
-			const WS = ['🔳', '🟥','🟨','🟩','🟦'];
+			const WB = ['🔲', '🔳', ''];
+			const WL = ['X','А','Б','В','Г'];
+			const WS = ['🔳','🟥','🟨','🟩','🟦','✅'];
+			const WC = ['black','red','orange','green','blue'];
 
 			function setInfobar( p ) {
-				const n = nDiv( p ).classes( 'column' );
-				const status = nText( n ).styles( 'font-size:5vmin' );
+				const n = nText( p );
 				const bg = 'steelblue';
 
 				n.update = () => {
 					const ind = WB[ (ret? (ret.step % 2): 0) ];
 					const mid = mqtt? `[${mqtt.id}]`: '*';
 
-					status.text( `Квэстер ${version} ${ind} Комната: ${pRoom}${mid}` ).styles( CSS.background( bg ) );
+					n.text( `Квэстер ${version} ${ind} Комната: ${pRoom}${mid}` ).styles( `background:${bg}` );
 
 					if( ret && ret.code === MQ.MASTER_QUESTION ) {
 						const time = ( '' + ( new Date() ) ).split( ' ' )[4];
@@ -418,15 +407,16 @@
 						const factor = 1 - ( dtimer / timer_range );
 						const head = dtimer>10000 ? 'green': 'red';
 						const tail = bg;
-						status.text( `⏲ Время: ${time} Осталось секунд: ${diff}` ).styles( CSS.grad( bg, bg, head, 0, factor*100, factor*100 ) );
+						n.text( `⏲ Время: ${time} Осталось секунд: ${diff}` ).styles( `background:${CSS.grad( bg, bg, head, 0, factor*100, factor*100 )}` );
 					}
 				}
+
 				n.update();
 				return n;
 			}
 
 			function setInfoQuiz( p ) {
-				const info = nDiv( p ).classes( 'column' );
+				const info = nColumn( p ).classes( 'column' );
 				const bload = nWidget( info, nProperty( config, 'bank', 'FILE', { label: '🤹 Загрузить банк вопросов', types: ['.txt'], onload: load_bank } ) );
 				const n = nText( info ).classes( 'column' );
 
@@ -448,20 +438,26 @@
 
 			function setInfoReport( p, data ) {
 				const n = nText( p );
-				n.update = ( question, answers=[0, 0, 0, 0, 0] ) => {
+
+				n.update = ( question, answers=[0, 0, 0, 0, 0, 0] ) => {
+					n.visible( false );
 					let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
 					let text = qinfo? qinfo.text: '';
 					let total = answers[0];
-					let report = `<div class="column"><div class="caption">Вопрос № ${question}.</div><div class="caption">${text}</div>`;
+					n.clear();
+					const report = nColumn( n ).classes( 'align-items:left' );
+					nText( report, `Вопрос № ${question}` ).classes( 'caption' );
+					nText( report, `${text}` ).classes( 'caption' );
 					for( let i=1; i<=4; i++ ) {
+						const bar = nRow( report ).classes( 'margin' );
 						const value = total? answers[i]/total*100: 0;
 						const level = Math.ceil( value/10 );
-						const val = value? `${('⭐').repeat( level )} ${value.toFixed(0)}%`: ''; 
-						const bar = `${value? WS[i]: WS[0]} ${WL[i]}) ${val} ${qinfo? qinfo.answers[i].text: ''} ${(qinfo && i===qinfo.answer)? '*': ''}`;
-						report = `${report}<div class="caption">${bar}</div>`;
+						const sup1 = ( value ) ? `${(WS[i]).repeat( level )} ${value.toFixed(0)}%`: '';
+						const sup2 = ( qinfo ) ? `${qinfo.answers[i].text}`: '';
+						nText( bar, `${WL[i]}) ${WS[i===answers[5] ? 5: 0]} ${sup1} ${sup2}` )
+						if( i===answers[5] ) bar.classes( 'border' );
 					}
-					report = `${report}</div>`;
-					n.text( report );
+					n.visible( true );
 				}
 				return n;
 			}
@@ -512,18 +508,20 @@
 					if( question ) {
 						let q = questions[question];
 						if( q ) {
-							q.answers = [0, 0, 0, 0, 0];
+							q.answers = [0, 0, 0, 0, 0, 0];
 							for( const [id, user] of Object.entries( q.users ) ) {
 								const v = user.answer;
 								if( v ) { q.answers[v] = q.answers[v] + 1; q.answers[0] = q.answers[0] + 1; }
 							}
 						}
+						let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
+						if( qinfo ) q.answers[5] = qinfo.answer;
 						return q.answers[0]? true: false;
 					}
 					return false;
 				}
 
-				function newQuestion() { question++; questions[question] = { answers:[0, 0, 0, 0, 0], users:{} }; }
+				function newQuestion() { question++; questions[question] = { answers:[0, 0, 0, 0, 0, 0], users:{} }; }
 
 				function send_connect() { send( MQ.MASTER_CONNECT ); }
 
@@ -531,6 +529,7 @@
 					panels.visible();
 					timer.start( 0, null, send_connect );
 					imperative.text( 'Попросите участников подключиться' );
+					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
 					bnext.text( '🙋 Начать опрос' ).run( cmd_survey );
 					infoUser.visible();
 					settings.visible();
@@ -556,6 +555,7 @@
 					newQuestion();
 					timer.start( 0, null, () => { send( MQ.MASTER_ATTENTION, question ); } );
 					imperative.text( `Озвучьте вопрос №${question} и запустите таймер` );
+					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
 					bnext.text( `⏲ Запуститьт таймер ${timer_long}` ).run( cmd_timer );
 					infoReport.visible();
 					infoReport.update( question );
@@ -565,6 +565,7 @@
 					let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
 					let qansw = qinfo? qinfo.answer: 0;
 					imperative.text( `Попросите участников ответить на вопрос №${question}` );
+					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
 					bnext.text( '⏲ Завершить досрочно' ).run( timer.break );
 					timer.start( timer_long, cmd_post, ( timer_set ) => { send( MQ.MASTER_QUESTION, question, qansw, timer_set ); } );
 				}
@@ -572,13 +573,13 @@
 				function cmd_post() {
 					timer.start( 0, null, () => { send( config.report_mode? MQ.MASTER_REPORT: MQ.MASTER_TIMEOUT, 0, question, questions[question].answers ); } );
 					imperative.text( `Озвучьте результат голосования` );
-					infoReport.clear();
 					infoReport.update( question, questions[question].answers );
-					infoReport.visible();
 					if( question<config.question_limit) {
+						bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
 						bnext.text( `Перейти к вопросу №${question+1}` ).run( cmd_next );
 					} else {
-						bnext.text( `Завершить опрос` ).run( cmd_stop );
+						bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
+						bnext.text( `Новый опрос` ).run( autoReload );
 					}
 				}
 
@@ -615,26 +616,36 @@
 
 				const timer_mode_list = ['30 секунд', '1 минута', '2 минуты'];
 
-				const top = nDiv( p ).classes( 'column' );
-				const info =  nDiv( top ).classes( 'column' );
-				statusbar = setInfobar( info );
-				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'imperative border margin' ).styles( 'font-size:5vmin' );
+				const top = nColumn( p );
+				const info =  nColumn( top );
+				statusbar = setInfobar( info ).classes( 'border margin' ).styles( ft0 );
 
+				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'border margin' ).styles( ft0 );
 				timer.start( reload_time, autoReload, waitConnect );
 
-				panels = nDiv( top ).classes( 'row' ).visible( false );
-				const left = nDiv( panels ).classes( 'column border margin panel' ).styles( 'width:30em' );
-				bnext = nButton( left );
-				settings = nDiv( left ).classes( 'column border margin panel' ).visible( false );
+				panels = nRow( top ).visible( false );
+				const left = nColumn( panels ).classes( 'border margin panel' ).styles( 'width:30em' );
+
+				const bpan = nColumn( left );
+				let bstep = false
+				const bpan_l = nText( bpan, '⚠' ).classes( 'margin' ).styles( `background:darkorange` );
+				bnext = nButton( bpan );
+				const bpan_r = nText( bpan, '⚠' ).classes( 'margin' ).styles( `background:darkorange` );
+				bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
+
+				settings = nColumn( left ).classes( 'border margin panel' ).visible( false );
 				bstop = nButton( left );
-				const right = nDiv( panels ).classes( 'column border margin panel' ).styles( 'flex-grow:1' );
+				const right = nColumn( panels ).classes( 'border margin panel' ).styles( 'flex-grow:1' );
 				infoQuiz = setInfoQuiz( right ).visible( true );
 				infoReport = setInfoReport( right ).visible( false );
 				infoUser = setInfoUsers( top ).classes( 'column border margin panel' ).visible( false );
 
 				mqtt = MQTT( 
 					() => { imperative.text( 'Успешное подлючение!!!' ); cmd_start(); },
-					() => { imperative.text( 'Ошибка подключения!!!' ); cmd_stop(); },
+					() => {
+						imperative.text( `Ошибка подключения ${error.errorMessage}. Обновите страницу.` );
+						nButton( top, 'Перезагрузить Квэстер' ). run( autoReload ).styles( ft2 );
+					},
 					( msg ) => {
 						ret = decode( msg );
 						if( ret ) {
@@ -654,45 +665,72 @@
 				);
 			}
 
+
 			// USER
 			function user( p ) {
-				function send_answer( question, answer, answ ) {
-					console.log( 'ME ANSWER', question, answer );
-					userdata.questions[question] = { answer: answer, question: question, answ: answ };
-					send( MQ.USER_ANSWER, answer, question );
+
+				function send_answer( question, code, correct ) {
+					if( !userdata.answers[question] ) {
+						userdata.answers[question] = { code: code, correct: correct };
+						userdata.question = question;
+						userdata.correct = correct;
+						userdata.answer = code;
+						if( correct) userdata.countStar++;
+					}
+					const ud = userdata.answers[question];
+					send( MQ.USER_ANSWER, ud.code, question );
+				}
+
+
+				function setLevelUp( p ) {
+					const n = nDiv( p );
+					const timer = setTimer();
+
+					//function randBG() { top.styles( `background:${CSS.random()}` ); }
+					function randBG() { top.styles( `background:${CSS.grad( theme.color.background, CSS.random(), CSS.random(), 0, 50, 100 )}` ); }
+					function standBG() { top.styles( theme.background ); }
+
+					n.update = () => {
+						n.clear();
+						if( userdata.countStar ) {
+							for( const [question, answer] of Object.entries( userdata.answers ) ) {
+								nText( n, answer.correct? '🌟': '💭' ).styles( `background:${CSS.hsl(question*35, 50, 25)}` );
+							}
+							nText( n, userdata.countStar ).styles( `background:${CSS.hsl(userdata.question*35, 50, 25)}` );
+							if( userdata.correct ) timer.start( 1, standBG, randBG, 33 );
+						} else {
+							nText( n, '💭' );
+						}
+					}
+
+					n.update();
+					return n;
 				}
 
 				function userReport( p ) {
-					p.clear();
 					const list = nDiv( p ).classes( 'column' );
 					nText( list ).text( 'Результат').classes( 'caption' );
-					let countStar = 0;
-					for( const [key, data] of Object.entries( userdata.questions ) ) {
-						const code = data.answer;
-						let flag; 
-						if( code===data.answ ) {
-							countStar++;
-							flag = '⭐';
-						} else {
-							flag = '';
-						}
-						nText( list, `Вопрос ${key} Ответ ${WL[code]} ${WS[code]} ${flag}` ).classes( 'caption' );
+					for( const [question, answer] of Object.entries( userdata.answers ) ) {
+						nText( list, `Вопрос ${question} Ответ ${WL[answer.code]} ${WS[answer.code]} ${answer.correct?WS[5]:WS[0]}` ).classes( 'caption' );
 					}
-					if( countStar ) nText( list, `${countStar} ${'🌟'.repeat(countStar)}`).classes( 'caption border margin' ).styles( 'font-size:9vmin' );
 				}
 
-				document.documentElement.style.setProperty( '--base-size', '2vw' );
-				const userdata = { questions:{} };
+				const userdata = { answers:{}, countStar:0 };
 
-				const statusbar = setInfobar( p );
-				const imperative = nText( p ).classes( 'imperative border margin' ).styles( 'font-size:5vmin' );
-				const questnum = nText( p ).visible( false );
-				const buttons = nDiv( p ).classes( 'column' ).visible( false ).styles( 'justify-content1:space-between' );
-				const line1 = nDiv( buttons ).classes( 'row' ).visible().styles( 'justify-content1:space-between' );
-				const line2 = nDiv( buttons ).classes( 'row' ).visible().styles( 'justify-content1:space-between' );
+				const top = nColumn( p ).styles( `align-items:left;` );
+				const statusbar = setInfobar( top ).classes( 'border margin' ).styles( ft0 );
+				const levelUp = setLevelUp( top ).classes( 'border margin' ).styles( ft1 );
+				const imperative = nText( top ).classes( 'border margin' ).styles( ft1 );
+				const view = nColumn( top ).styles( ft1 );
 
+				const questnum = nText( view ).classes( 'border margin' ).visible( false );
+				const buttons = nColumn( view ).visible( false );
+				const line1 = nRow( buttons );
+				const line2 = nRow( buttons );
 				const answers = [nButton( line1 ), nButton( line1 ), nButton( line2 ), nButton( line2 )];
-				const infoReport = setInfoReport( p ).visible( false );
+				answers.forEach( (button) => { button.styles( ft3+'width:50vw;height:22vh;' ); } );
+
+				const infoReport = setInfoReport( view ).classes( 'border margin' ).visible( false ).styles( ft0 );
 
 				timer.start( reload_time, autoReload, waitConnect );
 
@@ -700,14 +738,26 @@
 				let master_id;
 				let question;
 
-				imperative.text( 'Идет подключение.' );
+				const MSG = {
+					connect:'Идет подключение',
+					wait1:	'Ждите начала',
+					wait2:	'Ждите окончания',
+					wait3:	'Ждите другой вопрос',
+					warning:'Внимание! Уже скоро',
+					error:	'Ошибка подключения',
+					select: 'Выберите ответ',
+					reload: 'Перезагрузить',
+					goodbay:'Хорошего дня!'
+				}
+
+				imperative.text( MSG.connect );
 
 				mqtt = MQTT(
-					() => { imperative.text( 'Дождитесь начала голосования.' ); },
+					() => { imperative.text( MSG.wait1 ); },
 					( error ) => {
-						imperative.text( `Ошибка подключения ${error.errorMessage}. Обновите страницу.` );
-						buttons.visible();
-						bnext.text( 'Перезагрузить Квэстер' ). run( autoReload ).styles( 'font-size:15vmin' );;
+						imperative.text( MSG.error );
+						buttons.visible( false );
+						nButton( p, MSG.reload ). run( autoReload ).styles( ft2 );;
 					},
 					( msg ) => {
 						timer.clear();
@@ -716,7 +766,7 @@
 							statusbar.update();
 							if( ( ret.code < MQ.USER_CONNECT ) && ( master_id != ret.id ) ) {
 								master_id = ret.id;
-								imperative.text( 'Идет подключение.' );
+								imperative.text( MSG.connect );
 								questnum.visible( false );
 								buttons.visible( false );
 								infoReport.visible( false );
@@ -727,7 +777,7 @@
 								switch( ret.code ) {
 								case MQ.USER_READY:
 									if( mqtt.id === ret.check ) {
-										imperative.text( 'Ждите начала голосования.' );
+										imperative.text( MSG.wait1 );
 										questnum.visible( false );
 										buttons.visible( false );
 										infoReport.visible( false );
@@ -735,7 +785,7 @@
 									break;
 								case MQ.USER_ORDER:
 									if( mqtt.id === ret.check ) {
-										imperative.text( `Ждите окончания голосования!` );
+										imperative.text( MSG.wait2 );
 										questnum.text( `${WS[ret.value]} Ответ ${WL[ret.value]}` ).visible();
 										buttons.visible( false );
 										infoReport.visible( false );
@@ -743,21 +793,20 @@
 									}
 									break;
 								case MQ.MASTER_ATTENTION:
-									imperative.text( `Внимание! Голосование скоро начнется.` );
-									questnum.text( `Вопрос № ${ret.value}` ).styles( 'font-size:18vmin' ).visible();
+									imperative.text( MSG.warning );
+									questnum.text( `Вопрос № ${ret.value}` ).visible();
 									buttons.visible( false );
 									infoReport.visible( false );
 									break;
 								case MQ.MASTER_QUESTION:
 									if( question !== ret.value ) {
 										question = ret.value;
-										const answ = ret.check;
+										const answer = ret.check;
 										need_report = true;
-										imperative.text( 'Выберите свой вариант ответа' );
-										questnum.text( `Вопрос № ${question}` ).styles( 'font-size:18vmin' ).visible();
-										for( let i=1; i<=4; i++ ) answers[i-1].text( WL[i] ).run( () => { send_answer( question, i, answ ); } ).styles( 'width:33vmin;height:33vmin;font-size:33vmin' );
+										imperative.text( MSG.select );
+										questnum.text( `Вопрос № ${question}` ).visible();
+										for( let i=1; i<=4; i++ ){ answers[i-1].text( WL[i] ).run( () => { send_answer( question, i, (i===answer) ); } ); }
 										buttons.visible();
-										infoReport.clear();
 										infoReport.visible( false );
 										send( MQ.USER_CONSIDERS );
 									}
@@ -766,17 +815,18 @@
 									if( need_report ) {
 										need_report = false;
 										infoReport.update( ret.check, ret.data );
+										levelUp.update();
 										send( MQ.USER_REPORT );
-										imperative.text( `Ждите следующего вопроса!` );
-										questnum.visible( false );
+										imperative.text( MSG.wait3 );
+										questnum.visible();
 										buttons.visible( false );
-										infoReport.visible();
 									}
 									break;
 								case MQ.MASTER_STOP:
-									imperative.text( 'Опрос завершен! Хорошего дня!' );
+									imperative.text( MSG.goodbay );
 									questnum.visible( false );
 									buttons.visible( false );
+									infoReport.clear();
 									userReport( infoReport );
 									break;
 								default:
@@ -793,7 +843,7 @@
  		<script>
 			const options = getHrefOptions();
 			if( options.master ) options.mode = 'master';
-			let pRoom = options.roomid? Number(options.roomid): 7773;
+			let pRoom = options.roomid? Number(options.roomid): roomDefalut;
 			let pMode = options.mode? options.mode: 'user';
 			let pTop = document.body;
 
