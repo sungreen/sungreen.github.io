@@ -48,7 +48,7 @@
 	 	<script type = "text/javascript" language = "javascript">
 
 			// roles: master, user, monitor
-			const version = '1.05';
+			const version = '1.07';
 			const destinationName = '/quizzy'; 
 			const roomDefalut = 777;
 			const reload_time = 30;
@@ -281,6 +281,7 @@
 
 			const CSS = {
 				hsl: (h, s, l) => { l /= 100; const a = s * Math.min(l, 1 - l) / 100; const f = n => { const k = (n + h / 30) % 12; const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1); return Math.round(255 * color).toString(16).padStart(2, '0'); }; return `#${f(0)}${f(8)}${f(4)}`; },
+				rgb: ( r, g, b) => { return `rgb(${r}, ${g}, ${b})`; },
 				grad: ( color0='#000000', color1='#888888', color2='#ffffff', level0=0, level1=50, level2=100, turn=0.25 ) => { return `linear-gradient( ${turn}turn, ${color0} ${level0}%, ${color1} ${level1}%, ${color2} ${level2}%);`; },
 				hex: ( color='#000000') => { return `${color}`; },
 				random: () => { return `#${Math.floor(Math.random()*16777215).toString(16)}` }
@@ -553,7 +554,7 @@
 
 				function cmd_next() {
 					newQuestion();
-					timer.start( 0, null, () => { send( MQ.MASTER_ATTENTION, question ); } );
+					timer.start( 0, null, () => { send( MQ.MASTER_ATTENTION, question, config.question_limit ); } );
 					imperative.text( `Озвучьте вопрос №${question} и запустите таймер` );
 					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
 					bnext.text( `⏲ Запуститьт таймер ${timer_long}` ).run( cmd_timer );
@@ -688,15 +689,16 @@
 
 					//function randBG() { top.styles( `background:${CSS.random()}` ); }
 					function randBG() { top.styles( `background:${CSS.grad( theme.color.background, CSS.random(), CSS.random(), 0, 50, 100 )}` ); }
-					function standBG() { top.styles( theme.background ); }
+					function standBG() {  top.styles( `background:${theme.color.background};` ); }
 
 					n.update = () => {
 						n.clear();
 						if( userdata.countStar ) {
+							nText( n, `(${userdata.countStar})` ).styles( `background:${CSS.rgb( 0, 128, 64 )}` );
 							for( const [question, answer] of Object.entries( userdata.answers ) ) {
-								nText( n, answer.correct? '🌟': '💭' ).styles( `background:${CSS.hsl(question*35, 50, 25)}` );
+								const cf = question/userdata.question_limit*128;
+								nText( n, answer.correct? '🌟': '💭' ).styles( answer.correct? `background:${CSS.rgb( cf, 128-cf, 64 )}`:`background:${theme.color.background};` );
 							}
-							nText( n, userdata.countStar ).styles( `background:${CSS.hsl(userdata.question*35, 50, 25)}` );
 							if( userdata.correct ) timer.start( 1, standBG, randBG, 33 );
 						} else {
 							nText( n, '💭' );
@@ -717,7 +719,8 @@
 
 				const userdata = { answers:{}, countStar:0 };
 
-				const top = nColumn( p ).styles( `align-items:left;` );
+				const desktop = p;
+				const top = nColumn( desktop ).styles( `align-items:left; width:100vw; height:100vh;` );
 				const statusbar = setInfobar( top ).classes( 'border margin' ).styles( ft0 );
 				const levelUp = setLevelUp( top ).classes( 'border margin' ).styles( ft1 );
 				const imperative = nText( top ).classes( 'border margin' ).styles( ft1 );
@@ -794,9 +797,10 @@
 									break;
 								case MQ.MASTER_ATTENTION:
 									imperative.text( MSG.warning );
-									questnum.text( `Вопрос № ${ret.value}` ).visible();
+									questnum.text( `Вопрос № ${ret.value} из ${ret.check}` ).visible();
 									buttons.visible( false );
 									infoReport.visible( false );
+									userdata.question_limit = ret.check;
 									break;
 								case MQ.MASTER_QUESTION:
 									if( question !== ret.value ) {
