@@ -1,475 +1,123 @@
 <!DOCTYPE html> 
 <html>
-	<style>
-		:root {
-			--tone: 300;
-			--font-family: sans-serif;
-			--background: hsl(var(--tone), 50%, 5%);
-			--background-color: hsl(var(--tone), 50%, 10%);
-			--button-bg: hsl(var(--tone), 50%, 25%);
-			--button-hover: hsl(var(--tone), 50%, 50%);
-			--panel-color: hsl(var(--tone), 50%, 15%);;
-			--text-color: white;
-			--base-size: 1vh;
-			--icon-size: calc(var(--base-size)*3);
-			--gallery-image-size: calc(var(--base-size)*15);
-			--tab-size: calc(var(--base-size)*0.2);
-			--pan-size: calc(var(--base-size)*1.0);
-			--border-color: hsl(var(--tone), 50%, 50%);
-		}
-
-		html, body { margin: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: var(--background-color); }
-		body { transform: scale(1.0); transform-origin: 0 0; }
-		.frame { overflow: scroll; }
-
-		div { display: flex; }
-
-		.border { border: 2px solid; border-radius: 5px; border-color: var(--border-color); }
-		.panel { background-color: var( --panel-color); }
-
-		.text { text-align:center; white-space: nowrap; text-overflow: ellipsis; font-family: var(--font-family);	color: var(--text-color); }
-		.caption { text-align:left; white-space: nowrap; text-overflow: ellipsis; font-family: var(--font-family);	color: var(--text-color); }
-		.preline { white-space: pre-line; }
-
-		.button { border: 2px solid; border-radius: 5px; border-color: var(--border-color); color: var(--text-color); background-color: var(--button-bg); }
-		.button:hover { background-color: var(--button-hover); }
-
-		.margin { margin: calc(var(--tab-size)*3); padding: calc(var(--tab-size)*1); }
-
-		.row { display: flex; flex-direction: row; }
-		.column { display: flex; flex-direction: column; }
-
-	</style>
 	<head>
 		<title>DomikJS/Quiz</title>
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"> -->
-		<script src="mqttws31.js" type="text/javascript">
-	 	</script>
-	 	<script type = "text/javascript" language = "javascript">
+		<link rel="stylesheet" href="stylesheet.css">
+		<script src="vendor/mqttws31.js" type="text/javascript"></script>
+		<script src="core/utils.js" type="text/javascript"></script>
+		<script src="core/mqtt.js" type="text/javascript"></script>
+		<script src="core/ndiv.js" type="text/javascript"></script>
+		<script src="core/quizzy.js" type="text/javascript"></script>
 
+		<script type = "text/javascript" language = "javascript">
 			// roles: master, user, monitor
-			const version = '1.07';
-			const destinationName = '/quizzy'; 
-			const roomDefalut = 777;
+			const appname = 'Квестер'
+			const version = '1.2';
 			const reload_time = 30;
 
-			const ft0 = 'font-size:4.5vmin;';
-			const ft1 = 'font-size:9vmin;';
-			const ft2 = 'font-size:15vmin;';
-			const ft3 = 'font-size:22vmin;';
+			function autoReload() { console.log( 'autorelod' ); document.location.reload(); }
 
-			let mqtt, ret, quiz, timer;
-			let step = 0;
-
-			const config = {};
-
-			// SYSTEM
-			function getHrefOptions() {
-				const options = {};
-				const qs = String( document.location.href + '?version=' + version ).split('?').slice(1);
-				qs.forEach( ( query ) => {
-					const parts = query.split('&');
-					parts.forEach( ( part ) => {
-						const lex = (part + '=true').split( '=' );
-						options[lex[0]] = lex[1];
-					} );
-				} );
-				return options;
-			}
-
-			function setTimer() {
-				const timer = {};
-				let timer_id, timer_start, timer_finish, timer_limit, call_finish, call_order;
-
-				timer.clear = () => { if( timer_id ) clearInterval( timer_id ); timer_id = null; }
-
-				timer.order = () => {
-					const current = Date.now();
-					if( !timer_range || current <= timer_finish ) {
-						if( call_order ) call_order( [current, timer_start, timer_finish, timer_range] );
-					} else timer.stop();
-				}
-
-				timer.start = ( duration=0, onFinish=null, onOrder=null, interval=1000 ) => {
-					timer.clear();
-					timer_range = duration * 1000;
-					timer_start = Date.now();
-					timer_finish = timer_start + timer_range;
-					call_finish = onFinish;
-					call_order = onOrder;
-					timer_id = setInterval( () => { timer.order(); }, interval );
-				}
-
-				timer.stop = () => {
-					timer.clear();
-					timer_id = null;
-					if( call_finish ) call_finish( [timer_finish, timer_start, timer_finish, timer_range] );
-				}
-
-				timer.break = () => {
-					timer_finish = Date.now();
-					timer.order();
-				}
-
-				return timer;
-			}
-
-			function readFromFile( file, onread = ( data ) => {} ) {
-				const reader = new FileReader();
-				reader.readAsText( file );
-				reader.onload = () => { onread( reader.result ) };
-			}
-
-			function parseQuizData( text ) {
-				// QUIZ EXT 2
-				const quiz = { name: '', questions: {}, count: 0 };
-				const lines = ( text ).split(/\r?\n/);
-				let question;
-				let num = 0;
-				let code = 0;
-				lines.forEach( ( line ) => {
-					if( line.startsWith('NAME:') ) {
-						const name = line.split( ':' )[1].trim();
-						quiz.name = name;
-					} else {
-						if( question ) {
-							if( line.charAt(0) === '*' ) {
-								code++;
-								let test = false;
-								let text = line.substring( 2 ).trim();
-								if( line.charAt(1) === '*' ) question.answer = code;
-								question.answers[code] = { code: code, text: text };
-							} else {
-								question = null;
-							}
-						}
-						if( !question ) {
-							const text = line.trim();
-							if( text !== '' ) {
-								num++;
-								code = 0;
-								question = { num: num, text: text, answers: {} };
-								quiz.questions[num] = question;
-								quiz.count = num;
-							}
-						}
-					}
-				} );
-				return quiz;
-			}
-
-			function load_bank( file ) {
-				readFromFile( file, ( data ) => {
-					quiz = parseQuizData( data );
-					config.question_limit = quiz.count;
-					infoQuiz.update();
-				} );
-			}
-
-			function autoReload() { document.location.reload(); }
-			function waitConnect() { ++step; }
-
-			//MQTT
-			function MQTT( onConnect, onFailure, onMessage ) {
-				const location = {
-					// hivemq.cloud
-					// host: "d8b235f2986140de80c0ce6f9d8bd5ed.s1.eu.hivemq.cloud",
-					// port: 8884
-				// 	// userName: "hivemq.webclient.1734721971482",
-				// 	// password: "NHJeE:$!1%OaMfvxs098",
-
-					host: "broker.hivemq.com",
-					port: 8884,
-				}
-
-				const id = Math.floor(Math.random() * 10000);
-				const cname = `ID${id}`;
-				const client = new Paho.MQTT.Client( location.host, location.port, cname );
-				if( onMessage ) client.onMessageArrived = onMessage;
-
-				client.onMessageArrived = ( message ) => {
-					console.log( `MQTT Message ${message.payloadString}` );
-					if( onMessage ) onMessage( message );
-				}
-
-				client.onConnectionLost = ( responseObject ) => {
-					if( responseObject.errorCode !== 0 ) {
-						console.log( `MQTT Error ${responseObject.errorMessage}` );
-						if( onFailure ) onFailure();
-					}
-				}
-
-				const connectOptions = {
-					timeout: 30,
-					// userName:"string", 
-					// password:"string", 
-					// willMessage:"object", 
-					keepAliveInterval: 60, // default 60 
-					cleanSession: true, 
-					useSSL: true,
-					// invocationContext:"object", 
-					onSuccess: () => {
-						client.subscribe( destinationName );
-						if( onConnect ) onConnect( client );
-					}, 
-					// onFailure:"function",
-					// hosts:"object",
-					// ports:"object",
-					// mqttVersion:"number"
-				}
-
-				client.connect( connectOptions );
-				const _mqtt_ = { client: client, cname: cname, id: id };
-				_mqtt_.message = ( content ) => { const message = new Paho.MQTT.Message( content ); message.destinationName = destinationName; client.send( message ); }
-				return _mqtt_;
-			}
-
-			const MQ = {
-				MASTER_CONNECT: 0,
-				MASTER_READY: 1,
-				MASTER_START: 2,
-				MASTER_STOP: 3,
-				MASTER_ATTENTION: 4,
-				MASTER_QUESTION: 5,
-				MASTER_TIMEOUT: 6,
-				MASTER_REPORT: 7,
-				USER_CONNECT: 10,
-				USER_READY: 11,
-				USER_CONSIDERS: 12,
-				USER_ANSWER: 13,
-				USER_ORDER: 14,
-				USER_REPORT: 15
-			}
-
-			function decode( msg ) {
-				const lex = msg.payloadString.split( '~' );
-				const [id, step, room, code, value, check] = lex[0].split(':').map(Number);
-				if( room === pRoom ) {
-					const data = lex.length>1? lex[1].split(':').map(Number): null;
-					return { id: id, step: step, code: code, value: value, check: check, data: data }
-				}
-			}
-
-			function convert( code=0, value=0, check=0, data=null ) {
-				return [pRoom, code, value, check].join( ':' ) + ( data ? ( '~' + data.join( ':' ) ): '' );
-			}
-
-			function send( code=0, value=0, check=0, data=null ) {
-				if( mqtt ) {
-					step++;
-					const msg = `${mqtt.id}:${step}:${convert( code, value, check, data )}`;
-					mqtt.message( msg );
-				} else {
-					alert( 'Not mqtt!!!' );
-				}
-			}
-
-			// NPROPERTY
-			function nProperty( obj, param, type, options={} ) {
-				const property = { obj: obj, param: param, type: type, value: null, options: options };
-				property.set = ( value ) => { if( property.value!==value ) { property.onChangeValue( value ); property.value = value; } }
-				property.get = () => { return property.value; }
-				property.option = ( name, value=0 ) => { return options[name]? options[name]: value };
-				Object.defineProperty( obj, param, { set: ( value ) => { property.set( value ); }, get: () => { return property.get(); }, } );
-				property.onChangeValue = ( v ) => {};
-				if( property.option( 'init' ) ) property.set( property.option( 'init' ) );
-				return property;
-			}
-
-			// NDIV
-			function msplit( head, sep, tail='' ) { return `${head}${sep}${tail}`.split( sep ); }
-
-			const CSS = {
-				hsl: (h, s, l) => { l /= 100; const a = s * Math.min(l, 1 - l) / 100; const f = n => { const k = (n + h / 30) % 12; const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1); return Math.round(255 * color).toString(16).padStart(2, '0'); }; return `#${f(0)}${f(8)}${f(4)}`; },
-				rgb: ( r, g, b) => { return `rgb(${r}, ${g}, ${b})`; },
-				grad: ( color0='#000000', color1='#888888', color2='#ffffff', level0=0, level1=50, level2=100, turn=0.25 ) => { return `linear-gradient( ${turn}turn, ${color0} ${level0}%, ${color1} ${level1}%, ${color2} ${level2}%);`; },
-				hex: ( color='#000000') => { return `${color}`; },
-				random: () => { return `#${Math.floor(Math.random()*16777215).toString(16)}` }
-			}
+			function waitConnect() { console.log( 'wait connect' ); }
 
 			const theme = {};
 			theme.tone = 300,
 			theme.color = { background: CSS.hsl( theme.tone, 50, 5 ) };
 			theme.background = `background:${theme.color.background};`;
 
-			function nDiv( p, types='DIV' ){
-				const [type, input] = msplit( types, ':' );
-				const n = document.createElement( type );
-				if( type === 'INPUT' ) n.type = input;
-				n.classes = ( classes = null ) => { if( classes ) { classes.split(' ').forEach( ( c ) => { n.classList.add( c ); } ); }; return n; }
-				n.styles = ( styles = null ) => { if( styles ) { styles.split(';').forEach( ( s ) => { const p = (s + ':').split( ':' ); n.style[p[0].trim()] = p[1].trim(); } ); }; return n; }
-				n.clear = () => { while ( n.hasChildNodes() ) { n.removeChild( n.firstChild ); } };
-				n.parented = (p) => { p.appendChild( n ); return n; }
-				n.visible = ( visible=true ) => { n.style.display = visible? 'flex': 'none'; return n; }
-				if( p ) n.parented( p );
-				return n;
-			}
-
-			function nRow( p ) { return nDiv( p ).classes( 'row' ); }
-			function nColumn( p ) { return nDiv( p ).classes( 'column' ); }
-
-			const extensions = { video: ['.avi','.ogg','.mov','.mp4'], image: ['.png','.jpg'], sound: ['.aac', '.mp3'], text: ['.txt' ], shader: ['.glsl'], pdf: ['.pdf'], model3d:['.fbx'], addon: ['.dmx'], }
-
-			function nText( p, text='' ){ const n = nDiv( p ); n.text = ( text='' ) => { n.innerHTML = text; return n; }; n.append = ( text='' ) => { n.text( n.innerHTML + text ); };  n.text( text ); return n.classes( 'text' ); }
-			function nButton( p, label='', order=null ) { const n = nText( p, label ); n.run = ( order ) => { n.order = order; return n; }; n.run( order ); n.addEventListener( 'pointerdown', ()=>{ if( n.order ) n.order(); } ); return n.classes( 'button margin' ); }
-
-			function nInput( p, type ) {
-				const n = nDiv( p, type );
-				let _cast_;
-				n.get = () => { return n.value; };
-				n.set = ( v ) => { n.value = v; };
-				n.up = ( v ) => { if( _cast_ !== v ) { _cast_ = v; n.set( v ); return true; } return false; };
-				n.update = () => { if( n.up( n.get() ) && n.onChangeValue ) n.onChangeValue( _cast_ ); };
-				return n;
-			}
-
-			function nCheck( p , init=true ) {
-				const n = nInput( p, 'INPUT:CHECKBOX' );
-				n.get = () => { return n.checked; }
-				n.set = ( v ) => { n.checked = v; }
-				n.addEventListener( 'change', ( event ) => { n.change(); } );
-				n.up( init );
-				return n;
-			}
-
-			function nNumber( p, init, min=0, max=1, step=0.1 ) {
-				const n = nInput( p, 'INPUT:NUMBER' );
-				n.get = () => { return ( Number( n.value ) ); }
-				n.set = ( v ) => { n.value = String(v); }
-				n.min = min; n.max = max; n.step = step;
-				n.onchange = () => { n.change(); };
-				n.up( init );
-				return n;
-			}
-
-			function nSelect( p , init, options=[] ) {
-				const n = nInput( p, 'SELECT' );
-				options.forEach( ( option ) => { const o =  nDiv( n, 'OPTION' ); o.value = option; o.textContent = option; } );
-				n.onchange = () => { n.update(); };
-				n.up( init );
-				return n;
-			}
-
-			function nFile( p, label, onload = ( file ) => {}, types ) {
-				const n = nInput( p, 'INPUT:FILE' );
-				n.setAttribute( 'style', 'display:none' );
-				n.addEventListener( 'change', () => { const file = n.files[0]; file.extension = file.name.split( '.' ).pop().toLowerCase(); onload( file ); }, false );
-				if( types ) {
-					let accept = ''; types.forEach( ( type ) => { accept = `${accept}${extensions[type]}, `; } );
-					n.setAttribute( 'accept', accept );
-				}
-				const b = nButton( p, label, () => { n.click(); } );
-				return b;
-			}
-
-			function nWidget( p, property, label ) {
-				if( property.type ) {
-					let n;
-					switch( property.type ) {
-						case 'CHECKBOX': n = nCheck( null, property.get() ); break;
-						case 'SELECT':   n = nSelect( null, property.get(), property.option( 'options', ['empty'] ) ); break;
-						case 'NUMBER':   n = nNumber( null, property.get(), property.option( 'min', 0 ), property.option( 'max', 1 ), property.option( 'step', 0.1 ) ); break;
-						case 'FILE':     n = nFile( null, property.option( 'label' ), property.option( 'onload' ), property.option( 'types' ) ); break;
-						default: break;
-					}
-					if( n ) {
-						const row = nDiv( p ).classes( 'row' );
-						if( property.type!=='FILE' ) { const text = nText( row, label? label: property.option( 'label', property.param ) ); }
-						n.parented( row );
-						n.onChangeValue = ( v ) => { property.set( v ); }
-						property.onChangeValue = ( v ) => { n.up( v ); }
-					}
-					return n;
-				}
-			}
-
-			// WIDGETS
-
 			const WB = ['🔲', '🔳', ''];
 			const WL = ['X','А','Б','В','Г'];
 			const WS = ['🔳','🟥','🟨','🟩','🟦','✅'];
 			const WC = ['black','red','orange','green','blue'];
 
-			function setInfobar( p ) {
-				const n = nText( p );
-				const bg = 'steelblue';
+			function setInfobar( p, host ) {
+				let ping = true;
+				const panel = nDiv( p ).classes( 'row border' );
+				const route = nText( panel );
+				const timer = nText( panel );
+				const bg = 'royalblue';
+				const c1 = 'seagreen';
+				const c2 = 'tomato';
+				const c3 = 'orange';
 
-				n.update = () => {
-					const ind = WB[ (ret? (ret.step % 2): 0) ];
-					const mid = mqtt? `[${mqtt.id}]`: '*';
+				panel.updatePing = () => {
+					ping = !ping;
+					route.text( WB[ ping? 0: 1 ] );
+				}
 
-					n.text( `Квэстер ${version} ${ind} Комната: ${pRoom}${mid}` ).styles( `background:${bg}` );
-
-					if( ret && ret.code === MQ.MASTER_QUESTION ) {
+				panel.updateTimer = ( timerset ) => {
+					const mid = host.mqtt? `${host.mqtt.room} [${host.mqtt.id}]`: '*';
+					if( timerset ) {
 						const time = ( '' + ( new Date() ) ).split( ' ' )[4];
-						const [current, timer_start, timer_finish, timer_range ] = ret.data;
+						const [current, timer_start, timer_finish, timer_range ] = timerset;
 						const dtimer = timer_finish - current;
 						const diff = Math.floor( dtimer / 1000 );
 						const factor = 1 - ( dtimer / timer_range );
-						const head = dtimer>10000 ? 'green': 'red';
+						const head = dtimer>10000 ? c1: c2;
 						const tail = bg;
-						n.text( `⏲ Время: ${time} Осталось секунд: ${diff}` ).styles( `background:${CSS.grad( bg, bg, head, 0, factor*100, factor*100 )}` );
+						timer.text( `⏲ Время: ${time} Осталось секунд: ${diff}` );
+						panel.styles( `background:${CSS.grad( bg, c3, head, factor*100-2, factor*100, factor*100, 0.3 )}` );
+					} else {
+						timer.text( `${appname} ${version} Комната: ${mid}` );
+						panel.styles( `background:${bg}` );
 					}
 				}
 
-				n.update();
-				return n;
+				panel.updatePing();
+				panel.updateTimer();
+				return panel;
 			}
 
-			function setInfoQuiz( p ) {
+			function setInfoQuiz( p, host ) {
 				const info = nColumn( p ).classes( 'column' );
-				const bload = nWidget( info, nProperty( config, 'bank', 'FILE', { label: '🤹 Загрузить банк вопросов', types: ['.txt'], onload: load_bank } ) );
+				const bload = nWidget( info, nProperty( host.quiz, 'bank', 'FILE', { label: '🤹 Загрузить банк вопросов', types: ['.txt'], onload: ( file ) => { load_bank( file, host.quiz, () => { info.update(); host.mqtt.newID(); host.sendAttention( 0 ); } ); } } ) );
 				const n = nText( info ).classes( 'column' );
 
 				info.update = () => {
 					n.clear();
-					if( quiz ) {
-						nText( n, `Название: ${quiz.name}` ).classes( 'caption' );
-						nText( n, `Количество вопросов: ${quiz.count}` ).classes( 'caption' );
-						for( let i=1; i<=quiz.count; i++ ) {
-							const qin = quiz.questions[i];
-							nText( n, `<${i}> ${qin.text}` ).classes( 'caption preline' );
-						}
-					} else {
-						nText( n, `Банк вопросов не загружен.` ).classes( 'caption' );
+					nText( n, `Название: ${host.quiz.name}` ).classes( 'caption' );
+					nText( n, `Количество вопросов: ${host.quiz.range}` ).classes( 'caption' );
+					for( let i=1; i<=host.quiz.range; i++ ) {
+						nText( n, `<${i}> ${host.quiz.question( i ).text}` ).classes( 'caption preline' );
 					}
 				}
 				return info;
 			}
 
-			function setInfoReport( p, data ) {
+			function setInfoReport( p, host ) {
 				const n = nText( p );
-
-				n.update = ( question, answers=[0, 0, 0, 0, 0, 0] ) => {
+				n.update = ( question, correct, report=[0, 0, 0, 0, 0] ) => {
 					n.visible( false );
-					let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
-					let text = qinfo? qinfo.text: '';
-					let total = answers[0];
+					let total = report[0];
 					n.clear();
-					const report = nColumn( n ).classes( 'align-items:left' );
-					nText( report, `Вопрос № ${question}` ).classes( 'caption' );
-					nText( report, `${text}` ).classes( 'caption' );
+					const r = nColumn( n ).classes( 'align-items:left' );
+					nText( r, `Вопрос № ${question}` ).classes( 'caption' );
+					nText( r, `${host.quiz.question( question ).text}` ).classes( 'caption' );
 					for( let i=1; i<=4; i++ ) {
-						const bar = nRow( report ).classes( 'margin' );
-						const value = total? answers[i]/total*100: 0;
+						const bar = nRow( r ).classes( 'margin' );
+						const value = total? report[i]/total*100: 0;
 						const level = Math.ceil( value/10 );
 						const sup1 = ( value ) ? `${(WS[i]).repeat( level )} ${value.toFixed(0)}%`: '';
-						const sup2 = ( qinfo ) ? `${qinfo.answers[i].text}`: '';
-						nText( bar, `${WL[i]}) ${WS[i===answers[5] ? 5: 0]} ${sup1} ${sup2}` )
-						if( i===answers[5] ) bar.classes( 'border' );
+						const sup2 = `${host.quiz.question( question ).answer( i ).text}`;
+						nText( bar, `${WL[i]}) ${WS[i===correct ? 5: 0]} ${sup1} ${sup2}` )
+						if( i===correct ) bar.classes( 'border' );
 					}
 					n.visible( true );
 				}
 				return n;
 			}
 
-			function setInfoUsers( p ) {
+			function setinfoUsers( p, host ) {
 				const n = nText( p );
-				n.update = ( question, users ) => {
+
+				n.update = ( question ) => {
+					const users = host.quiz.users;
 					let active=0; let count = 0; let list = '';
+
 					for( const [id, user] of Object.entries( users ) ) {
-						if( Number(id) !== mqtt.id ) {
-							if( user.question === question && user.answer ) { active++; list += `${id}${WS[user.answer]} `; } else { list += `${id}${WS[0]} `; }
+						if( Number(id) !== host.mqtt.id ) {
+							const userActive = host.quiz.question( question ).users[id];
+							if( userActive && userActive.answer ) { active++; list += `${id}${WS[userActive.answer]} `; } else { list += `${id}${WS[0]} `; }
 							count++;
 						}
 					}
@@ -478,230 +126,158 @@
 				return n;
 			}
 
-			timer = setTimer();
+// MASTER
+			function master( room, p ) {
+				const host = makeHost( 'master' );
 
-			// MASTER
-			function master( p ) {
+				const timer_mode_list = ['30 секунд', '1 минута', '2 минуты'];
+				const top = nColumn( p );
+				const info =  nColumn( top );
+				const infoPanel = setInfobar( info, host ).classes( 'border margin ft0' );
+				const imperative = nText( top, 'Дождитесь подключения' ).classes( 'border margin ft0' );
+				const panels = nRow( top ).visible( false );
+				const left = nColumn( panels ).classes( 'border margin panel' ).styles( 'width:30em' );
+				const bpan = nColumn( left );
+				const bpan_l = nText( bpan, '⚠' ).classes( 'margin' ).styles( `background:darkorange` );
+				const bnext = nButton( bpan ).classes( 'ft0' );
+				const bpan_r = nText( bpan, '⚠' ).classes( 'margin' ).styles( `background:darkorange` );
+				const settings = nColumn( left ).classes( 'border margin panel' ).visible( false );
+				const bstop = nButton( left );
+				const right = nColumn( panels ).classes( 'border margin panel' ).styles( 'flex-grow:1' );
+				const infoQuiz = setInfoQuiz( right, host ).visible( true );
+				const infoReport = setInfoReport( right, host ).visible( false );
+				const infoUsers = setinfoUsers( top, host ).classes( 'column border margin panel' ).visible( false );
 
-				function testUserAnswer( ret ) {
-					if( ret.code>=MQ.USER_CONNECT ) {
-						const userID = ret.id;
-						if( !users[userID] ) {
-							send( MQ.USER_READY, 0, userID );
-							users[userID] = { vite: 0, id: userID, question:0, answer:0 }
-						}
-						if( ret.code === MQ.USER_CONNECT ) { send( MQ.USER_READY, userID ); }
-						else if( ret.code === MQ.USER_ANSWER ) {
-							send( MQ.USER_ORDER, ret.value, userID );
-							users[userID].question = ret.check;
-							users[userID].answer = ret.value;
-							users[userID].vite = 0;
-							console.log( ret.check, userID );
-							if( !questions[ret.check].users[userID] ) questions[ret.check].users[userID] = { answer: ret.value };
-						}
-						users[userID].code = ret.code;
-						return true;
-					}
-					return true;
+				let bstep = false
+				bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
+
+				host.run();
+
+				host.timer.start( reload_time, autoReload, waitConnect );
+
+				host.doConnect = () => {
+					imperative.text( 'Успешное подлючение!!!' );
+					cmd_start();
 				}
 
-				function calcQuestion() {
-					if( question ) {
-						let q = questions[question];
-						if( q ) {
-							q.answers = [0, 0, 0, 0, 0, 0];
-							for( const [id, user] of Object.entries( q.users ) ) {
-								const v = user.answer;
-								if( v ) { q.answers[v] = q.answers[v] + 1; q.answers[0] = q.answers[0] + 1; }
-							}
-						}
-						let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
-						if( qinfo ) q.answers[5] = qinfo.answer;
-						return q.answers[0]? true: false;
-					}
-					return false;
+				host.doFailure = ( error ) => {
+					imperative.text( `Ошибка подключения ${error.errorMessage}. Обновите страницу.` );
+					nButton( top, 'Перезагрузить Квэстер' ). run( autoReload ).classes( 'ft2' );
 				}
 
-				function newQuestion() { question++; questions[question] = { answers:[0, 0, 0, 0, 0, 0], users:{} }; }
+				host.doReady = ( code ) => {
+					infoPanel.updatePing();
+					infoUsers.update( currentQuestion );
+				}
 
-				function send_connect() { send( MQ.MASTER_CONNECT ); }
+				host.doAnswer = ( id, question, answer ) => {
+					infoUsers.update( currentQuestion );
+				}
 
 				function cmd_start() {
+					host.sendAttention( 0 );
+
 					panels.visible();
-					timer.start( 0, null, send_connect );
 					imperative.text( 'Попросите участников подключиться' );
 					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
 					bnext.text( '🙋 Начать опрос' ).run( cmd_survey );
-					infoUser.visible();
+					infoUsers.visible();
 					settings.visible();
 					infoQuiz.visible();
 					nText( settings, 'Настройки опроса:' ).classes( 'caption' );
-					nWidget( settings, nProperty( config, 'question_limit', 'NUMBER', { label: 'Количество вопросов: ', min: 1, max: 10, step: 1, init: 3 } ) );
-					nWidget( settings, nProperty( config, 'timer_mode', 'SELECT', { label: 'Ожидание ответа: ', options: timer_mode_list, init: timer_mode_list[1] } ) );
-					nWidget( settings, nProperty( config, 'report_mode', 'CHECKBOX', { label: 'Показать результат участнику: ', init: true } ) );
-					bstop.text( '🤷Прекратить опрос' ).run( cmd_stop );
+					nWidget( settings, nProperty( host.quiz, 'range', 'NUMBER', { label: 'Количество вопросов: ', min: 1, max: 10, step: 1, init: 3 } ) );
+					nWidget( settings, nProperty( host.quiz, 'timer_mode', 'SELECT', { label: 'Ожидание ответа: ', options: timer_mode_list, init: timer_mode_list[1] } ) );
+					nWidget( settings, nProperty( host.quiz, 'report_mode', 'CHECKBOX', { label: 'Показать результат участнику: ', init: true } ) );
+					bstop.text( '🙅Завершить опрос' ).run( cmd_stop );
 				}
+
+				let currentQuestion = 0;
+				let timerlong = 0;
 
 				function cmd_survey() {
 					settings.visible( false );
 					infoQuiz.visible( false );
-					question = 0;
-					questions = {};
-					const timer_mode = timer_mode_list.indexOf( config.timer_mode );
-					timer_long = Math.pow( 2, timer_mode ) * 30; // 30-60-120
+					const timermode = timer_mode_list.indexOf( host.quiz.timer_mode );
+
+					timerlong = Math.pow( 2, timermode ) * 30; // 30-60-120
 					cmd_next();
 				}
 
 				function cmd_next() {
-					newQuestion();
-					timer.start( 0, null, () => { send( MQ.MASTER_ATTENTION, question, config.question_limit ); } );
-					imperative.text( `Озвучьте вопрос №${question} и запустите таймер` );
+					currentQuestion++;
+
+					const correct = host.quiz.question( currentQuestion ).correct;
+					const range = host.quiz.range;
+
+					infoUsers.update( currentQuestion );
+					host.sendAttention( currentQuestion );
+					imperative.text( `Озвучьте вопрос №${currentQuestion} и запустите таймер` );
 					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
-					bnext.text( `⏲ Запуститьт таймер ${timer_long}` ).run( cmd_timer );
+					bnext.text( `⏲ Запустить таймер ${timerlong}` ).run( cmd_timer );
 					infoReport.visible();
-					infoReport.update( question );
+					infoReport.update( currentQuestion );
 				}
 
 				function cmd_timer() {
-					let qinfo = ( quiz && quiz.questions[question] )? quiz.questions[question]: null;
-					let qansw = qinfo? qinfo.answer: 0;
-					imperative.text( `Попросите участников ответить на вопрос №${question}` );
+					host.sendQuestion( currentQuestion, timerlong, ( timerset ) => { infoPanel.updateTimer( timerset ); }, () => { infoPanel.updateTimer(); cmd_post(); } );
+					imperative.text( `Попросите участников ответить на вопрос №${currentQuestion}` );
 					bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
-					bnext.text( '⏲ Завершить досрочно' ).run( timer.break );
-					timer.start( timer_long, cmd_post, ( timer_set ) => { send( MQ.MASTER_QUESTION, question, qansw, timer_set ); } );
+					bnext.text( '⏲ Завершить досрочно' ).run( () => { host.timer.break(); } );
 				}
 
 				function cmd_post() {
-					timer.start( 0, null, () => { send( config.report_mode? MQ.MASTER_REPORT: MQ.MASTER_TIMEOUT, 0, question, questions[question].answers ); } );
-					imperative.text( `Озвучьте результат голосования` );
-					infoReport.update( question, questions[question].answers );
-					if( question<config.question_limit) {
-						bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
-						bnext.text( `Перейти к вопросу №${question+1}` ).run( cmd_next );
-					} else {
-						bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
-						bnext.text( `Новый опрос` ).run( autoReload );
-					}
-				}
+					host.sendReport( currentQuestion );
 
-				function cmd_pause() {
-					pause = !pause;
-					if( pause ) {
-						imperative.text( 'Голосование приостановлено!' );
-						bpause.text( 'Продолжить' );
+					imperative.text( `Озвучьте результат голосования` );
+					infoReport.update( currentQuestion, host.quiz.question( currentQuestion ).correct, host.quiz.report( currentQuestion ) );
+					if( currentQuestion < host.quiz.range ) {
+						bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
+						bnext.text( `Перейти к вопросу №${currentQuestion + 1}` ).run( cmd_next );
 					} else {
-						imperative.text( 'Голосование продолжено!' );
-						bpause.text( 'Приостановить' );
+						bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
+						bstop.text( '🙅Новый опрос' ).run( autoReload );
+						bnext.text( `🤷Завершить опрос` ).run( cmd_stop );
 					}
 				}
 
 				function cmd_stop() {
-					send( MQ.MASTER_STOP );
+					host.sendStop();
 					imperative.text( 'Опрос завершен! Хорошего дня!' );
 					panels.visible( false );
 				}
 
-				document.documentElement.style.setProperty( '--base-size', '1.5vmin' );
-
-				let statusbar, infoReport, infoUser;
-				let imperative, panels, bnext, bstop, settings;
-
-				let attempt = 0;
-				let report;
-				let users = {};
-				let question;
-				let question_limit;
-				let questions;
-				let timer_long;
-				let pause = false;
-
-				const timer_mode_list = ['30 секунд', '1 минута', '2 минуты'];
-
-				const top = nColumn( p );
-				const info =  nColumn( top );
-				statusbar = setInfobar( info ).classes( 'border margin' ).styles( ft0 );
-
-				imperative = nText( top, 'Дождитесь окончания проверки подключения' ).classes( 'border margin' ).styles( ft0 );
-				timer.start( reload_time, autoReload, waitConnect );
-
-				panels = nRow( top ).visible( false );
-				const left = nColumn( panels ).classes( 'border margin panel' ).styles( 'width:30em' );
-
-				const bpan = nColumn( left );
-				let bstep = false
-				const bpan_l = nText( bpan, '⚠' ).classes( 'margin' ).styles( `background:darkorange` );
-				bnext = nButton( bpan );
-				const bpan_r = nText( bpan, '⚠' ).classes( 'margin' ).styles( `background:darkorange` );
-				bstep = !bstep; bpan_l.visible( bstep ); bpan_r.visible( !bstep );
-
-				settings = nColumn( left ).classes( 'border margin panel' ).visible( false );
-				bstop = nButton( left );
-				const right = nColumn( panels ).classes( 'border margin panel' ).styles( 'flex-grow:1' );
-				infoQuiz = setInfoQuiz( right ).visible( true );
-				infoReport = setInfoReport( right ).visible( false );
-				infoUser = setInfoUsers( top ).classes( 'column border margin panel' ).visible( false );
-
-				mqtt = MQTT( 
-					() => { imperative.text( 'Успешное подлючение!!!' ); cmd_start(); },
-					() => {
-						imperative.text( `Ошибка подключения ${error.errorMessage}. Обновите страницу.` );
-						nButton( top, 'Перезагрузить Квэстер' ). run( autoReload ).styles( ft2 );
-					},
-					( msg ) => {
-						ret = decode( msg );
-						if( ret ) {
-							if( ret.code < MQ.USER_CONNECT ) {
-								statusbar.update();
-							} else {
-								if( testUserAnswer( ret ) ) {
-									infoUser.update( question, users );
-								}
-								if( calcQuestion() ) {
-									console.log( question )
-									infoReport.update( question, questions[question].answers );
-								}
-							}
-						}
-					}
-				);
 			}
 
+// USER
+			function user( room, p ) {
+				const host = makeHost( 'user' );
 
-			// USER
-			function user( p ) {
-
-				function send_answer( question, code, correct ) {
-					if( !userdata.answers[question] ) {
-						userdata.answers[question] = { code: code, correct: correct };
-						userdata.question = question;
-						userdata.correct = correct;
-						userdata.answer = code;
-						if( correct) userdata.countStar++;
-					}
-					const ud = userdata.answers[question];
-					send( MQ.USER_ANSWER, ud.code, question );
-				}
-
-
-				function setLevelUp( p ) {
+				function setLevelUp( p, host ) {
 					const n = nDiv( p );
-					const timer = setTimer();
+					const timer = makeTimer();
 
-					//function randBG() { top.styles( `background:${CSS.random()}` ); }
 					function randBG() { top.styles( `background:${CSS.grad( theme.color.background, CSS.random(), CSS.random(), 0, 50, 100 )}` ); }
 					function standBG() {  top.styles( `background:${theme.color.background};` ); }
 
-					n.update = () => {
+					n.update = ( question ) => {
 						n.clear();
-						if( userdata.countStar ) {
-							nText( n, `(${userdata.countStar})` ).styles( `background:${CSS.rgb( 0, 128, 64 )}` );
-							for( const [question, answer] of Object.entries( userdata.answers ) ) {
-								const cf = question/userdata.question_limit*128;
-								nText( n, answer.correct? '🌟': '💭' ).styles( answer.correct? `background:${CSS.rgb( cf, 128-cf, 64 )}`:`background:${theme.color.background};` );
+						let stars = 0;
+						for( const [index, data] of Object.entries( host.quiz.questions ) ) {
+							if( data.report[0] ) {
+								const ok = data.user( 0 ).ok;
+								if( ok ) stars++;
+								const cf = Number(index)/user.range*128;
+								nText( n, ok? '🌟': '❌' ).styles( ok? `background:${CSS.rgb( cf, 128-cf, 64 )}`:`background:${theme.color.background};` );
 							}
-							if( userdata.correct ) timer.start( 1, standBG, randBG, 33 );
+						}
+						if( stars ) {
+							nText( n, `(${stars})` ).styles( `background:${CSS.rgb( 0, 128, 64 )}` );
 						} else {
 							nText( n, '💭' );
+						}
+						if( question ) {
+							const q = host.quiz.question( question ).user( 0 );
+							if( q.ok ) makeTimer().start( 2, standBG, randBG, 33 );
 						}
 					}
 
@@ -712,34 +288,18 @@
 				function userReport( p ) {
 					const list = nDiv( p ).classes( 'column' );
 					nText( list ).text( 'Результат').classes( 'caption' );
-					for( const [question, answer] of Object.entries( userdata.answers ) ) {
-						nText( list, `Вопрос ${question} Ответ ${WL[answer.code]} ${WS[answer.code]} ${answer.correct?WS[5]:WS[0]}` ).classes( 'caption' );
+					for( const [index, question] of Object.entries( host.quiz.questions ) ) {
+						const num = Number(index);
+						if( num ) {
+							const user = question.user( 0 );
+							const answer = user.answer;
+							const ok = user.ok;
+							const corrent = question.correct;
+
+							nText( list, `Вопрос ${num} Ответ ${WL[answer]} ${WS[answer]} ${ok?WS[5]:WS[0]}` ).classes( 'caption' );
+						}
 					}
 				}
-
-				const userdata = { answers:{}, countStar:0 };
-
-				const desktop = p;
-				const top = nColumn( desktop ).styles( `align-items:left; width:100vw; height:100vh;` );
-				const statusbar = setInfobar( top ).classes( 'border margin' ).styles( ft0 );
-				const levelUp = setLevelUp( top ).classes( 'border margin' ).styles( ft1 );
-				const imperative = nText( top ).classes( 'border margin' ).styles( ft1 );
-				const view = nColumn( top ).styles( ft1 );
-
-				const questnum = nText( view ).classes( 'border margin' ).visible( false );
-				const buttons = nColumn( view ).visible( false );
-				const line1 = nRow( buttons );
-				const line2 = nRow( buttons );
-				const answers = [nButton( line1 ), nButton( line1 ), nButton( line2 ), nButton( line2 )];
-				answers.forEach( (button) => { button.styles( ft3+'width:50vw;height:22vh;' ); } );
-
-				const infoReport = setInfoReport( view ).classes( 'border margin' ).visible( false ).styles( ft0 );
-
-				timer.start( reload_time, autoReload, waitConnect );
-
-				let need_report;
-				let master_id;
-				let question;
 
 				const MSG = {
 					connect:'Идет подключение',
@@ -753,107 +313,190 @@
 					goodbay:'Хорошего дня!'
 				}
 
-				imperative.text( MSG.connect );
+				host.doConnect = () => {
+					host.timer.clear();
+					imperative.text( MSG.wait1 );
+				}
 
-				mqtt = MQTT(
-					() => { imperative.text( MSG.wait1 ); },
-					( error ) => {
-						imperative.text( MSG.error );
-						buttons.visible( false );
-						nButton( p, MSG.reload ). run( autoReload ).styles( ft2 );;
-					},
-					( msg ) => {
-						timer.clear();
-						ret = decode( msg );
-						if( ret ) {
-							statusbar.update();
-							if( ( ret.code < MQ.USER_CONNECT ) && ( master_id != ret.id ) ) {
-								master_id = ret.id;
-								imperative.text( MSG.connect );
-								questnum.visible( false );
+				host.doFailure = ( error ) => {
+					imperative.text( MSG.error );
+					buttons.visible( false );
+					nButton( p, MSG.reload ). run( autoReload ).classes( 'ft2' );;
+				}
+
+				host.doMessage = ( ret ) => {
+					infoPanel.updatePing();
+				}
+
+				host.doAttention = ( question, range ) => {
+					imperative.text( MSG.warning );
+					if( question ) {
+						questnum.text( `Вопрос № ${question} из ${range}` ).visible();
+					} else {
+						questnum.text( `Количество вопросов ${range}` ).visible();
+					}
+					buttons.visible( false );
+					infoReport.visible( false );
+				}
+
+				host.doWaitAnswer = ( question, correct, timerset ) => {
+					infoPanel.updateTimer( timerset );
+				}
+
+				host.doQuestion = ( question, correct, timerset ) => {
+					infoPanel.updateTimer( timerset );
+					imperative.text( MSG.select );
+					questnum.text( `Вопрос № ${question}` ).visible();
+					for( let i=1; i<=4; i++ ){
+						answers[i-1].text( WL[i] ).run(
+							() => {
+								host.quiz.question( question ).user( 0 ).answer = i;
+								imperative.text( MSG.wait2 );
+								questnum.text( `Вопрос ${question} ${WS[answer]} Ответ отправлен ${WL[answer]}` ).visible();
 								buttons.visible( false );
 								infoReport.visible( false );
-								send( MQ.USER_CONNECT );
 							}
-
-							if( ret.code && master_id && ret.id !== mqtt.id ) {
-								switch( ret.code ) {
-								case MQ.USER_READY:
-									if( mqtt.id === ret.check ) {
-										imperative.text( MSG.wait1 );
-										questnum.visible( false );
-										buttons.visible( false );
-										infoReport.visible( false );
-									}
-									break;
-								case MQ.USER_ORDER:
-									if( mqtt.id === ret.check ) {
-										imperative.text( MSG.wait2 );
-										questnum.text( `${WS[ret.value]} Ответ ${WL[ret.value]}` ).visible();
-										buttons.visible( false );
-										infoReport.visible( false );
-										need_report = true;
-									}
-									break;
-								case MQ.MASTER_ATTENTION:
-									imperative.text( MSG.warning );
-									questnum.text( `Вопрос № ${ret.value} из ${ret.check}` ).visible();
-									buttons.visible( false );
-									infoReport.visible( false );
-									userdata.question_limit = ret.check;
-									break;
-								case MQ.MASTER_QUESTION:
-									if( question !== ret.value ) {
-										question = ret.value;
-										const answer = ret.check;
-										need_report = true;
-										imperative.text( MSG.select );
-										questnum.text( `Вопрос № ${question}` ).visible();
-										for( let i=1; i<=4; i++ ){ answers[i-1].text( WL[i] ).run( () => { send_answer( question, i, (i===answer) ); } ); }
-										buttons.visible();
-										infoReport.visible( false );
-										send( MQ.USER_CONSIDERS );
-									}
-									break;
-								case MQ.MASTER_REPORT:
-									if( need_report ) {
-										need_report = false;
-										infoReport.update( ret.check, ret.data );
-										levelUp.update();
-										send( MQ.USER_REPORT );
-										imperative.text( MSG.wait3 );
-										questnum.visible();
-										buttons.visible( false );
-									}
-									break;
-								case MQ.MASTER_STOP:
-									imperative.text( MSG.goodbay );
-									questnum.visible( false );
-									buttons.visible( false );
-									infoReport.clear();
-									userReport( infoReport );
-									break;
-								default:
-									break;
-								}
-							}
-						}
+						);
 					}
-				);
+					buttons.visible();
+				}
+
+				host.doAccept = ( question, answer ) => {
+					imperative.text( MSG.wait2 );
+					questnum.text( `Вопрос ${question} ${WS[answer]} Ответ принят ${WL[answer]}` ).visible();
+					buttons.visible( false );
+					infoReport.visible( false );
+				}
+
+				host.doReport = ( question, correct, report ) => {
+					infoPanel.updateTimer();
+					infoReport.update( question, correct, report );
+					levelUp.update( question );
+					imperative.text( MSG.wait3 );
+					questnum.visible();
+					buttons.visible( false );
+				}
+
+				host.doStop = () => {
+					imperative.text( MSG.goodbay );
+					questnum.visible( false );
+					buttons.visible( false );
+					infoReport.clear();
+					userReport( infoReport );
+				}
+
+				const top = nColumn( p ).styles( `align-items:left; width:100vw; height:100vh;` );
+				const infoPanel = setInfobar( top, host ).classes( 'border margin ft0' );
+				const levelUp = setLevelUp( top, host ).classes( 'border margin ft1' );
+				const imperative = nText( top, MSG.connect ).classes( 'border margin ft1' );
+				const view = nColumn( top ).classes( 'ft1' );
+				const questnum = nText( view ).classes( 'border margin' ).visible( false );
+				const buttons = nColumn( view ).visible( false );
+				const line1 = nRow( buttons );
+				const line2 = nRow( buttons );
+				const answers = [nButton( line1 ), nButton( line1 ), nButton( line2 ), nButton( line2 )];
+				answers.forEach( (button) => { button.classes( 'ft3' ).styles( 'width:50vw;height:22vh;' ); } );
+				const infoReport = setInfoReport( view, host ).classes( 'border margin ft0' ).visible( false );
+
+				host.timer.start( reload_time, autoReload, waitConnect );
+				host.run();
+			}
+
+// STUB
+			function user_stub( room, p ) {
+				const host = makeHost( 'user' );
+
+				host.doConnect = () => { imperative.text( `${host.mqtt.id} Участвует` ); }
+
+				host.onFailure = ( error ) => { imperative.text( MSG.error ); }
+
+				host.doQuiz = () => { imperative.text( `${host.mqtt.id} ${host.quiz.name}` ); }
+
+				host.doAttention = ( question, range ) => { imperative.text( `${host.mqtt.id} ${question} in ${range}` ); }
+
+				host.doQuestion = ( question, correct, timerset ) => { host.randomWait = randomInt( 35, 5 ); host.randomAnswer = ( Math.random()<0.6 )? correct: randomInt( 3, 1 ); }
+
+				host.doWaitAnswer = ( question, correct, timerset ) => {
+					const [current, timer_start, timer_finish, timer_range ] = timerset;
+					const dt = Math.floor( ( timer_finish - current ) / 1000 );
+					if( dt < host.randomWait ) {
+						if( !host.quiz.question( question ).user( 0 ).answer ) host.quiz.question( question ).user( 0 ).answer = host.randomAnswer;
+						imperative.text( `${host.mqtt.id} В:${question} Ответ ${host.randomAnswer}` );
+					} else {
+						imperative.text( `${host.mqtt.id} В:${question} Ожидание ${dt} ${host.randomWait}` );
+					}
+				}
+
+				host.doStop = () => {
+					imperative.text( `${host.mqtt.id} Завершен` );
+				}
+
+				host.timer.start( reload_time, autoReload, waitConnect );
+
+				const imperative = nText( p, '?????' ).classes( 'border margin ft1' );
+				host.run();
+			}
+
+// MONITOR
+			function monitor( room, p ) {
+				const gui = {};
+				gui.top = nColumn( p ).styles( `align-items:left; width:100vw; height:100vh;` );
+				gui.imperative = nText( gui.top, 'Дождитесь подключения' ).classes( 'border margin ft0 preline' );
+				gui.timer = nText( gui.top ).classes( 'border margin ft0 preline' );
+
+				const host = makeHost( 'monitor' );
+
+				host.doConnect = () => {
+					gui.imperative.text( `Монитор подключен` );
+				}
+
+				host.doFailure = ( error ) => {
+					gui.imperative.text( `Ошибка подключения ${error}` );
+				}
+
+				host.doAttention = ( question, range ) => {
+					gui.imperative.text( `Викторина ${host.quiz.name}` );
+				}
+
+				host.doQuestion = ( question, correct, timerset ) => {
+					const [current, begin, finish, range ] = timerset;
+					const q = host.quiz.question( question );
+					let t = q.text;
+					for( let i=1; i<=4; i++ ) { t = `${t} ${i} ${q.answers[i].text};`; }
+					gui.imperative.text( t );
+				}
+
+				host.doWaitAnswer = ( question, correct, timerset ) => {
+					const [current, start, finish, range ] = timerset;
+					const sf = ( finish - current ) / range * 100;
+					gui.timer.text( `${sf}%` );
+				}
+
+				host.doReport = ( question, correct, report ) => {
+					const [total, v0, v1, v2, v3] = report;
+					gui.imperative.text( `${host.quiz.question( question ).text} ${host.quiz.question( question ).correct} = ${correct}` );
+				}
+
+				host.timer.start( reload_time, autoReload, waitConnect );
+
+				host.run();
 			}
 		</script>
 	</head>
 	<body>
  		<script>
 			const options = getHrefOptions();
-			if( options.master ) options.mode = 'master';
-			let pRoom = options.roomid? Number(options.roomid): roomDefalut;
-			let pMode = options.mode? options.mode: 'user';
-			let pTop = document.body;
+			const room = options.roomid? Number(options.roomid): 0;
 
-			if( pMode === 'master' ) master( document.body );
-			else if( pMode === 'monitor' ) monitor( document.body );
-			else user( document.body );
+			if( options.mode === 'master' || options.master ) master( room, document.body );
+			else if( options.mode === 'monitor' || options.monitor ) monitor( room, document.body );
+			else if( options.mode === 'stub' || options.stub ) {
+				const panel = nDiv( document.body ).classes( 'column frame' );
+				for( let user = 0; user<50; user ++ ) {
+					const user_panel = nDiv( panel );
+					user_stub( room, user_panel );
+				}
+			} else user( room, document.body );
 		</script>
 	</body>
 </html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>DomIK.JS</title>
+		<link rel="stylesheet" type="text/css" href="./static/stylesheet.css">
+		<script src="addons/quiz/vendor/mqttws31.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<script type="importmap">
+			{
+				"imports": {
+					"three":               "./vendor/build/three.module.min.js",
+					"three/addons/":       "./vendor/jsm/",
+					"troika-three-text":   "./vendor/build/troika-three-text.esm.js",
+					"troika-three-utils":  "./vendor/build/troika-three-utils.esm.js",
+					"troika-worker-utils": "./vendor/build/troika-worker-utils.esm.js",
+					"webgl-sdf-generator": "./vendor/build/webgl-sdf-generator.mjs",
+					"bidi-js":             "./vendor/build/bidi.mjs"
+				}
+			}
+		</script>
+		<script type="text/javascript" src="./demo/gallery/demo.js"></script>
+		<script type="module" src="./vendor/chroma.js"></script>
+		<script type="module" src="./core/main.js"></script>
+	</body>
+</html>
