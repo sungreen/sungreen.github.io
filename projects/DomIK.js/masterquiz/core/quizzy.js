@@ -1,5 +1,3 @@
-const quiz = makeQuiz();
-
 function makeQuiz() {
     const quiz = {
         name: '',
@@ -123,7 +121,7 @@ const MQ = {
     USER_ANSWER: 8,
 }
 
-function makeHost( mode='user' ) {
+function makeHost( mode='user', room ) {
     const quiz = makeQuiz();
     const autoID = ( mode === 'monitor' )? 100: 0;
     const host = { mode: mode === 'monitor'? 'user': mode };

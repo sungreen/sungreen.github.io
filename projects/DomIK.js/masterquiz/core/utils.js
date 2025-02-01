@@ -6,9 +6,9 @@ function msplit(head, sep, tail = '') {
     return `${head}${sep}${tail}`.split(sep);
 }
 
-function getHrefOptions() {
+function getHrefOptions( href ) {
     const options = {};
-    const qs = String(document.location.href + '?version=' + version).split('?').slice(1);
+    const qs = String( href + '?version=' + version ).split( '?' ).slice( 1 );
     qs.forEach((query) => {
         const parts = query.split('&');
         parts.forEach((part) => {

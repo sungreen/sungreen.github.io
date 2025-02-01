@@ -2,9 +2,9 @@
 
 const destinationName = '/quizzy'; 
 
-function MQTT( staticRoom=777, onConnect, onFailure, onMessage, id ) {
+function MQTT( room, onConnect, onFailure, onMessage, id ) {
 	const _mqtt_ = {};
-	_mqtt_.room = `${destinationName}${staticRoom}`;
+	_mqtt_.room = `${destinationName}${room}`;
 
 	const location = {
 		// hivemq.cloud
