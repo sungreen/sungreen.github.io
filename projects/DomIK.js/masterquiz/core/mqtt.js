@@ -7,29 +7,16 @@ function MQTT( room, onConnect, onFailure, onMessage, id ) {
 	_mqtt_.room = `${destinationName}${room}`;
 
 	const location = {
-		// hivemq.cloud
-		// host: "d8b235f2986140de80c0ce6f9d8bd5ed.s1.eu.hivemq.cloud",
-		// port: 8884
-		// 	// userName: "hivemq.webclient.1734721971482",
-		// 	// password: "NHJeE:$!1%OaMfvxs098",
-		host: "broker.hivemq.com",
-		port: 8884,
+		host: "test.mosquitto.org",
+		port: 8080,
 	}
 
 	const connectOptions = {
 		timeout: 30,
-		// userName:"string", 
-		// password:"string", 
-		// willMessage:"object", 
-		keepAliveInterval: 60, // default 60 
+		keepAliveInterval: 60,
 		cleanSession: true, 
-		useSSL: true,
-		// invocationContext:"object", 
+		useSSL: false,
 		onSuccess: () => { _mqtt_.client.subscribe( _mqtt_.room ); if( onConnect ) onConnect( _mqtt_.client ); }, 
-		// onFailure:"function",
-		// hosts:"object",
-		// ports:"object",
-		// mqttVersion:"number"
 	}
 
 	_mqtt_.newID = () => {
