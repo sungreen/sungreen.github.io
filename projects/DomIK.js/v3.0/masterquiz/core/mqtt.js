@@ -8,7 +8,7 @@ function MQTT( room, onConnect, onFailure, onMessage, id ) {
 
 	const location = {
 		host: "test.mosquitto.org",
-		port: 8886,
+		port: 8081,
 	}
 
 	const connectOptions = {
