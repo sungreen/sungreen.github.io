@@ -8,14 +8,14 @@ function MQTT( room, onConnect, onFailure, onMessage, id ) {
 
 	const location = {
 		host: "test.mosquitto.org",
-		port: 8080,
+		port: 8886,
 	}
 
 	const connectOptions = {
 		timeout: 30,
 		keepAliveInterval: 60,
 		cleanSession: true, 
-		useSSL: false,
+		useSSL: true,
 		onSuccess: () => { _mqtt_.client.subscribe( _mqtt_.room ); if( onConnect ) onConnect( _mqtt_.client ); }, 
 	}
 
