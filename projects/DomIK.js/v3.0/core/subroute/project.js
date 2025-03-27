@@ -369,7 +369,7 @@ async function getDataFromResource( data ) {
 
 async function getResourceFromData( data ) {
     if( data ) {
-        setContentPath( data.path? data.path: './presentation/default/' );
+        setContentPath( data.path? data.path: 'presentation/default/' );
         if( data.list ) {
             for( const path of data.list ) {
                 await ModelTools.getResource( path );
