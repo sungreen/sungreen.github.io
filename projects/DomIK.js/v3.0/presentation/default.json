@@ -6,14 +6,14 @@
 					"properties:group::": {
 						"select:direction::": "origin"
 					},
-					"link.rrvkl780h74": {
-						"string:ref_id::true": "Quiz_0",
+					"link.66dudf8efv6": {
+						"string:ref_id::true": "quiz_0",
 						"params": [
 							{
 								"path": [
 									"ref_id"
 								],
-								"value": "Quiz_0"
+								"value": "quiz_0"
 							}
 						]
 					}
@@ -34,8 +34,7 @@
 		"uix": {
 			"openrefs": [
 				"roe7p4kg204",
-				"rrvkku599u4",
-				"rrvkl780h74"
+				"rrvkku599u4"
 			]
 		},
 		"resources": []
