@@ -1,0 +1,43 @@
+{
+	"project.roe7p2t7a1s": {
+		"presentation": {
+			"presentation.roe7p4kg204": {
+				"slide.rrvkku599u4": {
+					"properties:group::": {
+						"select:direction::": "origin"
+					},
+					"link.rrvkl780h74": {
+						"string:ref_id::true": "Quiz_0",
+						"params": [
+							{
+								"path": [
+									"ref_id"
+								],
+								"value": "Quiz_0"
+							}
+						]
+					}
+				}
+			}
+		},
+		"templates": {
+			"templates.roe7pj4iudo": {}
+		},
+		"addons": {
+			"addons.roe7qmva9ic": {
+				"addon.rr83sblui8o": {
+					"string:name::": "Base quiz",
+					"resource:source::": "./addons/quiz/quiz.dmx"
+				}
+			}
+		},
+		"uix": {
+			"openrefs": [
+				"roe7p4kg204",
+				"rrvkku599u4",
+				"rrvkl780h74"
+			]
+		},
+		"resources": []
+	}
+}
