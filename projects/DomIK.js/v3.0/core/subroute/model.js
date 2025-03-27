@@ -382,7 +382,7 @@ objects.transform = ( ref ) => {
     objects.base( ref );
 
     ref.model.group = new THREE.Group();
-    ref.setVisible( false ); // Включается при обходе активного элемента
+    ref.setVisible( true ); // Включается при обходе активного элемента
 
     ref.model._inscribed = false;
     ref.model._vside = vec( 0, 0, 0 );
@@ -465,12 +465,13 @@ objects.frame = ( ref ) => {
 
             ModelTools.removeObj( frame );
 
+            const mode = ref.frame.mode.get();
+
             if( side.x && side.y ) {
-                const mode = ref.frame.mode.get();
+                // const mode = ref.frame.mode.get();
                 switch( mode ) {
                     default:
                     case 'none': break;
-//                    default: frame = Tools3D.mesh( Tools3D.geometry.Rectangle( side.x, side.y ) ); break;
                     case 'rectangle': frame = Tools3D.mesh( Tools3D.geometry.Rectangle( side.x, side.y ) ); break;
                     case 'round rectangle': frame = Tools3D.mesh( Tools3D.geometry.RectangleRounded( side.x, side.y ) ); break;
                     case 'circle': frame = Tools3D.mesh( Tools3D.geometry.Circle( side.x, side.y ) ); break;
@@ -512,7 +513,7 @@ objects.frame = ( ref ) => {
     }
 
     Ref.property.new( ref, { name: 'frame', type: 'properties' } );
-    Ref.property.new( ref.frame, { name: 'mode', type: 'select', init: 'round rectangle', options: [ 'none', 'rectangle', 'round rentangle', 'circle', 'star'] } );
+    Ref.property.new( ref.frame, { name: 'mode', type: 'select', init: 'none', options: [ 'none', 'rectangle', 'round rectangle', 'circle', 'star'] } );
     Ref.property.new( ref.frame, { name: 'color', type: 'color' } );
 }
 
@@ -746,9 +747,9 @@ objects.presentation = ( ref ) => {
 
         if( Ref.property.check( ref.overhead ) || Ref.property.check( ref.distance ) ) {
             if( ref.overhead && ref.distance ) {
-                app.options.overhead = ref.overhead.get();
-                app.options.distance = ref.distance.get();
-                const a = Math.atan2( app.options.overhead, app.options.distance );
+                app.data.options.overhead = ref.overhead.get();
+                app.data.options.distance = ref.distance.get();
+                const a = Math.atan2( app.data.options.overhead, app.data.options.distance );
                 const scope = 1 + ( 2 * a/Math.PI );
                 const options = { scope_cube: scope }
                 ROUTE.send( 'set_warp', options );
@@ -1019,7 +1020,6 @@ objects.addon = ( ref ) => {
         const source = ref.source.get();
         if( !source ) return;
 
-        console.log( 'Addon source set', source );
         ROUTE.updateLock( 'addon update' );
 
         const data = await ModelTools.getResource( source );
@@ -1042,13 +1042,13 @@ objects.addon = ( ref ) => {
                 if( addon.content ) {
 
                     addon.newTemplate = ( num, alias ) => {
-                        const id = name + '_' + num;
+                        const id = `${name}_${num}`;
                         const template = Ref.new( { type: 'template', id: id }, ref, true );
                         template.name.set( alias? alias: name );
                         return template;
                     }
                     Ref.children.clear( ref );
-                    addon.content();
+                    addon.content( app );
                     await ref.model.updateGroup();
                     ROUTE.updateUnLock('addon update');
                 }
@@ -1060,6 +1060,7 @@ objects.addon = ( ref ) => {
 
     ref.group.enable = () => { return false };
     ref.transform.enable = () => { return false };
+    ref.frame.mode.set( 'none' );
 
     Ref.allowUpdate( ref );
 }

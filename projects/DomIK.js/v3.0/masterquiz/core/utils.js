@@ -1,5 +1,4 @@
 'use strict';
-
 function randomInt(max, base=0 ) { return Math.floor(Math.random() * max) + base; }
 
 function msplit(head, sep, tail = '') {
@@ -8,7 +7,7 @@ function msplit(head, sep, tail = '') {
 
 function getHrefOptions( href ) {
     const options = {};
-    const qs = String( href + '?version=' + version ).split( '?' ).slice( 1 );
+    const qs = String( href + '?foo' ).split( '?' ).slice( 1 );
     qs.forEach((query) => {
         const parts = query.split('&');
         parts.forEach((part) => {

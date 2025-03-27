@@ -26,6 +26,8 @@ export const Ref = {
         } else if( ref.model.group && ref.parent ) ModelTools.appendObj( ref.parent, ref.model.group );
 
         ref.append = ( sour) => { return Ref.append( ref, sour ); }
+
+        if( sour.name && ref.name ) ref.name.set( sour.name );
         return ref;
     },
 

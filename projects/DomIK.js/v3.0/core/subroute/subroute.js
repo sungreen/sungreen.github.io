@@ -70,6 +70,8 @@ export const app = {
 
 export function createApp() {
     app.views = {};
+    app.session = {};
+    app.data = {};
     app.modify = () => {};
     return app;
 }

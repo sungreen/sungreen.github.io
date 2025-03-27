@@ -37,9 +37,9 @@ function changeDemoset( demo, onload ) {
         exdata.data.remove();
     }
 
-    app.options.transformType = ( demo.transformType ) ? demo.transformType : null;
-    app.options.wireframe = ( demo.transformType ) ? demo.wireframe : false;
-    app.options.scope = ( demo.scope ) ? demo.scope : app.options.scope;
+    app.data.options.transformType = ( demo.transformType ) ? demo.transformType : null;
+    app.data.options.wireframe = ( demo.transformType ) ? demo.wireframe : false;
+    app.data.options.scope = ( demo.scope ) ? demo.scope : app.data.options.scope;
 
 
     exdata.type = ( demo.type ) ? demo.type : 'video';
@@ -112,7 +112,7 @@ function mkGallery( el, content, onload ) {
 function mkOptionsFile() {
     const el = nInputFile( ( file ) =>{
         Storage.readFromFile( app, file );
-        setLang( app.interface.lang );
+        setLang( app.data.interface.lang );
         updateWidgets();
     } );
     return el;
@@ -201,8 +201,8 @@ function mkSettingsMenu( el ) {
     const optionsFile = mkOptionsFile( app );
     nLink( wg.export, 'click', ()=>{ ExportOptions(); } );
     nLink( wg.import, 'click', ()=>{ optionsFile.do_select(); } );
-    nLink( wg.interface.app_lang.ru, 'click', ()=>{ app.interface.lang='ru'; setLang( app.interface.lang ); } );
-    nLink( wg.interface.app_lang.en, 'click', ()=>{ app.interface.lang='en'; setLang( app.interface.lang ); } );
+    nLink( wg.interface.app_lang.ru, 'click', ()=>{ app.data.interface.lang='ru'; setLang( app.data.interface.lang ); } );
+    nLink( wg.interface.app_lang.en, 'click', ()=>{ app.data.interface.lang='en'; setLang( app.data.interface.lang ); } );
 }
 
 function mkSplash( el, styles ) {
@@ -258,7 +258,7 @@ export function subroute() {
         const view = options.view;
         if( view.mode === 'domik-menu' ) {
             const canvas = view.canvas;
-            setLang( app.interface.lang );
+            setLang( app.data.interface.lang );
                 //mkDesktop( canvas, app );
                 //const canv = addWidget( nDiv( mkCanvas( 'canvas' ) , 'column'), dict.app, app, 'app' );
                 // const canv = addWidget( nDiv( canvas , 'column'), dict.app, app, 'app' );
@@ -270,10 +270,10 @@ export function subroute() {
             mkGallery( canv.menu.gallery, demoset, do_play );
             mkFilesMenu( canv.menu.files, do_play );
             mkSettingsMenu( canv.menu.settings );
-            if( app.content ){
-                const source = app.content;
-                const type = app.type ? app.type : 'video';
-                const transformType = app.transformType ? app.transformType: 'Original';
+            if( app.data.content ){
+                const source = app.data.content;
+                const type = app.data.type ? app.data.type : 'video';
+                const transformType = app.data.transformType ? app.data.transformType: 'Original';
                 const demo = { type: type, content: source, file: null, transformType: transformType };
                 changeDemoset( demo, do_play );
             }
@@ -281,9 +281,9 @@ export function subroute() {
     } );
 
     sub.registry( 'modify', ( options ) => {
-        document.documentElement.style.setProperty( "--tone", app.interface.tone );
-        document.documentElement.style.setProperty( "--base-size", parseFloat( app.interface.size )+'vh' );
-        document.documentElement.style.setProperty( "--font-family", app.interface.font );
+        document.documentElement.style.setProperty( "--tone", app.data.interface.tone );
+        document.documentElement.style.setProperty( "--base-size", parseFloat( app.data.interface.size )+'vh' );
+        document.documentElement.style.setProperty( "--font-family", app.data.interface.font );
     } );
 
     return sub;

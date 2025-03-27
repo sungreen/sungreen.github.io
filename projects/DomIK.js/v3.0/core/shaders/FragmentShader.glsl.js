@@ -172,8 +172,9 @@ void colorFromImage(sampler2D image, vec2 uvs, out vec4 color) {
 }
 
 bool onFisheye(vec2 uv, out vec3 dm) {
-    float x = 2.0*uv.x-1.0;
-    float y = 2.0*uv.y-1.0;
+    float aspect = 16.0/9.0;
+    float x = (2.0*uv.x-1.0) * aspect;
+    float y = (2.0*uv.y-1.0);
     float rr = x*x+y*y;
     if(rr<=1.0){
         float z = sqrt(1.0-rr);
@@ -185,12 +186,52 @@ bool onFisheye(vec2 uv, out vec3 dm) {
 
 bool onEquirectangular(vec2 uv, out vec3 dm) {
     float y = uv.y;
-    float r = sqrt(1.0f-y*y);
-    float a = -2.0f*uv.x*M_PI;
+    float r = sqrt(1.0-y*y);
+    float a = -2.0*uv.x*M_PI;
     float x = r*sin(a);
     float z = r*cos(a);
     dm = vec3(x,y,z);
     return true;
+}
+
+bool onPolar2(vec2 uv, out vec3 dm) {
+    float aspect = resolution.x/resolution.y;
+    float x = (2.0*uv.x-1.0);
+    float y = (2.0*uv.y-1.0);
+    float rr = x*x+y*y;
+    if(rr<=1.0){
+        float a = atan(y,x)+M_PI_2;
+        x = (a/M_PI+1.0)/2.0;
+        float r = sqrt(rr);
+        y = 1.0-r;
+        r = sqrt(1.0-y*y);
+        a = -2.0*x*M_PI;
+        x = r*sin(a);
+        float z = r*cos(a);
+        dm = vec3(x,y,z);
+        return true;
+    }
+    return false;
+}
+
+bool onPolar(vec2 uv, out vec3 dm) {
+    float aspect = 16.0/9.0;
+    float x = (2.0*uv.x-1.0) * aspect;
+    float y = (2.0*uv.y-1.0);
+    float rr = x*x+y*y;
+    if(rr<=1.0){
+        float a = atan(y,x)+M_PI_2;
+        x = (a/M_PI+1.0)/2.0;
+        float r = sqrt(rr);
+        y = 1.0-r;
+        r = sqrt(1.0-y*y);
+        a = -2.0*x*M_PI;
+        x = r*sin(a);
+        float z = r*cos(a);
+        dm = vec3(x,y,z);
+        return true;
+    }
+    return false;
 }
 
 void main() {
@@ -199,40 +240,35 @@ void main() {
     vec4 c_dome = vec4(0.0, 0.0, 0.0, 1.0);
     vec4 c_d = texture2D(img_cube, uvs);
 
-    // if( stype==0 ) {
-    //     space_color(uvs, c_dome);
-    // } else {
-        vec3 dm;
-        bool check = false;
-        switch( dtype ) {
-            case 1: check=onFisheye( uvs, dm ); break;
-            case 2: check=onEquirectangular(uvs, dm); break;
-            case 3: check=onDomeFromUV(uvs, ud_factor, ud_shift, ud_dome, ud_mirror, ud_mirror_radius, ud_projector, dm); break;
+    vec3 dm;
+    bool check = false;
+    switch( dtype ) {
+        case 1: check=onFisheye( uvs, dm ); break;
+        case 2: check=onEquirectangular(uvs, dm); break;
+        case 3: check=onDomeFromUV(uvs, ud_factor, ud_shift, ud_dome, ud_mirror, ud_mirror_radius, ud_projector, dm); break;
+        case 4: check=onPolar( uvs, dm ); break;
+    }
+    if( check ) {
+        check = false;
+        vec3 xyz;
+        vec2 qp;
+        onDomeTransform(dm, scope_dome, rotate_dome, xyz, qp);
+        switch(stype) {
+            case 2: check=onUVFisheyeFromQP(qp, uvs); break;
+            case 3: check=onUVEquirectangularFromQP(qp, uvs); break;
+            case 4: check=onUVCubemapFromDome(xyz, uvs); break;
         }
         if( check ) {
-            check = false;
-            vec3 xyz;
-            vec2 qp;
-            onDomeTransform(dm, scope_dome, rotate_dome, xyz, qp);
-            switch(stype) {
-                case 2: check=onUVFisheyeFromQP(qp, uvs); break;
-                case 3: check=onUVEquirectangularFromQP(qp, uvs); break;
-                case 4: check=onUVCubemapFromDome(xyz, uvs); break;
-            }
-            if( check ) {
-                space_color( uvs, c_dome );
-            }
-            onDomeTransform(dm, scope_cube, rotate_cube, xyz, qp);
-            if( onUVCubemapFromDome(xyz, uvs) ) {
-                colorFromImage(img_cube, uvs, c_cube);
-            }
+            space_color( uvs, c_dome );
         }
-    // }
-    gl_FragColor = c_cube+c_dome*(1.0-c_cube.a);
-    // gl_FragColor = c_d;
-    // gl_FragColor = vec4( uvs.x, uvs.y, 0.0, 1.0 );
-
+        onDomeTransform(dm, scope_cube, rotate_cube, xyz, qp);
+        if( onUVCubemapFromDome(xyz, uvs) ) {
+            colorFromImage(img_cube, uvs, c_cube);
+        }
+        gl_FragColor = c_cube+c_dome*(1.0-c_cube.a);
+    } else {
+        gl_FragColor = vec4( 0.1, 0.1, 0.1, 1.0 );
+    }
     // #include <colorspace_fragment>
 }
-
 `

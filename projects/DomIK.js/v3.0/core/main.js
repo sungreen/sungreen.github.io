@@ -30,8 +30,9 @@ function mkWindowManager( app ) {
 
 import { nDiv, updateWidgets } from './ndiv.js'
 
-function main() {
+function main( room ) {
     const app = ROUTE.createApp();
+    app.session.room = room;
 
     Storage.readDefault( app, SETS.app );
     Storage.readFromURL( app );
@@ -53,10 +54,10 @@ function main() {
     app.renderer = new THREE.WebGLRenderer( { canvas: threejs, antialias: true } );
     app.renderer.setClearColor( 0x000000, 0 );
     app.renderer.setPixelRatio( window.devicePixelRatio );
-    app.background = new THREE.Color( 0xff0000 );
-    app.windowWidth = 0;
-    app.windowHeight = 0;
-    app.mouse = { value: new THREE.Vector2() };
+    app.data.background = new THREE.Color( 0xff0000 );
+    app.data.windowWidth = 0;
+    app.data.windowHeight = 0;
+    app.data.mouse = { value: new THREE.Vector2() };
 
     ROUTE.send( 'setup', {} );
 
@@ -114,4 +115,6 @@ function main() {
     ROUTE.run();
 }
 
-main();
+const options = getHrefOptions( document.location.href );
+const room = options.roomid? Number(options.roomid): 773;
+main( room );

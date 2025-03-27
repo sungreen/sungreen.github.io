@@ -1,14 +1,16 @@
 export let app = {
-    name: "DomIK.JS",
-    version: "2.2",
-    preset: "Dome 2.5 Mirror 0.25",
-    screen: { side: 0, zenit:0, front:0 },
-    dome:{},
-    mirror:{},
-    projector:{},
-    options:{},
-    interface:{},
-    transform:{}
+    data: {
+        name: "DomIK.JS",
+        version: "2.2",
+        preset: "Dome 2.5 Mirror 0.25",
+        screen: { side: 0, zenit:0, front:0 },
+        dome:{},
+        mirror:{},
+        projector:{},
+        options:{},
+        interface:{},
+        transform:{}
+    }
 }
 
 export const preset_list = ["Dome 2.5 Mirror 0.25", "Dome 5.0 Mirror 0.37", "Expert", "Custom"];
@@ -96,57 +98,57 @@ export function setPreset( preset ) {
     if ( preset === null ) {
     } else {
         if( preset == "Dome 2.5 Mirror 0.25" ) {
-            app.dome.radius = 2.5;
-            app.mirror.radius = 0.25;
-            app.projector.offset = 0.5;
+            app.data.dome.radius = 2.5;
+            app.data.mirror.radius = 0.25;
+            app.data.projector.offset = 0.5;
         }
         if( preset == "Dome 5.0 Mirror 0.37" ) {
-            app.dome.radius = 5.0;
-            app.mirror.radius = 0.37;
-            app.projector.offset = 0.6;
+            app.data.dome.radius = 5.0;
+            app.data.mirror.radius = 0.37;
+            app.data.projector.offset = 0.6;
         }
         if( preset == "Expert" ) {
-            app.dome.radius = 100.0;
-            app.mirror.radius = 0.01;
-            app.projector.offset = 1.0;
+            app.data.dome.radius = 100.0;
+            app.data.mirror.radius = 0.01;
+            app.data.projector.offset = 1.0;
         }
     }
 }
 
-app.tmp = {}
+app.data.tmp = {}
 
-app.mirror.offset = 0;
-app.mirror.elevation = 0;
-app.mirror.shift = 0;
-app.projector.offset = 0;
-app.projector.elevation = 0;
+app.data.mirror.offset = 0;
+app.data.mirror.elevation = 0;
+app.data.mirror.shift = 0;
+app.data.projector.offset = 0;
+app.data.projector.elevation = 0;
 
-app.options.transformTypeList = maptexture_list;
-app.options.transformType = maptexture_list[0];
-app.options.wireframe = true;
-app.options.segments = 9;
-app.options.subdiv = 5;
-app.options.level = 7;
-app.options.limit = 7;
-app.options.triCount = 0;
-app.options.limitEdge = 0;
-app.options.scope = 0.5;
-app.options.overhead = 0.5;
-app.options.rotate = 0;
-app.options.tilt = 0;
-app.options.flexture = 0;
-app.options.seamless = 0.01;
+app.data.options.transformTypeList = maptexture_list;
+app.data.options.transformType = maptexture_list[0];
+app.data.options.wireframe = true;
+app.data.options.segments = 9;
+app.data.options.subdiv = 5;
+app.data.options.level = 7;
+app.data.options.limit = 7;
+app.data.options.triCount = 0;
+app.data.options.limitEdge = 0;
+app.data.options.scope = 0.5;
+app.data.options.overhead = 0.5;
+app.data.options.rotate = 0;
+app.data.options.tilt = 0;
+app.data.options.flexture = 0;
+app.data.options.seamless = 0.01;
 
-app.interface.tone = 300;
-app.interface.size = 1;
-app.interface.font = font_list[0];
-app.interface.lang = lang_list[0];
+app.data.interface.tone = 300;
+app.data.interface.size = 1;
+app.data.interface.font = font_list[0];
+app.data.interface.lang = lang_list[0];
 
-app.transform.sour_width = 1.0;
-app.transform.sour_height = 1.0;
-app.transform.sour_shift = 0.0;
-app.transform.dest_width = 1.0;
-app.transform.dest_height = 1.0;
-app.transform.dest_shift = 0.0;
+app.data.transform.sour_width = 1.0;
+app.data.transform.sour_height = 1.0;
+app.data.transform.sour_shift = 0.0;
+app.data.transform.dest_width = 1.0;
+app.data.transform.dest_height = 1.0;
+app.data.transform.dest_shift = 0.0;
 
 setPreset( "Dome 2.5 Mirror 0.25" );

@@ -1,42 +1,68 @@
-'use strict';
+'use strict'
 
-const destinationName = '/quizzy'; 
+const broker = 'wss://test.mosquitto.org:8081'
+//const broker = 'wss://test.mosquitto.org:8884'
+//const broker = 'ws://test.mosquitto.org:8080'
+//const broker = 'wss://mqtt.eclipseprojects.io:443/mqtt'
 
-function MQTT( room, onConnect, onFailure, onMessage, id ) {
-	const _mqtt_ = {};
-	_mqtt_.room = `${destinationName}${room}`;
+const topic = 'quizzy'
 
-	const location = {
-		host: "test.mosquitto.org",
-		port: 8081,
-	}
+function MQTT(room = 777, onConnect, onFailure, onMessage, changeStatus) {
+    const mq = { topic: `${topic}${room}`, status: 'new' };
 
-	const connectOptions = {
-		timeout: 30,
-		keepAliveInterval: 60,
-		cleanSession: true, 
-		useSSL: true,
-		onSuccess: () => { _mqtt_.client.subscribe( _mqtt_.room ); if( onConnect ) onConnect( _mqtt_.client ); }, 
-	}
+    mq.newID = () => {
+        mq.id = 1000 + Math.floor(Math.random() * 9000);
+        return mq.id
+    }
 
-	_mqtt_.newID = () => {
-		_mqtt_.id = id? id: 1000 + Math.floor( Math.random() * 9000 );
-		return _mqtt_.id
-	};
+    function call(status, func, param) {
+        if (changeStatus) changeStatus(status, param);
+        if (func) func(param);
+    }
 
-	_mqtt_.client = new Paho.MQTT.Client( location.host, location.port, `ID${_mqtt_.newID()}` );
-	if( onMessage ) _mqtt_.client.onMessageArrived = onMessage;
+    mq.message = (content) => {
+        if (mq.client && mq.client.connected) {
+            mq.client.publish(mq.topic, content, { qos: 0 }, (error) => {
+                if (error) {
+                    console.error('SSL Publish failed', error);
+                } else {
+                }
+            });
+        }
+    }
 
-	_mqtt_.client.onMessageArrived = ( message ) => { if( onMessage ) onMessage( message ); }
-	_mqtt_.client.onConnectionLost = ( responseObject ) => { if( responseObject.errorCode !== 0 ) { console.log( `MQTT Error ${responseObject.errorMessage}` ); if( onFailure ) onFailure(); } }
+    try {
+        mq.client = mqtt.connect(broker, {
+            clientId: 'id' + mq.newID(),
+            clean: true,
+            path: "/mqtt",
+            connectTimeout: 40000,
+            reconnectPeriod: 2000,
+            rejectUnauthorized: false,
+            protocolVersion: 5
+        });
 
-	_mqtt_.message = ( content ) => {
-		const message = new Paho.MQTT.Message( content );
-		message.destinationName = _mqtt_.room;
-		_mqtt_.client.send( message );
-	}
+        mq.client.on('connect', () => {
+            mq.client.subscribe(mq.topic, (error) => {
+                if (error) { console.log(error); }
+                else call('connect', onConnect);
+            });
+        });
 
-	_mqtt_.client.connect( connectOptions );
+        mq.client.on('message', (receivedTopic, message) => {
+            const content = (typeof message === 'string') ? message : new TextDecoder('utf-8').decode(message);
+            call('message', onMessage, content);
+        });
 
-	return _mqtt_;
+        mq.client.on('error', (error) => { call('error', onFailure, error); });
+
+        mq.client.on('close', () => { call('close', () => { console.log('SSL Connection close', mq.id) }) });
+
+        mq.client.on('offline', () => { call('offline', () => { console.log('Clien is offline', mq.id) }) });
+
+    } catch (error) {
+        console.error('SSL Connection failed', error);
+    }
+
+    return mq;
 }
