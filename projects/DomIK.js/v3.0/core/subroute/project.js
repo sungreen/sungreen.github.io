@@ -600,7 +600,7 @@ export function subroute() {
                 ROUTE.send( 'console_log', { stag:'db', tag: 'indexddb', msg: 'restore' } );
             },
             ( event ) => {
-                readDataFromJSON( './presentation/'+version+'.json',
+                readDataFromJSON( 'presentation/'+version+'.json',
                     ( data ) => {
                         const ref = loadProjectByData( data );
                         ROUTE.send( 'console_log', { stag:'db', tag: version, msg: 'restore from file' } );
