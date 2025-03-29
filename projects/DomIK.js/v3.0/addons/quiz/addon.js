@@ -15,7 +15,11 @@ export function registry(def) {
       const template = addon.newTemplate(0);
       template.frame.mode.set("none");
       const ref = Ref.append(template, { type: "group" });
-      Ref.property.new(ref, {name: "source", type: "resource", datatype: "text" });
+      Ref.property.new(ref, {
+        name: "source",
+        type: "resource",
+        datatype: "text",
+      });
       ref.model.finaly = async (ref) => {
         await init(ref, app);
       };
@@ -23,6 +27,21 @@ export function registry(def) {
   };
 
   return addon;
+}
+
+function mkQuizTimer(ref) {
+  const node = Ref.append(ref, { type: "group", name: "Таймер" });
+  node.transform.position.set(vecXYZ( 0, 1, 0));
+  node.transform.rotation.set(rotXYZ(90, 0, 0));
+  node.timeValue = Ref.append(node, {
+    type: "text",
+    name: "Значение таймера",
+  });
+  node.timeValue.transform.basis.set(1);
+  node.timeValue.text.set("");
+  node.frame.mode.set("circle");
+
+  return node;
 }
 
 function mkQuizInfo(ref) {
@@ -34,23 +53,32 @@ function mkQuizInfo(ref) {
   node.frame.mode.set("round rectangle");
   node.frame.color.set("#335577");
 
-  node.title = Ref.append(node, {type: "text",name: "Заголовок"});
+  node.title = Ref.append(node, { type: "text", name: "Заголовок" });
   node.title.transform.basis.set(0.15);
-  node.title.text.set("Подключитесь!");
+  node.title.text.set("🚀 Подключитесь!");
 
-  node.image = Ref.append(node, {type: "image"});
+  node.image = Ref.append(node, { type: "image" });
   //node.image.source.set('image/surikat.jpg');
-  node.image.source.set('image/qrcode.png');
+  node.image.source.set("image/qrcode.png");
   node.image.transform.scale.set(vecXYZ(1, 1, 1));
 
   return node;
+}
+
+function setGroupEnable(enabled = [], disabled = []) {
+  enabled.forEach((el) => {
+    setEnable(el, true);
+  });
+  disabled.forEach((el) => {
+    setEnable(el, false);
+  });
 }
 
 async function init(ref, app) {
   if (!ref.quiz_init) {
     ref.quiz_init = true;
 
-    ref.source.set( "text/Космическая викторина.txt" );
+    ref.source.set("text/Космическая викторина.txt");
 
     Ref.children.clear(ref);
     ref.name.set("Содержание");
@@ -58,23 +86,13 @@ async function init(ref, app) {
     ref.group.direction.set("block");
 
     const quizInfo = mkQuizInfo(ref);
+    const quizTimer = mkQuizTimer(ref);
 
     const quizQuestion = Ref.append(ref, { type: "group", name: "Вопрос" });
     quizQuestion.transform.scale.set(vecXYZ(1.7, 1.7, 1.7));
     quizQuestion.transform.position.set(vecXYZ(0, 0.5, -1));
     quizQuestion.transform.inscribed.set(true);
     quizQuestion.frame.mode.set("round rectangle");
-
-    const quizTimer = Ref.append(ref, { type: "group", name: "Таймер" });
-    quizTimer.transform.position.set(vecXYZ(-1, 0.5, 0));
-    quizTimer.transform.rotation.set(rotXYZ(0, 90, 0));
-    quizTimer.timeValue = Ref.append(quizTimer, {
-      type: "text",
-      name: "Значение таймера",
-    });
-    quizTimer.timeValue.transform.basis.set(1);
-    quizTimer.timeValue.text.set("");
-    quizTimer.frame.mode.set("round rectangle");
 
     quizQuestion.group.mode.set("selector");
     quizQuestion.group.direction.set("column");
@@ -132,7 +150,7 @@ async function init(ref, app) {
     };
 
     host.doAttention = (index, range) => {
-      if(index) {
+      if (index) {
         host.quiz.next(index);
         cmd_attention();
       } else {
@@ -160,28 +178,17 @@ async function init(ref, app) {
       quizQuestion.setVisible(false);
       quizTimer.setVisible(false);
 
-      setEnable( bLoad, false );
-      setEnable( bStart, true );
-      setEnable( bQuest, false);
-      setEnable( bTimer, false );
-      setEnable( bBreak, false );
-      setEnable( bStop, true );
-
+      setGroupEnable([bStart, bStop], [bLoad, bQuest, bTimer, bBreak]);
       cmd_survey();
     }
-  
+
     function cmd_survey() {
       host.quiz.calc();
       quizInfo.title.text.set(host.quiz.name);
       quizInfo.title.fontSize.set(0.1);
-      quizInfo.image.source.set('image/cosmos.png');
+      quizInfo.image.source.set("image/cosmos.png");
 
-      setEnable( bLoad, false );
-      setEnable( bStart, false );
-      setEnable( bQuest, true );
-      setEnable( bTimer, false );
-      setEnable( bBreak, false );
-      setEnable( bStop, true );
+      setGroupEnable([bQuest, bStop], [bLoad, bStart, bTimer, bBreak]);
       ROUTE.updateNeeds();
     }
 
@@ -194,12 +201,7 @@ async function init(ref, app) {
     function cmd_attention() {
       const question = host.quiz.base();
 
-      setEnable( bLoad, false );
-      setEnable( bStart, false );
-      setEnable( bQuest, false);
-      setEnable( bTimer, true );
-      setEnable( bBreak, false );
-      setEnable( bStop, true );
+      setGroupEnable([bTimer, bStop], [bLoad, bStart, bQuest, bBreak]);
 
       quizInfo.setVisible(false);
       quizQuestion.setVisible(true);
@@ -240,19 +242,14 @@ async function init(ref, app) {
     }
 
     function cmd_question(question) {
-      setEnable( bLoad, false );
-      setEnable( bStart, false );
-      setEnable( bQuest, false);
-      setEnable( bTimer, false );
-      setEnable( bBreak, true );
-      setEnable( bStop, false );
+      setGroupEnable([bBreak, bStop], [bLoad, bStart, bQuest, bTimer]);
     }
 
     function cmd_post() {
       host.sendReport();
       cmd_report(host.quiz.current);
     }
-  
+
     function cmd_report(index) {
       quizInfo.setVisible(false);
       quizQuestion.setVisible(true);
@@ -267,22 +264,12 @@ async function init(ref, app) {
       }
 
       if (index < host.quiz.params.range) {
-        setEnable( bLoad, false );
-        setEnable( bStart, false );
-        setEnable( bQuest, true);
-        setEnable( bTimer, false );
-        setEnable( bBreak, false );
-        setEnable( bStop, true );
+        setGroupEnable([bQuest, bStop], [bLoad, bStart, bTimer, bBreak]);
       } else {
-        setEnable( bLoad, true );
-        setEnable( bStart, true );
-        setEnable( bQuest, false);
-        setEnable( bTimer, false );
-        setEnable( bBreak, false );
-        setEnable( bStop, false );
+        setGroupEnable([bLoad, bStart], [bQuest, bTimer, bBreak, bStop]);
       }
     }
-  
+
     function cmd_stop() {
       host.sendStop();
       imperative.text("Опрос завершен! Хорошего дня!");
@@ -300,31 +287,59 @@ async function init(ref, app) {
       });
     });
 
+    const bLoad = nButton(
+      controls,
+      null,
+      "path:mrl",
+      fs.do_select,
+      "btl bbl alt-border background"
+    );
+    const bStart = nButton(
+      controls,
+      null,
+      "animation_start",
+      cmd_survey,
+      "alt-border background"
+    );
+    const bQuest = nButton(
+      controls,
+      null,
+      "animation_next",
+      cmd_next,
+      "alt-border background"
+    );
+    const bTimer = nButton(
+      controls,
+      null,
+      "timer",
+      cmd_timer,
+      "alt-border background"
+    );
+    const bBreak = nButton(
+      controls,
+      null,
+      "utimer",
+      cmd_post,
+      "alt-border background"
+    );
+    const bStop = nButton(
+      controls,
+      null,
+      "animation_stop:mrr",
+      cmd_stop,
+      "btr bbr alt-border background"
+    );
 
-
-    const bLoad = nButton( controls, null, "path:mrl", fs.do_select, "btl bbl alt-border background" );
-    const bStart = nButton(controls, null, "animation_start", cmd_survey, "alt-border background" );
-    const bQuest = nButton(controls, null, "animation_next", cmd_next , "alt-border background" );
-    const bTimer = nButton(controls, null, "timer", cmd_timer, "alt-border background" );
-    const bBreak = nButton(controls, null, "utimer", cmd_post, "alt-border background" );
-    const bStop = nButton(controls, null, "animation_stop:mrr", cmd_stop, "btr bbr alt-border background" );
-
-    setEnable( bLoad, true );
-    setEnable( bStart, false );
-    setEnable( bQuest, false );
-    setEnable( bTimer, false );
-    setEnable( bBreak, false );
-    setEnable( bStop, false );
+    setGroupEnable([bLoad], [bStart, bQuest, bTimer, bBreak, bStop]);
 
     const source = ref.source.get();
-    const data = await ModelTools.getResource( source );
-    if( data ) {
+    const data = await ModelTools.getResource(source);
+    if (data) {
       const text = data.text;
       host.quiz.load(text);
-      setEnable( bStart, true );
+      setEnable(bStart, true);
     }
-
   }
 
-  ROUTE.updateUnLock( 'quiz init' );
+  ROUTE.updateUnLock("quiz init");
 }
