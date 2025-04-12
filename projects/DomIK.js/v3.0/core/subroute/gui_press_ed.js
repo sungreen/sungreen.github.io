@@ -534,7 +534,7 @@ function mkViewport(el) {
     2 * far
   );
 
-  const orbitCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  const orbitCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
   orbitCamera.position.set(offset, offset, offset);
   const controls = new OrbitControls(orbitCamera, el);
   controls.minDistance = radius * 0.1;

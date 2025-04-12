@@ -212,12 +212,9 @@ bool onEquirectangular2(vec2 uv, out vec3 dm) {
 
 bool onEquirectangular(vec2 uv, out vec3 dm) {
     float b = M_PI_2*uv.y;
-    float y = sin(b);
     float r = cos(b);
     float a = -2.0*uv.x*M_PI;
-    float x = r*sin(a);
-    float z = r*cos(a);
-    dm = vec3(x,y,z);
+    dm = vec3(r*sin(a),sin(b),r*cos(a));
     return true;
 }
 
@@ -267,21 +264,19 @@ bool onPolar(vec2 uv, out vec3 dm) {
     float y = (2.0*uv.y-1.0);
     float rr = x*x+y*y;
     if(rr<=1.0){
-        float a = atan(y,x)+M_PI_2;
+        float a = -(atan(y,x)+1.5*M_PI);
         float r = sqrt(rr);
-        y = 1.0-r;
-        x = (a/M_PI+1.0)/2.0;
-
-        float b = M_PI_2*y;
-        y = sin(b);
+        float b = M_PI_2*(1.0-r);
         r = cos(b);
-        a = -2.0*x*M_PI;
-        x = r*sin(a);
-        float z = r*cos(a);
-        dm = vec3(x,y,z);
+        dm = vec3(r*sin(a),sin(b),r*cos(a));
         return true;
+        // float r = cos(M_PI_2*uv.y);
+        // float a = -2.0*uv.x*M_PI;
+        // dm = vec3(r*sin(a),sin(b),r*cos(a));
+        // return true;
     }
     return false;
+
 }
 
 void main() {

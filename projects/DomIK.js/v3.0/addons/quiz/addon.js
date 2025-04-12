@@ -7,22 +7,15 @@ import { nButton } from "../../core/ndiv.js";
 import { nInputFile } from "../../core/ndiv.js";
 import { setEnable } from "../../core/ndiv.js";
 
-const codeABCD = ["X", "А", "Б", "В", "Г"];
-
 export function registry(def) {
   const addon = {
     content: (app) => {
       const template = addon.newTemplate(0);
       template.frame.mode.set("none");
       const ref = Ref.append(template, { type: "group" });
-      Ref.property.new(ref, {
-        name: "source",
-        type: "resource",
-        datatype: "text",
-      });
-      ref.model.finaly = async (ref) => {
-        await init(ref, app);
-      };
+      Ref.property.new(ref, {name: "source",type: "resource",datatype: "text",});
+      Ref.property.new(ref, {name: "background",type: "color", init: "#AABB33",});
+      ref.model.finaly = async (ref) => {await init(ref, app);};
     },
   };
 
@@ -75,10 +68,13 @@ function setGroupEnable(enabled = [], disabled = []) {
 }
 
 async function init(ref, app) {
+  const codeABCD = ["X", "А", "Б", "В", "Г"];
+
   if (!ref.quiz_init) {
     ref.quiz_init = true;
-
     ref.source.set("text/Космическая викторина.txt");
+
+    const background = ref.background.get();
 
     Ref.children.clear(ref);
     ref.name.set("Содержание");
@@ -93,6 +89,7 @@ async function init(ref, app) {
     quizQuestion.transform.position.set(vecXYZ(0, 0.5, -1));
     quizQuestion.transform.inscribed.set(true);
     quizQuestion.frame.mode.set("round rectangle");
+    quizQuestion.frame.color.set(background);
 
     quizQuestion.group.mode.set("selector");
     quizQuestion.group.direction.set("column");

@@ -103,6 +103,7 @@ function main( room ) {
                     app.renderer.setScissor( left, bottom, width, height );
                     view.camera.setViewOffset( height, height, ( height-width/2 )/2, height/4, width/2, height/2 );
                     view.camera.updateProjectionMatrix();
+                    view.camera.layers.enableAll();
     
                     if( view.controls ) view.controls.update();
                     app.renderer.render( view.scene, view.camera );

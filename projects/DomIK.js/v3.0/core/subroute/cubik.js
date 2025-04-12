@@ -30,10 +30,11 @@ export function subroute() {
 
   sub.registry("init", (options) => {
     cube_camera_views.forEach((view) => {
-      view.camera = new THREE.PerspectiveCamera(90, 1, 0.001, 100);
+      view.camera = new THREE.PerspectiveCamera(90, 1, 0.001, 1000);
       view.camera.position.set(0, 0, 0);
       view.camera.lookAt(new THREE.Vector3().fromArray(view.dir));
       view.camera.rotateZ(view.rot);
+      view.camera.layers.enableAll();
     });
     warp = new THREE.Group();
     renderTarger = new THREE.WebGLRenderTarget(sizeblock * 3, sizeblock * 2);
