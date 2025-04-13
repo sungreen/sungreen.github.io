@@ -67,6 +67,7 @@ const windowShader = new THREE.ShaderMaterial({
   uniforms: {
     time: { value: 0 },
   },
+
   vertexShader: `
     varying vec2 vUv;
     void main() {
@@ -74,6 +75,7 @@ const windowShader = new THREE.ShaderMaterial({
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
+
   fragmentShader: `
     uniform float time;
     varying vec2 vUv;
@@ -111,6 +113,7 @@ const flameShader = new THREE.ShaderMaterial({
     color2: { value: new THREE.Color(0xffcc00) },
     color3: { value: new THREE.Color(0x88aaff) }
   },
+
   vertexShader: `
       varying vec2 vUv;
       varying vec3 vPosition;
@@ -271,11 +274,14 @@ function mkAsteroids(arena) {
         asteroid.needinit = true;
         asteroid.rotA = 0;
         asteroid.rotD = Math.PI * (Math.random());
+
+        arena.asteroids.removeOf(asteroid);
+        arena.asteroids.push(asteroid);
       }
 
       asteroid.update = (dt) => {
         if (asteroid.needinit && arena.flag) {
-          asteroid.pos.set(arena.config.arena.width * (2.0 * Math.random() - 1.0), arena.config.asteroid.far);
+          asteroid.pos.set(arena.width * (2.0 * Math.random() - 1.0), arena.config.asteroid.far);
           asteroid.needinit = false;
           arena.flag = false;
         }
@@ -316,7 +322,6 @@ function mkAsteroids(arena) {
       }
 
       asteroid.reset();
-      arena.asteroids.push(asteroid);
     }
   }
 }
@@ -325,38 +330,21 @@ function mkRockets(arena) {
   arena.rockets = [];
 
   for (let tag = 0; tag < arena.config.rocket.count; tag++) {
+
     const rocket = {
       radius: arena.config.rocket.radius,
       speed: arena.config.rocket.speed,
-      dist: 0,
-      a: 0,
       rot: 0,
       lider: 0,
       pos: new THREE.Vector2(),
       v: new THREE.Vector2(),
-      w: new THREE.Vector2(),
+      bot: true,
+      target: new THREE.Vector2(0,0),
     };
 
     rocket.reset = () => {
-      rocket.dist = 0;
-      rocket.a = 0;
       rocket.rot = 0;
-      rocket.pos.set((Math.random() - 0.5) * arena.config.arena.width, (Math.random() - 0.5) * arena.config.arena.height);
-      rocket.v.set((Math.random() - 0.5) * arena.config.rocket.speed, (Math.random() - 0.5) * arena.config.rocket.speed);
-      rocket.w.set(0, 1 );
-      rocket.tails = [];
-    }
-
-    const pd = 0.5;
-
-    rocket.ping = (dx, dy, dist) => {
-      if (!rocket.dist || dist < rocket.dist) {
-        rocket.dist = dist;
-        rocket.w.x += dx > 0 ? pd : (dx < 0 ? -pd : 0);
-        rocket.w.y += dy > 0 ? pd : (dy < 0 ? -pd : 0);
-        rocket.w.x = rocket.w.x > 2 ? 2 : (rocket.w.x < -2 ? -2 : rocket.w.x);
-        rocket.w.y = rocket.w.y > 2 ? 2 : (rocket.w.y < -2 ? -2 : rocket.w.y);
-      }
+      rocket.pos.set((Math.random() - 0.5) * arena.width, (Math.random() - 0.5) * arena.height);
     }
 
     rocket.state = (up = true) => {
@@ -419,7 +407,7 @@ function mkRockets(arena) {
         rocket.mesh.scale.set(s, s, s);
         for (let i = 0; i < 3; i++) rocket.rings[i].rotation.set(rocket.rot * (3 - i), 0, 0);
         if (!rocket.lider) {
-          ort(rocket.mesh, rocket.pos.x, rocket.pos.y, rocket.a);
+          ort(rocket.mesh, rocket.pos.x, rocket.pos.y, 0);
         } else {
           const x = rocket.lider;
           const q = x % 2 === 0 ? x / 2 : -(x - 1) / 2;
@@ -432,30 +420,12 @@ function mkRockets(arena) {
     }
 
     rocket.update = (dt) => {
-      const dx = (rocket.v.x + rocket.w.x);
-      const dy = (rocket.v.y + rocket.w.y);
-
-      rocket.dist = 0;
-      rocket.tails.unshift({ x: rocket.pos.x, y: rocket.pos.y });
-
-      if (rocket.tails.length > 100) rocket.tails.pop();
-
-      rocket.pos.x += dx * rocket.speed * dt;
-      rocket.pos.y += dy * rocket.speed * dt;
-
-      rocket.v.x = 0;
-      rocket.v.y = 0;
-      rocket.w.x = 0;
-      rocket.w.y = 0;
-
-      rocket.tail = rocket.tails[rocket.tails.length - 1];
-
-      rocket.a = Math.asin(rocket.tail.x - rocket.pos.x) * 2;
+      if( !rocket.bot ) { rocket.v.copy( rocket.target ).sub(rocket.pos); }
+      rocket.pos.add( rocket.v.multiplyScalar( rocket.speed * dt ) );
+      rocket.v.multiplyScalar(0);
       rocket.rot += dt;
-
-      if (rocket.pos.y < 0) rocket.pos.y = 0;
-      if (Math.abs(rocket.pos.y) > arena.config.arena.height) rocket.pos.y = Math.sign(rocket.pos.y) * arena.config.arena.height;
-      if (Math.abs(rocket.pos.x) > arena.config.arena.width) rocket.pos.x = Math.sign(rocket.pos.x) * arena.config.arena.width;
+      if (Math.abs(rocket.pos.y) > arena.height) rocket.pos.y = Math.sign(rocket.pos.y) * arena.height;
+      if (Math.abs(rocket.pos.x) > arena.width) rocket.pos.x = Math.sign(rocket.pos.x) * arena.width;
     }
 
     rocket.reset();
@@ -477,7 +447,10 @@ function ort(mesh, x, y, a = 0) {
 }
 
 function mkArena(ref) {
-  const arena = { config: ref.config, resources: ref.resources }
+  const arena = ref.config.arena;
+  arena.config.rocket = ref.config.rocket;
+  arena.config.asteroid = ref.config.asteroid;
+  arena.resources = ref.resources;
 
   arena.mesh = new THREE.Group();
   arena.mesh.name = "Arena";
@@ -544,6 +517,10 @@ function mkArena(ref) {
     arena.rockets.forEach((rocket) => {
       rocket.update(dt);
       rocket.refresh();
+      if( rocket.bot ) {
+        const f = rocket.pos.length();
+        rocket.v.set(0, 0).sub( rocket.pos ).multiplyScalar( f*f );
+      }
     });
 
     for (let i = 0; i < arena.rockets.length - 1; i++) {
@@ -553,26 +530,26 @@ function mkArena(ref) {
         if (!ri.lider && !rj.lider) {
           const n = ri.pos.clone().sub(rj.pos);
           const d = n.length();
-          const r = ri.radius + rj.radius;
+          const r = 2*(ri.radius + rj.radius);
           if (d < r) {
-            const rd = r-d;
-            n.multiplyScalar(rd);
-            ri.pos.add(n);
-            rj.pos.sub(n);
+            const f = (d?r/d:1);
+            n.multiplyScalar( f*f );
+            //ri.pos.add(n);
+            //rj.pos.sub(n);
+            ri.v.add(n);
+            rj.v.sub(n);
           }
         }
       }
     }
 
     arena.far = 0;
-
     for (let i = 0; i < arena.asteroids.length; i++) {
       const asteroid = arena.asteroids[i];
       if (!asteroid.needinit) {
         arena.far = Math.max(arena.far, asteroid.pos.y);
       }
     }
-
     arena.flag = (arena.config.asteroid.far - arena.far > 5 * arena.config.rocket.radius);
 
     for (let i = 0; i < arena.asteroids.length; i++) {
@@ -580,40 +557,38 @@ function mkArena(ref) {
       asteroid.update(dt);
 
       if (!asteroid.needinit) {
-        if (Math.abs(asteroid.pos.y) < arena.config.arena.height) {
+        if (Math.abs(asteroid.pos.y) < arena.height) {
           arena.rockets.forEach((rocket) => {
             if (!rocket.lider) {
               const n = asteroid.pos.clone().sub(rocket.pos);
               const d = n.length();
               const r = (asteroid.radius + rocket.radius);
 
-              if (rocket.tag === asteroid.tag) {
-                if (d <= r) {
+              if (d <= r) {
+                if (rocket.tag === asteroid.tag) {
                   rocket.state(true);
                   asteroid.reset();
                   arena.resources.sound1.play();
                 } else {
-                  rocket.ping(n.x, n.y, d);
-                }
-              } else {
-                if (d <= r) {
                   rocket.state(false);
                   rocket.reset();
                   asteroid.reset();
                   arena.resources.sound2.play();
-                } else {
-                  if (d < 2 * r) {
-                    rocket.ping(-n.x, 0, d);
+                }
+              } else {
+                if( rocket.bot ) {
+                  if (rocket.tag === asteroid.tag) {
+                    const f = 1;
+                    rocket.v.add( n.normalize().multiplyScalar(5) );
                   } else {
-                    const ry = rocket.pos.y > 0.3 ? -1 : (rocket.pos.y < -0.3 ? 1 : 0);
-                    rocket.ping(0, ry, 2 * d);
+                    const f = 2*(d>0?r/d:1);
+                    rocket.v.sub( n.multiplyScalar(f*f) );
                   }
                 }
               }
             }
           });
         }
-
       }
 
       asteroid.refresh();
@@ -626,6 +601,8 @@ function mkArena(ref) {
 async function init(ref, app) {
   ref.config = {
     arena: {
+      config: {},
+      mats:[],
       width: Math.PI / 2,
       height: 2,
       speed: 1,
@@ -637,6 +614,7 @@ async function init(ref, app) {
       seed: 4,
       far: 4
     },
+
     rocket: {
       radius: 0.1,
       speed: 0.5,
@@ -675,25 +653,29 @@ async function init(ref, app) {
     const bmat = new THREE.MeshLambertMaterial({ color: `hsl(${h}, ${s}%, ${lb}%)`, emissive: `hsl(${h}, ${s}%, ${lb}%)`, emissiveIntensity: 1.0 });
     const cmat = new THREE.ShaderMaterial({ uniforms: THREE.UniformsUtils.clone(asteroidShader.uniforms), vertexShader: asteroidShader.vertexShader, fragmentShader: asteroidShader.fragmentShader, blending: THREE.AdditiveBlending, transparent: false, side: THREE.DoubleSide });
     cmat.uniforms.baseColor.value = new THREE.Color(`hsl(${h}, ${s}%, ${lb}%)`);
-    arena.config.mats.push({ a: amat, b: bmat, c: cmat });
+    arena.mats.push({ a: amat, b: bmat, c: cmat });
   }
 
   arena.lider = 0;
 
   arena.getDistinctColors = (tag) => {
-    if (tag < arena.config.rocket.count) return arena.config.mats[tag];
-    return arena.config.mats[arena.config.rocket.count];
+    if (tag < arena.config.rocket.count) return arena.mats[tag];
+    return arena.mats[arena.config.rocket.count];
   }
 
 
   const host = simpleHost( 775, 'rockets' );
   host.doMessage = (ret) => {
-    const tag = ret.code
-    if( arena.rockets[tag]) {
-      const rocket = arena.rockets[tag];
-      rocket.ai = false;
-      rocket.v.set(ret.value / 10, ret.check/10);
-      console.log(rocket.tag, rocket.v );
+    if( ret.code === 100 ) {
+      const tag = ret.value;
+      if( arena.rockets[tag]) {
+        const rocket = arena.rockets[tag];
+        rocket.bot = false;
+        const objs = ret.objs;
+        if( objs ) {
+          rocket.target.set(arena.width * objs.x / 100, arena.height * objs.y / 100);
+        }
+      }
     }
   }
 

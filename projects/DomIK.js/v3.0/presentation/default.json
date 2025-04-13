@@ -6,14 +6,17 @@
 					"properties:group::": {
 						"select:direction::": "origin"
 					},
-					"link.66dudf8efv6": {
-						"string:ref_id::true": "quiz_0",
+					"properties:dome::": {
+						"resource:source::": "image/vlt-mw-potw.jpg"
+					},
+					"link.q3jdr9o2nkk": {
+						"string:ref_id::true": "rockets_0",
 						"params": [
 							{
 								"path": [
 									"ref_id"
 								],
-								"value": "quiz_0"
+								"value": "rockets_0"
 							}
 						]
 					}
@@ -26,15 +29,16 @@
 		"addons": {
 			"addons.roe7qmva9ic": {
 				"addon.rr83sblui8o": {
-					"string:name::": "Base quiz",
-					"resource:source::": "./addons/quiz/quiz.dmx"
+					"string:name::": "Rockets game",
+					"resource:source::": "./addons/rockets/rockets.dmx"
 				}
 			}
 		},
 		"uix": {
 			"openrefs": [
 				"roe7p4kg204",
-				"rrvkku599u4"
+				"rrvkku599u4",
+				"q3jdr9o2nkk"
 			]
 		},
 		"resources": []

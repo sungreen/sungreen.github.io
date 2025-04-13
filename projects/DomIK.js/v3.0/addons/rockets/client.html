@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -20,7 +19,6 @@
             height: 100%;
             font-family: 'Arial', sans-serif;
         }
-
         #game-title {
             position: fixed;
             top: 20px;
@@ -29,30 +27,25 @@
             text-align: center;
             color: #8A2BE2;
             font-size: min(8vmin, 48px);
-            /* Ограничиваем максимальный размер */
             font-weight: bold;
-            text-shadow: 3px 3px 0 #FFD700,
-                6px 6px 0 rgba(0, 0, 0, 0.2);
+            text-shadow: 3px 3px 0 #FFD700, 
+                         6px 6px 0 rgba(0,0,0,0.2);
             z-index: 20;
             pointer-events: none;
             animation: glow 2s infinite alternate;
             white-space: nowrap;
-            /* Запрещаем перенос строк */
             overflow: hidden;
             text-overflow: ellipsis;
-            /* Добавляем многоточие если не помещается */
             padding: 0 20px;
         }
-
         #rocket {
             position: absolute;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out;
+            transition: transform 0.1s ease-out, left 0.5s ease-out, top 0.5s ease-out;
             pointer-events: none;
             z-index: 10;
             filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.7));
         }
-
         #instructions {
             position: fixed;
             bottom: 100px;
@@ -68,12 +61,11 @@
             border-radius: 10px;
             max-width: 80%;
             margin: 0 auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
         #pointer {
             position: absolute;
             top: 0;
@@ -83,7 +75,6 @@
             pointer-events: none;
             z-index: 1;
         }
-
         #coordinates {
             position: fixed;
             bottom: 0;
@@ -94,7 +85,6 @@
             color: #ccff00;
             font-family: monospace;
             font-size: min(4vmin, 24px);
-            /* Адаптивный размер с ограничением */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -104,23 +94,21 @@
             overflow: hidden;
             padding: 0 20px;
         }
-
+        
         @keyframes glow {
             from {
-                text-shadow: 0 0 10px #8A2BE2,
-                    0 0 20px #8A2BE2,
-                    0 0 30px #9370DB;
+                text-shadow: 0 0 10px #8A2BE2, 
+                             0 0 20px #8A2BE2,
+                             0 0 30px #9370DB;
             }
-
             to {
-                text-shadow: 0 0 15px #8A2BE2,
-                    0 0 30px #9370DB,
-                    0 0 45px #FFD700;
+                text-shadow: 0 0 15px #8A2BE2, 
+                             0 0 30px #9370DB,
+                             0 0 45px #FFD700;
             }
         }
     </style>
 </head>
-
 <body>
     <div id="game-title">ЛОВЦЫ АСТЕРОИДОВ</div>
     <img id="rocket" src="resources/rocket.png" alt="Ракета">
@@ -137,71 +125,75 @@
         const instructions = document.getElementById('instructions');
         const gameTitle = document.getElementById('game-title');
         const coordinatesDisplay = document.getElementById('coordinates');
-
+        
         const ROCKET_SIZE = 0.25;
-
+        const RETURN_SPEED = 0.03; // Скорость возврата к центру
+        const CENTER_THRESHOLD = 5; // Порог остановки (в пикселях)
+        
         let isMoving = false;
         let relativeX = 0.5;
         let relativeY = 0.5;
+        let returnToCenter = false;
+        let animationId = null;
 
         function calculateRocketSize() {
             const minSize = Math.min(window.innerWidth, window.innerHeight) * ROCKET_SIZE;
             const img = new Image();
             img.src = rocket.src;
             const aspectRatio = img.width / img.height;
-
+            
             rocket.style.width = minSize * aspectRatio + 'px';
             rocket.style.height = minSize + 'px';
         }
-
+        
         function setInitialPosition() {
-            const centerX = window.innerWidth * relativeX;
-            const centerY = window.innerHeight * relativeY;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
             rocket.style.left = centerX + 'px';
             rocket.style.top = centerY + 'px';
             updateRocketAngle(centerX, centerY);
             drawPointer(centerX, centerY);
             updateCoordinates(centerX, centerY);
         }
-
+        
         function updateRocketAngle(rocketX, rocketY) {
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
-
+            
             const dx = centerX - rocketX;
             const dy = centerY - rocketY;
-            const angle = Math.atan2(dy, dx) * 180 / Math.PI - 90;
-
+            const angle = dx? (Math.atan2(dy, dx) * 180 / Math.PI - 90): 0;
+            
             rocket.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
         }
-
+        
         function drawPointer(rocketX, rocketY) {
             pointerCanvas.width = window.innerWidth;
             pointerCanvas.height = window.innerHeight;
             pointerCtx.clearRect(0, 0, pointerCanvas.width, pointerCanvas.height);
-
+            
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
-
+            
             const dx = centerX - rocketX;
             const dy = centerY - rocketY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            const distance = Math.sqrt(dx*dx + dy*dy);
             const nx = dx / distance;
             const ny = dy / distance;
-
+            
             const baseSize = parseFloat(rocket.style.width) * 0.5;
             const radius = baseSize / 2;
-
-            const p1x = rocketX + (-ny * radius);
-            const p1y = rocketY + (nx * radius);
-            const p2x = rocketX - (-ny * radius);
-            const p2y = rocketY - (nx * radius);
-
+            
+            const p1x = rocketX + (-ny * baseSize/2);
+            const p1y = rocketY + (nx * baseSize/2);
+            const p2x = rocketX - (-ny * baseSize/2);
+            const p2y = rocketY - (nx * baseSize/2);
+            
             const gradient = pointerCtx.createLinearGradient(rocketX, rocketY, centerX, centerY);
-            gradient.addColorStop(0.5, 'rgba(255, 0, 0, 1.0)');
-            gradient.addColorStop(0.8, 'rgba(255, 80, 80, 1.0)');
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 1.0)');
-
+            gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
+            gradient.addColorStop(0.3, 'rgba(255, 80, 80, 1.0)');
+            gradient.addColorStop(1, 'rgba(255, 100, 100, 1.0)');
+            
             pointerCtx.beginPath();
             pointerCtx.moveTo(p1x, p1y);
             pointerCtx.lineTo(centerX, centerY);
@@ -209,101 +201,154 @@
             pointerCtx.closePath();
             pointerCtx.fillStyle = gradient;
             pointerCtx.fill();
-
+            
             pointerCtx.beginPath();
             pointerCtx.arc(rocketX, rocketY, radius, 0, Math.PI * 2);
             pointerCtx.fillStyle = 'rgba(255, 0, 0, 1.0)';
             pointerCtx.fill();
         }
-
+        
         function updateCoordinates(x, y) {
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
-
-            let relX = Math.min(100, Math.max(-100,
+            
+            rocket.relX = Math.min(100, Math.max(-100, 
                 Math.round(((x - centerX) / centerX) * 100)));
-            let relY = Math.min(100, Math.max(-100,
+            rocket.relY = Math.min(100, Math.max(-100, 
                 Math.round(((centerY - y) / centerY) * 100)));
-
-            coordinatesDisplay.textContent = `X: ${relX}% Y: ${relY}%`;
-            if(host) host.send( 0, 0, relX, relY );
+            
+            coordinatesDisplay.textContent = `X: ${rocket.relX}% Y: ${rocket.relY}%`;
+            if(host) host.send( 0, 100, 0, 0, null, "", {x:rocket.relX, y:rocket.relY} );
         }
-
+        
+        function moveToCenter() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const currentX = parseFloat(rocket.style.left);
+            const currentY = parseFloat(rocket.style.top);
+            
+            // Вычисляем расстояние до центра
+            const dx = centerX - currentX;
+            const dy = centerY - currentY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Если ракета близко к центру, останавливаем анимацию
+            if (distance < CENTER_THRESHOLD) {
+                rocket.style.left = centerX + 'px';
+                rocket.style.top = centerY + 'px';
+                cancelAnimationFrame(animationId);
+                returnToCenter = false;
+                updateRocketAngle(centerX, centerY);
+                drawPointer(centerX, centerY);
+                updateCoordinates(centerX, centerY);
+                return;
+            }
+            
+            // Плавное движение к центру
+            const newX = currentX + dx * RETURN_SPEED;
+            const newY = currentY + dy * RETURN_SPEED;
+            
+            rocket.style.left = newX + 'px';
+            rocket.style.top = newY + 'px';
+            relativeX = newX / window.innerWidth;
+            relativeY = newY / window.innerHeight;
+            
+            updateRocketAngle(newX, newY);
+            drawPointer(newX, newY);
+            updateCoordinates(newX, newY);
+            
+            animationId = requestAnimationFrame(moveToCenter);
+        }
+        
         function handleResize() {
             calculateRocketSize();
             const newX = window.innerWidth * relativeX;
             const newY = window.innerHeight * relativeY;
-
+            
             rocket.style.left = newX + 'px';
             rocket.style.top = newY + 'px';
             updateRocketAngle(newX, newY);
             drawPointer(newX, newY);
             updateCoordinates(newX, newY);
         }
-
+        
         function handleTouchStart(e) {
             e.preventDefault();
             isMoving = true;
+            returnToCenter = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
             updateRocketPosition(e.touches[0]);
             instructions.style.display = 'none';
         }
-
+        
         function handleTouchMove(e) {
             e.preventDefault();
             if (isMoving) {
                 updateRocketPosition(e.touches[0]);
             }
         }
-
+        
         function handleTouchEnd() {
             isMoving = false;
+            returnToCenter = true;
+            moveToCenter();
         }
-
+        
         function updateRocketPosition(touch) {
             const x = touch.clientX;
             const y = touch.clientY;
-
+            
             relativeX = x / window.innerWidth;
             relativeY = y / window.innerHeight;
-
+            
             rocket.style.left = x + 'px';
             rocket.style.top = y + 'px';
-
+            
             updateRocketAngle(x, y);
             drawPointer(x, y);
             updateCoordinates(x, y);
         }
-
+        
         function init() {
             host = simpleHost( 775, 'rockets' );
             host.run();
 
-            rocket.onload = function () {
+            rocket.onload = function() {
                 calculateRocketSize();
                 setInitialPosition();
             };
-
+            
             window.addEventListener('resize', handleResize);
-            document.addEventListener('touchstart', handleTouchStart, { passive: false });
-            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+            document.addEventListener('touchstart', handleTouchStart, {passive: false});
+            document.addEventListener('touchmove', handleTouchMove, {passive: false});
             document.addEventListener('touchend', handleTouchEnd);
-
+            
             document.addEventListener('mousedown', (e) => {
                 isMoving = true;
+                returnToCenter = false;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
                 updateRocketPosition(e);
                 instructions.style.display = 'none';
             });
-
+            
             document.addEventListener('mousemove', (e) => {
                 if (isMoving) {
                     updateRocketPosition(e);
                 }
             });
-
+            
             document.addEventListener('mouseup', () => {
                 isMoving = false;
+                returnToCenter = true;
+                moveToCenter();
             });
-
+            
             let hue = 0;
             function animateTitle() {
                 hue = (hue + 1) % 360;
@@ -312,9 +357,8 @@
             }
             animateTitle();
         }
-
+        
         init();
     </script>
 </body>
-
 </html>

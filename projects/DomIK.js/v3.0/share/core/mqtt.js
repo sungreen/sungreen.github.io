@@ -5,7 +5,7 @@ const broker = 'wss://test.mosquitto.org:8081'
 //const broker = 'ws://test.mosquitto.org:8080'
 //const broker = 'wss://mqtt.eclipseprojects.io:443/mqtt'
 
-const DEBUG = true
+const DEBUG = !true
 
 function MQTT(room = 777, topic, onConnect, onFailure, onMessage, onSend, changeStatus ) {
     const mq = { topic: `${topic}${room}`, status: 'new' };
